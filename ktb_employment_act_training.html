@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employment Act (Cap. 226) — KTB Legal Hub</title>
+<style>
+  :root {
+    --primary: #0a5c5c;
+    --primary-dark: #073f3f;
+    --primary-light: #0e7a7a;
+    --gold: #C19A28;
+    --gold-light: #d4af44;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --bg: #f4f6f5;
+    --white: #ffffff;
+    --text: #1a2a2a;
+    --text-muted: #5a7070;
+    --border: #d0dede;
+    --card-bg: #ffffff;
+    --pip-inactive: #c8d8d8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
+  .shell { display: grid; grid-template-rows: 48px auto auto 1fr auto; height: 100vh; overflow: hidden; }
+  .topbar { background: var(--primary-dark); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-logo { width: 28px; height: 28px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: var(--primary-dark); flex-shrink: 0; }
+  .topbar-title { color: var(--white); font-size: 12px; font-weight: 600; letter-spacing: 0.5px; }
+  .topbar-sub { color: rgba(255,255,255,0.55); font-size: 11px; }
+  .pips-row { background: var(--primary); padding: 6px 20px; display: flex; align-items: center; gap: 4px; }
+  .pip { flex: 1; height: 4px; border-radius: 2px; background: var(--pip-inactive); transition: background 0.35s; }
+  .pip.done { background: var(--gold); }
+  .pip.active { background: var(--gold-light); }
+  .tabs-row { background: var(--primary); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; overflow-x: auto; scrollbar-width: none; padding: 0 8px; }
+  .tabs-row::-webkit-scrollbar { display: none; }
+  .tab { flex-shrink: 0; padding: 7px 14px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color 0.2s, border-color 0.2s; }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab.done { color: rgba(255,255,255,0.75); }
+  .tab.done::after { content: ' \2713'; color: var(--gold); }
+  .content { overflow-y: auto; padding: 24px 24px 12px; scroll-behavior: smooth; }
+  .slide { display: none; }
+  .slide.active { display: block; }
+  .bottombar { background: var(--white); border-top: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+  .bottombar-label { font-size: 11px; color: var(--text-muted); font-weight: 500; max-width: 180px; line-height: 1.3; }
+  .bottombar-nav { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .btn { border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; padding: 8px 18px; transition: all 0.2s; }
+  .btn-back { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-back:hover { background: var(--border); }
+  .btn-next { background: var(--primary); color: white; }
+  .btn-next:hover:not(:disabled) { background: var(--primary-light); }
+  .btn-next:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+  .understood-wrap { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+  .understood-wrap.hidden { display: none; }
+  #understood-btn { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+  #understood-btn.checked { background: var(--primary); border-color: var(--primary); }
+  #understood-btn.checked::after { content: '\2713'; color: white; font-size: 12px; }
+  .understood-label { font-size: 11px; color: var(--text-muted); }
+  .cover-hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%); border-radius: 12px; padding: 36px 32px; margin-bottom: 20px; position: relative; overflow: hidden; }
+  .cover-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(193,154,40,0.12); }
+  .cover-eyebrow { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { color: white; font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; }
+  .cover-cap { color: rgba(255,255,255,0.65); font-size: 13px; margin-bottom: 18px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .chip { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; }
+  .chip.gold { background: var(--gold); color: var(--primary-dark); }
+  .btn-begin { background: var(--gold); color: var(--primary-dark); border: none; border-radius: 8px; padding: 12px 28px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+  .btn-begin:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .cover-callout { background: rgba(193,154,40,0.12); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 14px 16px; color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.6; margin-top: 20px; }
+  .byline { font-size: 11px; color: var(--text-muted); margin-top: 12px; line-height: 1.5; }
+  .section-heading { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+  .callout { border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; font-size: 13px; line-height: 1.65; }
+  .callout.teal { background: #e8f4f4; border-left: 4px solid var(--primary); }
+  .callout.gold { background: #fdf6e3; border-left: 4px solid var(--gold); }
+  .callout.red { background: #fdecea; border-left: 4px solid var(--red); color: #7a1a1a; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin: 18px 0 8px; }
+  .terms-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 16px; }
+  .terms-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-size: 11px; }
+  .terms-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .terms-table tr:nth-child(even) td { background: #f9fbfb; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  @media(max-width:600px){ .grid-2 { grid-template-columns: 1fr; } }
+  .obl-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; border-top: 3px solid var(--primary); }
+  .obl-card-title { font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+  .obl-card-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .obl-card-ref { display: inline-block; margin-top: 6px; font-size: 10px; font-weight: 700; color: var(--gold); background: #fdf6e3; border-radius: 4px; padding: 2px 6px; }
+  .dodonttable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 16px; }
+  .dodonttable th { padding: 8px 12px; font-size: 12px; font-weight: 700; text-align: left; }
+  .dodonttable th.do-h { background: #e8f5ee; color: var(--green); }
+  .dodonttable th.dont-h { background: #fdecea; color: var(--red); }
+  .dodonttable td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 12px; line-height: 1.5; }
+  .dodonttable td.do { border-left: 3px solid var(--green); }
+  .dodonttable td.dont { border-left: 3px solid var(--red); }
+  .timeline-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .timeline-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-size: 11px; }
+  .timeline-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .timeline-table tr:nth-child(even) td { background: #f9fbfb; }
+  .badge-red { background: var(--red); color: white; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .badge-amber { background: #e67e22; color: white; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .scenario { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .scenario-head { background: var(--primary); color: white; padding: 10px 14px; font-size: 12px; font-weight: 700; }
+  .scenario-body { padding: 12px 14px; font-size: 13px; line-height: 1.65; }
+  .scenario-toggle { display: inline-block; margin-top: 8px; background: var(--gold); color: var(--primary-dark); border: none; border-radius: 5px; padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .scenario-answer { display: none; margin-top: 10px; padding: 10px; background: #e8f4f4; border-radius: 6px; font-size: 12.5px; line-height: 1.6; }
+  .scenario-answer.visible { display: block; }
+  .takeaways { list-style: none; margin-bottom: 16px; }
+  .takeaways li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.55; }
+  .takeaways li:last-child { border-bottom: none; }
+  .takeaway-num { background: var(--gold); color: var(--primary-dark); font-weight: 800; font-size: 13px; min-width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contacts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media(max-width:480px){ .contacts { grid-template-columns: 1fr; } }
+  .contact-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .contact-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contact-name { font-size: 13px; font-weight: 700; color: var(--primary-dark); }
+  .contact-role { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .contact-email { font-size: 11px; color: var(--primary); }
+  .quiz-progress { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+  .quiz-score-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+  .quiz-score-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s; }
+  .quiz-question { font-size: 15px; font-weight: 700; color: var(--primary-dark); line-height: 1.5; margin-bottom: 16px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 12px 14px; text-align: left; font-size: 13px; cursor: pointer; transition: all 0.15s; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: #e8f4f4; }
+  .opt-btn.correct { background: #e8f5ee; border-color: var(--green); color: var(--green); font-weight: 600; }
+  .opt-btn.wrong { background: #fdecea; border-color: var(--red); color: var(--red); }
+  .opt-btn.reveal { background: #e8f5ee; border-color: var(--green); }
+  .opt-btn:disabled { cursor: not-allowed; }
+  .quiz-feedback { display: none; margin-top: 14px; border-radius: 8px; padding: 12px 14px; font-size: 13px; line-height: 1.6; }
+  .quiz-feedback.correct { background: #e8f5ee; border-left: 4px solid var(--green); color: #0f4a28; display: block; }
+  .quiz-feedback.wrong { background: #fdecea; border-left: 4px solid var(--red); color: #7a1a1a; display: block; }
+  .quiz-dots { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+  .quiz-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--pip-inactive); font-size: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
+  .quiz-dot.correct { background: var(--green); }
+  .quiz-dot.wrong { background: var(--red); }
+  .quiz-dot.current { background: var(--primary); }
+  .results-card { border: 2px solid var(--gold); border-radius: 12px; padding: 32px; max-width: 500px; margin: 0 auto; text-align: center; background: white; }
+  .results-score { font-size: 52px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+  .results-label { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .results-msg { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+  .cert-badge { border: 2px solid var(--gold); border-radius: 10px; padding: 16px 20px; margin: 0 auto 16px; max-width: 340px; text-align: center; background: #fdf9ef; }
+  .cert-icon { font-size: 28px; margin-bottom: 6px; }
+  .cert-title { font-size: 13px; font-weight: 700; color: var(--primary-dark); }
+  .cert-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .btn-print { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 7px 16px; font-size: 12px; color: var(--text-muted); cursor: pointer; margin-top: 4px; }
+  .btn-print:hover { background: var(--bg); }
+  @media print {
+    .topbar, .pips-row, .tabs-row, .bottombar { display: none !important; }
+    html, body { overflow: visible !important; height: auto !important; }
+    .shell { display: block !important; height: auto !important; }
+    .content { overflow: visible !important; padding: 0 !important; }
+    .slide { display: none !important; }
+    #slide-16 { display: flex !important; align-items: center; justify-content: center; min-height: 100vh; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">KTB</div>
+    <div>
+      <div class="topbar-title">KTB Legal Hub</div>
+      <div class="topbar-sub">Directorate of Legal Services</div>
+    </div>
+  </div>
+  <div style="color:rgba(255,255,255,0.55);font-size:11px;">Employment Act &middot; Cap. 226</div>
+</div>
+
+<div class="pips-row" id="pips-row"></div>
+
+<div class="tabs-row" id="tabs-row">
+  <div class="tab active" onclick="goToSlide(0)" id="tab-0">Cover</div>
+  <div class="tab" onclick="goToSlide(1)" id="tab-1">1. Foundation</div>
+  <div class="tab" onclick="goToSlide(2)" id="tab-2">2. KTB Context</div>
+  <div class="tab" onclick="goToSlide(3)" id="tab-3">3. Obligations</div>
+  <div class="tab" onclick="goToSlide(4)" id="tab-4">4. Compliance</div>
+  <div class="tab" onclick="goToSlide(5)" id="tab-5">5. Consequences</div>
+  <div class="tab" onclick="goToSlide(6)" id="tab-6">Quiz</div>
+  <div class="tab" id="tab-16">Results</div>
+</div>
+
+<div class="content" id="content-area">
+
+<!-- SLIDE 0 COVER -->
+<div class="slide active" id="slide-0">
+  <div class="cover-hero">
+    <div class="cover-eyebrow">Directorate of Legal Services &middot; KTB</div>
+    <div class="cover-title">Employment Act</div>
+    <div class="cover-cap">CAP. 226 &mdash; Laws of Kenya &nbsp;&middot;&nbsp; As revised to 26 April 2024</div>
+    <div class="chips">
+      <span class="chip">&#x23F1; 35 min read</span>
+      <span class="chip">10 quiz questions</span>
+      <span class="chip gold">70% pass mark</span>
+      <span class="chip">Commenced 2 June 2008</span>
+      <span class="chip">All KTB staff</span>
+    </div>
+    <button class="btn-begin" onclick="navigate(1)">Begin Training &rarr;</button>
+    <div class="cover-callout">
+      This module has been developed by the Directorate of Legal Services to help all KTB staff understand their obligations under the Employment Act (Cap. 226). It covers employment contracts, wages, rights and duties, termination procedures, and the protection of children in employment. It includes five sections and a ten-question quiz. You must score at least 70% to pass.
+    </div>
+  </div>
+  <p class="byline">Reviewed and approved by Allan Njoroge, Director of Legal Services &amp; Corporation Secretary, Kenya Tourism Board.</p>
+</div>
+
+<!-- SLIDE 1 FOUNDATION -->
+<div class="slide" id="slide-1">
+  <div class="section-heading">Section 1 &mdash; Foundation</div>
+  <div class="section-sub">What is the Employment Act and why does it matter to you?</div>
+  <div class="callout teal">
+    <strong>Why this matters to you personally:</strong> The Employment Act defines the legal framework for your work at KTB. It protects your wages, your right to leave, and your right to fair treatment &mdash; and it sets out the obligations you and KTB owe each other. Violating this Act is not just an HR issue; it can lead to criminal charges, fines, and imprisonment for individual employees and managers alike.
+  </div>
+  <h3>What is the Employment Act?</h3>
+  <p style="font-size:13px;line-height:1.65;margin-bottom:14px;">
+    The Employment Act (Cap. 226) is a law of Kenya that declares and defines the fundamental rights of employees, provides basic conditions of employment, regulates the employment of children, and provides for related matters. It was assented to on 22 October 2007 and commenced on 2 June 2008. It applies to all employees under a contract of service, and it <strong>binds the Government</strong> &mdash; meaning KTB as a state corporation is fully subject to its provisions (Section 3(3)).
+  </p>
+  <h3>Enforcement Body</h3>
+  <p style="font-size:13px;line-height:1.65;margin-bottom:14px;">
+    The Act is enforced by <strong>Labour Officers</strong> (including the Commissioner of Labour and designated officers) and the <strong>Employment and Labour Relations Court</strong>, which has exclusive jurisdiction over employment disputes (Section 86(2)). The Cabinet Secretary for Labour oversees administration of the Act.
+  </p>
+  <h3>Key Defined Terms</h3>
+  <table class="terms-table">
+    <tr><th>Term</th><th>Plain English Meaning</th></tr>
+    <tr><td><strong>Employee</strong></td><td>Any person employed for wages or salary, including apprentices (Section 2)</td></tr>
+    <tr><td><strong>Employer</strong></td><td>Any person, public body, firm or company under a contract of service to employ someone &mdash; includes agents and managers (Section 2)</td></tr>
+    <tr><td><strong>Contract of service</strong></td><td>Any agreement (oral or written) to employ or serve as an employee for a period of time (Section 2)</td></tr>
+    <tr><td><strong>Casual employee</strong></td><td>A person paid at end of each day, not engaged for longer than 24 hours at a time (Section 2)</td></tr>
+    <tr><td><strong>Probationary contract</strong></td><td>A written contract of up to 12 months that expressly states it is a probationary period (Section 2)</td></tr>
+    <tr><td><strong>Redundancy</strong></td><td>Loss of employment through no fault of the employee where the employer finds services surplus (Section 2)</td></tr>
+    <tr><td><strong>Forced labour</strong></td><td>Any work extracted under threat of penalty that is not offered voluntarily (Section 2)</td></tr>
+    <tr><td><strong>Basic salary</strong></td><td>Gross salary excluding all allowances and other benefits (Section 2)</td></tr>
+    <tr><td><strong>Remuneration</strong></td><td>Total value of all payments in money or in kind arising from employment (Section 2)</td></tr>
+    <tr><td><strong>Child</strong></td><td>A person under the age of 18 years (Section 2)</td></tr>
+    <tr><td><strong>Young person</strong></td><td>A child aged 16 but under 18 (Section 2)</td></tr>
+    <tr><td><strong>Summary dismissal</strong></td><td>Terminating employment without notice or with less notice than entitled (Section 44)</td></tr>
+  </table>
+  <h3>Legislative History</h3>
+  <div class="callout gold">
+    <strong>Commencement:</strong> 2 June 2008 (LN 61 of 2008). The Act repealed and replaced the previous Employment Act. It has been amended multiple times &mdash; most recently by the Statute Law (Miscellaneous Amendments) Act 2024 on 26 April 2024. Significant additions include pre-adoptive leave (Act No. 2 of 2021) and data protection obligations for child employment registers (reflecting the Data Protection Act Cap. 411C).
+  </div>
+</div>
+
+<!-- SLIDE 2 KTB CONTEXT -->
+<div class="slide" id="slide-2">
+  <div class="section-heading">Section 2 &mdash; KTB Context</div>
+  <div class="section-sub">How the Employment Act applies specifically to KTB's operations</div>
+  <div class="callout teal">
+    KTB is a state corporation established under the Tourism Act (Cap. 383). The Employment Act binds the Government and all state corporations &mdash; making it fully applicable to KTB, all its staff, managers, HR officers, and the Board. Every KTB employment relationship is governed by this Act as a minimum standard.
+  </div>
+  <h3>Where the Employment Act Applies at KTB</h3>
+  <div class="grid-2">
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F4CB; Staff Contracts &amp; Onboarding</div>
+      <div class="obl-card-body">All KTB employees on contracts of 3 months or more must have written contracts with prescribed particulars provided within 2 months of starting.</div>
+      <span class="obl-card-ref">Sections 9, 10</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F4B0; Payroll &amp; Wage Deductions</div>
+      <div class="obl-card-body">KTB Finance/HR must pay wages in full, provide itemised pay slips, and only make lawful deductions. No deduction may exceed two-thirds of wages at any time.</div>
+      <span class="obl-card-ref">Sections 17, 19, 20</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F33F; Annual, Maternity &amp; Sick Leave</div>
+      <div class="obl-card-body">KTB must grant at least 21 working days annual leave, 3 months maternity leave with full pay, 2 weeks paternity leave, and prescribed sick leave to all eligible staff.</div>
+      <span class="obl-card-ref">Sections 28, 29, 30</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F91D; Event &amp; Casual Staff</div>
+      <div class="obl-card-body">KTB hires casual staff for events and conferences. If any casual worker works continuously for 1 month, their contract automatically converts to a monthly-paid contract.</div>
+      <span class="obl-card-ref">Section 37</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x2696;&#xFE0F; Disciplinary Procedures</div>
+      <div class="obl-card-body">Before dismissing a KTB employee for misconduct or poor performance, HR must explain the reason in a language the employee understands and allow them to respond.</div>
+      <span class="obl-card-ref">Section 41</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F6AB; Anti-Discrimination in Hiring</div>
+      <div class="obl-card-body">KTB's recruitment team cannot discriminate against applicants on grounds of race, sex, religion, disability, pregnancy, HIV status, marital status, nationality or political opinion.</div>
+      <span class="obl-card-ref">Section 5</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F4DC; Sexual Harassment Policy</div>
+      <div class="obl-card-body">KTB employs more than 20 employees and is therefore legally required to issue a written sexual harassment policy statement, shared with all staff.</div>
+      <span class="obl-card-ref">Section 6(2)</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F3E0; Housing Allowance Obligation</div>
+      <div class="obl-card-body">KTB must either provide reasonable housing near the workplace OR pay a sufficient housing allowance. Consolidated-salary contracts that include a housing element satisfy this requirement.</div>
+      <span class="obl-card-ref">Section 31</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F4CA; Vacancy Notifications</div>
+      <div class="obl-card-body">KTB employs more than 25 employees. Every job vacancy must be formally notified to the Director of Employment in the prescribed form, including job details and qualifications.</div>
+      <span class="obl-card-ref">Sections 76, 77</span>
+    </div>
+    <div class="obl-card">
+      <div class="obl-card-title">&#x1F4C1; Employment Records</div>
+      <div class="obl-card-body">KTB HR must maintain written records of all employees with prescribed particulars including leave records, warning letters, and wage statements accessible for the preceding 36 months.</div>
+      <span class="obl-card-ref">Section 74</span>
+    </div>
+  </div>
+  <h3>Scenario &mdash; Casual Worker Conversion</h3>
+  <div class="scenario">
+    <div class="scenario-head">&#x1F4CC; Scenario: The Events Casual Worker</div>
+    <div class="scenario-body">
+      KTB hires David as a casual event steward for the annual Kenya Tourism Expo. The event runs for 6 weeks. David works every day for the entire 6 weeks. At the end, KTB pays him daily rates and thanks him for his service &mdash; no notice, no additional entitlements. Has KTB complied with the Employment Act?
+      <br><br>
+      <button class="scenario-toggle" onclick="toggleScenario(this)">Reveal Answer</button>
+      <div class="scenario-answer">
+        <strong>No &mdash; KTB has not complied.</strong> Under Section 37(1)(a), when a casual employee works continuously for a period amounting to not less than one month, the contract is automatically deemed to be one where wages are paid monthly and Section 35(1)(c) applies &mdash; requiring 28 days' notice of termination. David worked 6 weeks, well over one month. KTB was required to give him proper written notice or payment in lieu. Simply paying daily rates and dismissing him is unlawful.
+      </div>
+    </div>
+  </div>
+  <h3>Scenario &mdash; Overseas Assignment</h3>
+  <div class="scenario">
+    <div class="scenario-head">&#x1F4CC; Scenario: The London Marketing Posting</div>
+    <div class="scenario-body">
+      KTB assigns Grace, a Marketing Officer, to the KTB London office for 3 months. Her existing contract says nothing about overseas assignments. Grace asks HR what currency she will be paid in and what happens when she returns. HR says "your normal contract applies."
+      <br><br>
+      <button class="scenario-toggle" onclick="toggleScenario(this)">Reveal Answer</button>
+      <div class="scenario-answer">
+        <strong>HR's response is non-compliant.</strong> Under Section 10(3)(f), where an employee works outside Kenya for more than one month, the written contract must specify: (i) the period of overseas work, (ii) the currency of payment while abroad, (iii) any additional remuneration or benefits, and (iv) terms for the employee's return to Kenya. These must be provided before Grace leaves. KTB HR must issue a written addendum to Grace's contract covering all four points prior to her departure.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3 OBLIGATIONS -->
+<div class="slide" id="slide-3">
+  <div class="section-heading">Section 3 &mdash; Core Obligations &amp; Principles</div>
+  <div class="section-sub">Personal obligations that apply to every KTB staff member</div>
+  <div class="callout teal">
+    These obligations are <strong>personal</strong> &mdash; they apply to you as an individual employee, manager, or HR officer, not just to KTB as an institution. Acting contrary to these obligations may expose you personally to disciplinary action or criminal liability.
+  </div>
+  <h3>DO / DON'T &mdash; Employment Obligations</h3>
+  <table class="dodonttable">
+    <tr>
+      <th class="do-h">&#x2705; YOU MUST / YOU MAY</th>
+      <th class="dont-h">&#x274C; YOU MUST NOT</th>
+    </tr>
+    <tr>
+      <td class="do">Provide every employee on a 3-month+ contract with a written contract within 2 months of starting (Section 10)</td>
+      <td class="dont">Use or assist in recruiting, trafficking or using forced labour under any circumstances (Section 4)</td>
+    </tr>
+    <tr>
+      <td class="do">Ensure wage payments are made in cash or by bank transfer, in Kenyan shillings, on a working day during working hours (Section 17)</td>
+      <td class="dont">Discriminate against any employee or applicant based on race, sex, pregnancy, disability, HIV status, religion or political opinion (Section 5)</td>
+    </tr>
+    <tr>
+      <td class="do">Grant at least 21 working days annual leave with full pay after every 12 months of service (Section 28)</td>
+      <td class="dont">Pay wages at a place where alcohol is sold or readily available, except to staff employed there (Section 17)</td>
+    </tr>
+    <tr>
+      <td class="do">Explain any disciplinary allegations in a language the employee understands before terminating employment (Section 41)</td>
+      <td class="dont">Terminate employment due to pregnancy, union membership, HIV status, disability, race, religion, or an employee's exercise of their legal rights (Section 46)</td>
+    </tr>
+    <tr>
+      <td class="do">Issue a certificate of service to any employee who has worked 4 or more consecutive weeks upon termination (Section 51)</td>
+      <td class="dont">Make wage deductions exceeding two-thirds of an employee's wages at any one time (Section 19)</td>
+    </tr>
+    <tr>
+      <td class="do">Keep written employment records for all employees, accessible to authorised officers for the preceding 36 months (Section 74)</td>
+      <td class="dont">Dismiss an employee summarily without genuine gross misconduct and without first hearing the employee's representations (Sections 41, 44)</td>
+    </tr>
+    <tr>
+      <td class="do">Provide female employees 3 months maternity leave with full pay and male employees 2 weeks paternity leave with full pay (Section 29)</td>
+      <td class="dont">Make false entries in employment registers or records required by the Act (Section 75)</td>
+    </tr>
+    <tr>
+      <td class="do">Issue a written sexual harassment policy to all staff since KTB employs 20 or more people (Section 6(2))</td>
+      <td class="dont">Employ a child under 13 years of age in any work whatsoever (Section 56(1))</td>
+    </tr>
+    <tr>
+      <td class="do">Pay severance of at least 15 days' pay per completed year of service in the event of redundancy (Section 40)</td>
+      <td class="dont">Employ a child between 13&ndash;16 in an industrial undertaking to attend to machinery (Section 58)</td>
+    </tr>
+  </table>
+  <div class="callout red">
+    <strong>&#x26A0;&#xFE0F; Criminal Liability Alert &mdash; These acts carry personal criminal liability:</strong>
+    <ul style="margin-top:8px;padding-left:18px;line-height:2.1;font-size:12.5px;">
+      <li>Using or assisting in forced labour &mdash; <strong>fine up to Ksh 500,000 or 2 years imprisonment</strong> (Section 4(3))</li>
+      <li>Failure to provide written employment particulars / pay slips &mdash; <strong>fine up to Ksh 100,000 or 2 years imprisonment</strong> (Section 16(4))</li>
+      <li>Wilfully failing to pay wages &mdash; <strong>fine up to Ksh 100,000 or 2 years imprisonment</strong> (Section 17(10))</li>
+      <li>Unlawful deductions not remitted to beneficiary &mdash; <strong>fine up to Ksh 100,000 or 2 years imprisonment</strong> (Section 19(5))</li>
+      <li>Making false entries in employment records &mdash; <strong>fine up to Ksh 100,000 or 6 months imprisonment</strong> (Section 75)</li>
+      <li>Child death or injury due to employer breach of child labour provisions &mdash; <strong>fine up to Ksh 500,000 or 12 months imprisonment</strong> (Section 65)</li>
+    </ul>
+  </div>
+  <h3>Scenario &mdash; Performance Dismissal</h3>
+  <div class="scenario">
+    <div class="scenario-head">&#x1F4CC; Scenario: The Instant Dismissal</div>
+    <div class="scenario-body">
+      A KTB supervisor tells a junior procurement officer on a Friday afternoon: "Your work has been poor. You're dismissed effective immediately. Clear your desk." The employee is given no warning letter, no hearing, and no explanation of what was wrong. The supervisor tells HR it was "obvious" the employee wasn't performing.
+      <br><br>
+      <button class="scenario-toggle" onclick="toggleScenario(this)">Reveal Answer</button>
+      <div class="scenario-answer">
+        <strong>This dismissal is unlawful and unfair.</strong> Section 41(1) requires that before terminating for poor performance, the employer must explain the reason in a language the employee understands and allow the employee to have a colleague or union representative present. Section 41(2) requires the employer to hear the employee's representations. No warning letters, no hearing, and no explanation means KTB has not followed fair procedure. Under Section 45(2)(c), termination in the absence of fair procedure is unfair. The employee can file a complaint within 3 months (Section 47), and the Employment and Labour Relations Court can order reinstatement or up to 12 months' gross salary in compensation (Section 49(1)(c)).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4 COMPLIANCE -->
+<div class="slide" id="slide-4">
+  <div class="section-heading">Section 4 &mdash; Compliance Requirements &amp; Timelines</div>
+  <div class="section-sub">Deadlines, declarations and mandatory procedures</div>
+  <h3>Employment Act &mdash; Key Timelines &amp; Compliance Obligations</h3>
+  <table class="timeline-table">
+    <tr><th>Obligation</th><th>Trigger</th><th>Deadline</th><th>Consequence of Breach</th></tr>
+    <tr><td>Provide written contract with employment particulars</td><td>Employment starts (contract &ge;3 months)</td><td><span class="badge-red">2 months</span></td><td>Fine up to Ksh 100,000 or 2 years imprisonment (Section 16)</td></tr>
+    <tr><td>Notify changes to employment particulars</td><td>Any change to terms or conditions</td><td><span class="badge-red">1 month</span></td><td>Same penalty as above (Section 13 / 16)</td></tr>
+    <tr><td>Issue itemised pay statement</td><td>Each wage or salary payment</td><td><span class="badge-amber">At or before pay date</span></td><td>Fine up to Ksh 100,000 or 2 years imprisonment (Section 16)</td></tr>
+    <tr><td>Re-issue consolidated statement of deductions</td><td>12 months from first statement and thereafter</td><td><span class="badge-amber">Every 12 months</span></td><td>Non-compliance (Section 21(4))</td></tr>
+    <tr><td>Notify redundancy &mdash; union member employees</td><td>Decision to make employees redundant</td><td><span class="badge-red">1 month prior</span></td><td>Termination deemed unlawful; severance still payable (Section 40)</td></tr>
+    <tr><td>Report dismissal to labour officer in writing</td><td>Dismissal of any employee</td><td><span class="badge-red">7 days</span></td><td>Non-compliance (Section 18(5)(b))</td></tr>
+    <tr><td>Pay wages to deceased employee's legal representative</td><td>Receipt of proof of legal capacity</td><td><span class="badge-red">30 days</span></td><td>Civil liability (Section 24(2))</td></tr>
+    <tr><td>Deliver deceased wages to labour officer (no claimant)</td><td>3 months after death with no claim filed</td><td><span class="badge-amber">On expiry of 3 months</span></td><td>Civil liability (Section 24(4))</td></tr>
+    <tr><td>Notify vacancy to Director of Employment</td><td>Vacancy arises (employers with 25+ employees)</td><td><span class="badge-amber">Upon occurrence</span></td><td>Fine up to Ksh 100,000 or 6 months imprisonment (Section 81)</td></tr>
+    <tr><td>Notify filling or abolition of notified vacancy</td><td>Post is filled or abolished</td><td><span class="badge-red">2 weeks</span></td><td>Fine up to Ksh 100,000 or 6 months imprisonment (Section 77 / 81)</td></tr>
+    <tr><td>Notify termination or lay-off to employment office</td><td>Any termination or lay-off</td><td><span class="badge-red">2 weeks</span></td><td>Fine up to Ksh 100,000 or 6 months imprisonment (Section 78 / 81)</td></tr>
+    <tr><td>Submit annual return of employees to Director</td><td>End of each calendar year</td><td><span class="badge-red">31 January</span></td><td>Fine up to Ksh 100,000 or 6 months imprisonment (Section 79 / 81)</td></tr>
+    <tr><td>File complaint for unfair termination</td><td>Date of dismissal or termination</td><td><span class="badge-red">3 months</span></td><td>Claim may be time-barred (Section 47(1))</td></tr>
+    <tr><td>Keep employment records accessible</td><td>Ongoing; officer may request at any time</td><td><span class="badge-amber">Preceding 36 months</span></td><td>Fine up to Ksh 100,000 or 6 months (Sections 74 / 75)</td></tr>
+    <tr><td>Keep written employment particulars after termination</td><td>Termination of each employment</td><td><span class="badge-amber">5 years</span></td><td>Burden of proof shifts to employer in any dispute (Section 10(6))</td></tr>
+    <tr><td>Limitation on civil claims under the Act</td><td>Act, neglect or default complained of</td><td><span class="badge-red">3 years</span></td><td>Claim time-barred (Section 89)</td></tr>
+  </table>
+  <h3>Redundancy &mdash; All Steps Required (Section 40)</h3>
+  <div class="callout gold">
+    <strong>When KTB needs to declare redundancies, ALL of the following must be completed:</strong>
+    <ol style="padding-left:18px;margin-top:8px;line-height:2.2;font-size:13px;">
+      <li>Notify the relevant trade union AND the area Labour Officer at least <strong>1 month before</strong> the intended redundancy date (for union members).</li>
+      <li>For non-union employees, notify the employee <strong>personally in writing</strong> AND the Labour Officer.</li>
+      <li>Select employees using fair criteria: seniority, skill, ability and reliability.</li>
+      <li>Pay any outstanding annual leave in cash to each affected employee.</li>
+      <li>Give at least <strong>1 month's notice</strong> or 1 month's wages in lieu of notice.</li>
+      <li>Pay <strong>severance of at least 15 days' pay for each completed year of service.</strong></li>
+    </ol>
+  </div>
+  <h3>Probationary Contracts &mdash; Key Rules (Section 42)</h3>
+  <div class="callout teal">
+    A probationary contract must be in writing. The period must not exceed 6 months &mdash; but may be extended with the employee's written agreement for a further 6 months (maximum aggregate: 12 months). No employee may be kept on probation beyond this. Either party may terminate with just <strong>7 days' notice</strong> (or 7 days' wages in lieu). The full hearing requirements of Section 41 do <em>not</em> apply to probationary terminations.
+  </div>
+  <h3>Scenario &mdash; Redundancy Process</h3>
+  <div class="scenario">
+    <div class="scenario-head">&#x1F4CC; Scenario: The Restructure</div>
+    <div class="scenario-body">
+      KTB undergoes an organisational restructure. Three positions in the Events department are declared redundant on a Monday. By Wednesday, the three staff members are called in, told their positions no longer exist, handed letters effective immediately, and paid only their final month's salary. No union was notified.
+      <br><br>
+      <button class="scenario-toggle" onclick="toggleScenario(this)">Reveal Answer</button>
+      <div class="scenario-answer">
+        <strong>KTB has failed to comply with Section 40 on multiple counts.</strong> The affected employees were members of a union, so KTB was required to notify the union AND the Labour Officer at least <em>one month</em> before the termination date &mdash; not two days. Outstanding annual leave was not paid in cash. One month's notice (or payment in lieu) was not provided. Severance at 15 days per completed year of service was not paid. All three terminations are therefore unlawful. KTB faces potential reinstatement orders or compensation of up to 12 months' gross salary per employee, plus exposure to severance claims.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 CONSEQUENCES -->
+<div class="slide" id="slide-5">
+  <div class="section-heading">Section 5 &mdash; Consequences, Response Steps &amp; Key Contacts</div>
+  <div class="section-sub">Penalties, what to do when things go wrong, and who to contact</div>
+  <h3>Penalty Provisions (Plain Language)</h3>
+  <table class="timeline-table">
+    <tr><th>Offence</th><th>Fine</th><th>Imprisonment</th><th>Section</th></tr>
+    <tr><td>Forced labour / trafficking for labour</td><td>Up to Ksh 500,000</td><td>Up to 2 years</td><td>4(3)</td></tr>
+    <tr><td>Failure to provide written employment particulars or pay slips</td><td>Up to Ksh 100,000</td><td>Up to 2 years</td><td>16(4)</td></tr>
+    <tr><td>Wilful failure to pay wages; paying in prohibited place</td><td>Up to Ksh 100,000</td><td>Up to 2 years</td><td>17(10)</td></tr>
+    <tr><td>Unlawful deductions not remitted to beneficiary</td><td>Up to Ksh 100,000</td><td>Up to 2 years</td><td>19(5)</td></tr>
+    <tr><td>Wrongfully withheld or deducted remuneration</td><td>Up to Ksh 100,000</td><td>Up to 2 years</td><td>25</td></tr>
+    <tr><td>Failure to issue certificate of service (wilful neglect)</td><td>Up to Ksh 100,000</td><td>Up to 6 months</td><td>51(4)</td></tr>
+    <tr><td>Employing a child in worst forms of child labour</td><td>Up to Ksh 200,000</td><td>Up to 12 months</td><td>64(2)</td></tr>
+    <tr><td>Death or injury of a child due to employer breach</td><td>Up to Ksh 500,000</td><td>Up to 12 months</td><td>65(1)</td></tr>
+    <tr><td>Failure to notify vacancies / terminations (25+ employers)</td><td>Up to Ksh 100,000</td><td>Up to 6 months</td><td>81</td></tr>
+    <tr><td>Inducing a person to work abroad without formal contract</td><td>Up to Ksh 200,000</td><td>Up to 6 months</td><td>85</td></tr>
+    <tr><td>False entries in employment records</td><td>Up to Ksh 100,000</td><td>Up to 6 months</td><td>75</td></tr>
+    <tr><td>General offence (no specific penalty stated)</td><td>Up to Ksh 50,000</td><td>Up to 3 months</td><td>87</td></tr>
+  </table>
+  <h3>Remedies for Unfair Termination (Section 49)</h3>
+  <div class="callout gold">
+    Where a labour officer finds a dismissal unjustified, they may recommend the employer pay the affected employee:
+    <ul style="padding-left:18px;margin-top:8px;line-height:2;font-size:13px;">
+      <li>Wages for the notice period the employee was entitled to</li>
+      <li>Proportionate wages for work done before dismissal</li>
+      <li>Up to <strong>12 months' gross salary</strong> as compensation</li>
+      <li><strong>Reinstatement</strong> or re-engagement in comparable work at the same wage</li>
+    </ul>
+  </div>
+  <h3>Step-by-Step: What to Do When a Problem Arises</h3>
+  <ol style="padding-left:20px;font-size:13px;line-height:2.3;margin-bottom:16px;">
+    <li><strong>Stop immediately.</strong> If you suspect an employment practice may breach the Act, pause before proceeding and seek advice.</li>
+    <li><strong>Contact the Legal Directorate.</strong> Reach Allan Njoroge or Doreen Mutunga for immediate guidance on any employment dispute or potential breach.</li>
+    <li><strong>Document everything.</strong> Ensure the employment file is complete &mdash; written contract, warning letters, hearing notes, correspondence. The burden of proof in disputes rests on the employer (Section 43).</li>
+    <li><strong>Follow prescribed procedures.</strong> For disciplinary matters, use the Section 41 process. For redundancy, follow Section 40 in full.</li>
+    <li><strong>If a complaint is filed,</strong> respond promptly to the Labour Officer. All Employment and Labour Relations Court proceedings should be managed through the Legal Directorate.</li>
+    <li><strong>Remediate promptly.</strong> If wages have been wrongfully withheld or deducted, repay them immediately. Courts order repayment in addition to fines (Section 25).</li>
+  </ol>
+  <h3>Key Takeaways</h3>
+  <ul class="takeaways">
+    <li><span class="takeaway-num">1</span>Every KTB employee on a contract of 3+ months must have a written contract with all prescribed particulars &mdash; issued within 2 months of starting.</li>
+    <li><span class="takeaway-num">2</span>Wages must be paid in full, in Kenyan shillings, on a working day. Lawful deductions must never exceed two-thirds of wages.</li>
+    <li><span class="takeaway-num">3</span>No dismissal for misconduct or poor performance is lawful without a prior hearing, in the employee's language, with the right to representation.</li>
+    <li><span class="takeaway-num">4</span>Redundancy without proper notice, fair selection, paid-out leave and 15 days' severance per completed year of service is unlawful.</li>
+    <li><span class="takeaway-num">5</span>Employment Act violations carry personal criminal liability &mdash; individual managers and HR officers can be fined or imprisoned, not only KTB as an organisation.</li>
+  </ul>
+  <h3>Contact the Legal Directorate</h3>
+  <div class="contacts">
+    <div class="contact-card">
+      <div class="contact-avatar">AN</div>
+      <div>
+        <div class="contact-name">Allan Njoroge</div>
+        <div class="contact-role">Director of Legal Services &amp; Corporation Secretary</div>
+        <div class="contact-email">allan@ktb.go.ke</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-avatar">DM</div>
+      <div>
+        <div class="contact-name">Doreen Mutunga</div>
+        <div class="contact-role">Legal Counsel, KTB Directorate of Legal Services</div>
+        <div class="contact-email">dmutunga@ktb.go.ke</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6 QUIZ -->
+<div class="slide" id="slide-6">
+  <div class="section-heading">Knowledge Quiz</div>
+  <div class="section-sub">10 questions &middot; Pass mark: 70% (7/10)</div>
+  <div class="quiz-dots" id="quiz-dots"></div>
+  <div class="quiz-progress" id="quiz-progress">Question 1 of 10</div>
+  <div class="quiz-score-bar"><div class="quiz-score-fill" id="quiz-score-fill" style="width:0%"></div></div>
+  <div id="quiz-container"></div>
+</div>
+
+<!-- SLIDE 16 RESULTS -->
+<div class="slide" id="slide-16">
+  <div class="results-card">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <div class="results-msg" id="results-msg"></div>
+    <div class="cert-badge" id="cert-badge">
+      <div class="cert-icon">&#x1F3C5;</div>
+      <div class="cert-title">Employment Act (Cap. 226)</div>
+      <div class="cert-sub" id="cert-date"></div>
+      <div class="cert-sub" style="font-weight:700;color:#0a5c5c;margin-top:4px;">KTB Legal Hub</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">&#x1F5A8; Print completion record</button>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="bottombar">
+  <div class="bottombar-label" id="bottombar-label"></div>
+  <div class="bottombar-nav">
+    <button class="btn btn-back" id="btn-back" onclick="navigate(-1)">&larr; Back</button>
+    <div class="understood-wrap" id="understood-wrap" onclick="toggleUnderstood()">
+      <div id="understood-btn"></div>
+      <span class="understood-label">I have read and understood</span>
+    </div>
+    <button class="btn btn-next" id="btn-next" onclick="navigate(1)" disabled>Next &rarr;</button>
+  </div>
+</div>
+
+</div><!-- /shell -->
+
+<script>
+const SLIDE_IDS = [0,1,2,3,4,5,6,16];
+let currentSlide = 0;
+let understood = false;
+let sectionsDone = new Set([0]);
+let quizCurrentQ = 0;
+let quizAnswers = [];
+let quizScore = 0;
+let quizAnswered = false;
+
+const sectionLabels = {
+  0:'', 1:'Section 1 \u2014 Foundation', 2:'Section 2 \u2014 KTB Context',
+  3:'Section 3 \u2014 Core Obligations', 4:'Section 4 \u2014 Compliance',
+  5:'Section 5 \u2014 Consequences', 6:'Quiz', 16:''
+};
+
+const quizData = [
+  {
+    q:"Under the Employment Act, written employment particulars must be provided to an employee within how many months of commencing employment?",
+    opts:["A. One month","B. Two months","C. Three months","D. Six months"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 10(1) states that the written employment particulars must be given not later than two months after the beginning of employment.",
+    feedbackWrong:"Incorrect. Under Section 10(1), written employment particulars must be provided not later than two months after the beginning of employment \u2014 not one, three, or six months."
+  },
+  {
+    q:"A KTB casual event worker works continuously for 5 weeks. What does Section 37 of the Employment Act say happens to their contract?",
+    opts:["A. It remains a casual contract throughout","B. It is automatically deemed a monthly-paid contract","C. The employee must apply to a labour officer for conversion","D. The contract ends at the 4-week mark"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 37(1)(a) states that where a casual employee works for a continuous period amounting to not less than one month, the contract is automatically deemed to be one where wages are paid monthly.",
+    feedbackWrong:"Incorrect. Under Section 37(1)(a), when a casual employee works continuously for one month or more, the contract converts automatically to a monthly-paid contract. No application to a labour officer is required."
+  },
+  {
+    q:"Which of the following is NOT a valid ground for dismissal or disciplinary action under Section 46 of the Employment Act?",
+    opts:["A. Wilful neglect to perform duties","B. Becoming intoxicated during working hours","C. Filing a complaint against the employer with a labour officer","D. Committing a criminal offence against the employer's property"],
+    correct:2,
+    feedbackCorrect:"Correct. Section 46(h) explicitly protects employees who initiate complaints or legal proceedings against their employer. This is a prohibited reason for dismissal, not a valid ground.",
+    feedbackWrong:"Incorrect. Section 46(h) categorically states that an employee's initiation of a complaint or legal proceedings against their employer does not constitute a fair reason for dismissal or discipline."
+  },
+  {
+    q:"Under Section 40, what is the minimum severance pay required when KTB declares an employee redundant?",
+    opts:["A. 7 days' pay per year of service","B. 10 days' pay per year of service","C. 15 days' pay per completed year of service","D. One month's pay per year of service"],
+    correct:2,
+    feedbackCorrect:"Correct. Section 40(1)(g) requires severance pay of not less than fifteen days' pay for each completed year of service.",
+    feedbackWrong:"Incorrect. Section 40(1)(g) requires at least fifteen days' pay for each completed year of service as severance \u2014 not seven, ten, or one month per year."
+  },
+  {
+    q:"KTB employs 35 staff. What is KTB's specific legal obligation under Section 6(2) of the Employment Act?",
+    opts:["A. KTB must investigate sexual harassment complaints within 30 days","B. KTB must issue a written sexual harassment policy statement after consulting staff","C. KTB must appoint a dedicated sexual harassment officer","D. No obligation \u2014 Section 6 only covers organisations with 50+ employees"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 6(2) requires any employer with 20 or more employees to issue a written policy statement on sexual harassment after consulting employees or their representatives.",
+    feedbackWrong:"Incorrect. Section 6(2) applies to employers with 20 or more employees. KTB, with 35 staff, must have a written sexual harassment policy in place and must bring it to the attention of all staff."
+  },
+  {
+    q:"A female KTB employee is terminated shortly after informing her manager she is pregnant. Under Section 46(a), this termination is:",
+    opts:["A. Permissible if there is also a documented performance concern","B. An unfair termination with no exceptions","C. Permitted if the employee has served less than 13 months","D. Subject to a 3-month probationary review process"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 46(a) explicitly states that a female employee's pregnancy, or any reason connected with pregnancy, does not constitute a fair reason for dismissal. There are no exceptions.",
+    feedbackWrong:"Incorrect. Section 46(a) categorically prohibits termination due to pregnancy or any reason connected with pregnancy. There are no exceptions \u2014 not for performance concerns, length of service, or any other reason."
+  },
+  {
+    q:"Under Section 19(3), what is the maximum total amount that may be deducted from an employee's wages at any one time?",
+    opts:["A. One-third of wages","B. One-half of wages","C. Two-thirds of wages","D. Three-quarters of wages"],
+    correct:2,
+    feedbackCorrect:"Correct. Section 19(3) sets the cap at two-thirds of wages. No combination of lawful deductions can exceed this limit at any one time.",
+    feedbackWrong:"Incorrect. Section 19(3) provides that the total of all deductions at any one time shall not exceed two-thirds of wages \u2014 not one-third, one-half, or three-quarters."
+  },
+  {
+    q:"An employee files a complaint of unfair termination. How long does the employee have from the date of dismissal to file this complaint under Section 47?",
+    opts:["A. One month","B. Three months","C. Six months","D. One year"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 47(1) states that an employee must present a complaint of summary dismissal or unfair termination within three months of the date of dismissal.",
+    feedbackWrong:"Incorrect. Section 47(1) provides a three-month window from the date of dismissal to present a complaint to a labour officer. Missing this window may bar the claim."
+  },
+  {
+    q:"KTB has 30 employees. Under Section 77, when must KTB notify the employment service office about filling a previously notified vacancy?",
+    opts:["A. One month after filling the post","B. Within two weeks of filling or abolishing the post","C. At the end of the year in the annual return only","D. Only if the post is abolished, not if it is filled"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 77 requires that when a notified vacancy is filled or abolished, the employer must notify the employment service office in writing within two weeks.",
+    feedbackWrong:"Incorrect. Section 77 requires notification within two weeks of filling or abolishing a post. The annual return (Section 79) is a separate, additional obligation."
+  },
+  {
+    q:"Under Section 29, what are the maternity and paternity leave entitlements for KTB employees?",
+    opts:["A. Maternity: 2 months full pay; Paternity: 1 week full pay","B. Maternity: 3 months full pay; Paternity: 2 weeks full pay","C. Maternity: 3 months half pay; Paternity: 2 weeks half pay","D. Maternity: 6 weeks full pay; Paternity: 1 week full pay"],
+    correct:1,
+    feedbackCorrect:"Correct. Section 29(1) provides three months maternity leave with full pay; Section 29(8) provides two weeks paternity leave with full pay. Both are mandatory minimums.",
+    feedbackWrong:"Incorrect. Section 29(1) provides three months maternity leave with full pay, and Section 29(8) provides two weeks paternity leave with full pay. Both entitlements are mandatory minimums that cannot be contracted away."
+  }
+];
+
+function init() {
+  buildPips();
+  buildQuizDots();
+  renderQuizQuestion(0);
+  updateUI();
+}
+
+function buildPips() {
+  const row = document.getElementById('pips-row');
+  row.innerHTML = '';
+  SLIDE_IDS.forEach((s,i) => {
+    const d = document.createElement('div');
+    d.className = 'pip'; d.id = 'pip-'+i;
+    row.appendChild(d);
+  });
+}
+
+function buildQuizDots() {
+  const c = document.getElementById('quiz-dots');
+  c.innerHTML = '';
+  for(let i=0;i<10;i++) {
+    const d = document.createElement('div');
+    d.className = 'quiz-dot'; d.id = 'qdot-'+i; d.textContent = i+1;
+    c.appendChild(d);
+  }
+}
+
+function navigate(dir) {
+  const idx = SLIDE_IDS.indexOf(currentSlide);
+  if(dir === 1) {
+    if(currentSlide >= 1 && currentSlide <= 5) markSectionDone(currentSlide);
+    if(currentSlide === 6) return;
+    const ni = idx+1;
+    if(ni < SLIDE_IDS.length) goToSlide(SLIDE_IDS[ni]);
+  } else {
+    const pi = idx-1;
+    if(pi >= 0) goToSlide(SLIDE_IDS[pi]);
+  }
+}
+
+function goToSlide(sid) {
+  document.getElementById('slide-'+currentSlide).classList.remove('active');
+  document.getElementById('tab-'+currentSlide) && document.getElementById('tab-'+currentSlide).classList.remove('active');
+  currentSlide = sid;
+  document.getElementById('slide-'+sid).classList.add('active');
+  document.getElementById('tab-'+sid) && document.getElementById('tab-'+sid).classList.add('active');
+  document.getElementById('content-area').scrollTop = 0;
+  understood = false;
+  updateUI();
+}
+
+function markSectionDone(sid) {
+  sectionsDone.add(sid);
+  const t = document.getElementById('tab-'+sid);
+  if(t) { t.classList.add('done'); t.classList.remove('active'); }
+}
+
+function updateUI() {
+  const idx = SLIDE_IDS.indexOf(currentSlide);
+  SLIDE_IDS.forEach((sid,i) => {
+    const p = document.getElementById('pip-'+i);
+    if(!p) return;
+    p.className = 'pip' + (i<idx?' done':i===idx?' active':'');
+  });
+  document.getElementById('bottombar-label').textContent = sectionLabels[currentSlide]||'';
+  const btnBack = document.getElementById('btn-back');
+  const btnNext = document.getElementById('btn-next');
+  const uWrap = document.getElementById('understood-wrap');
+  btnBack.style.display = currentSlide===0?'none':'';
+  if(currentSlide===0) {
+    uWrap.classList.add('hidden'); btnNext.style.display='none';
+  } else if(currentSlide>=1 && currentSlide<=5) {
+    uWrap.classList.remove('hidden'); btnNext.style.display='';
+    btnNext.disabled = !understood;
+    document.getElementById('understood-btn').className = understood?'checked':'';
+    btnNext.textContent = currentSlide===5?'Go to Quiz \u2192':'Next \u2192';
+  } else if(currentSlide===6) {
+    uWrap.classList.add('hidden'); btnNext.style.display='';
+    btnNext.disabled = !quizAnswered;
+    btnNext.textContent = quizCurrentQ<9?'Next Question \u2192':'See Results \u2192';
+  } else if(currentSlide===16) {
+    uWrap.classList.add('hidden'); btnNext.style.display='none'; btnBack.style.display='none';
+  }
+}
+
+function toggleUnderstood() {
+  understood = !understood;
+  updateUI();
+}
+
+function renderQuizQuestion(qi) {
+  quizAnswered = false;
+  const q = quizData[qi];
+  document.getElementById('quiz-container').innerHTML =
+    '<div class="quiz-question">'+q.q+'</div>' +
+    '<div class="quiz-options">' +
+    q.opts.map((o,oi)=>'<button class="opt-btn" onclick="answerQuestion('+qi+','+oi+')" id="opt-'+qi+'-'+oi+'">'+o+'</button>').join('') +
+    '</div><div class="quiz-feedback" id="quiz-feedback-'+qi+'"></div>';
+  document.getElementById('quiz-progress').textContent = 'Question '+(qi+1)+' of 10';
+  updateQuizDots(); updateScoreBar();
+}
+
+function answerQuestion(qi, oi) {
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const q = quizData[qi];
+  const correct = oi===q.correct;
+  quizAnswers[qi] = correct;
+  if(correct) quizScore++;
+  for(let i=0;i<4;i++) {
+    const b = document.getElementById('opt-'+qi+'-'+i);
+    if(!b) continue;
+    b.disabled = true;
+    if(i===q.correct) b.classList.add(correct&&i===oi?'correct':'reveal');
+    else if(i===oi&&!correct) b.classList.add('wrong');
+  }
+  const fb = document.getElementById('quiz-feedback-'+qi);
+  fb.className = 'quiz-feedback '+(correct?'correct':'wrong');
+  fb.innerHTML = (correct?'<strong>\u2713 Correct!</strong> ':'<strong>\u2717 Incorrect.</strong> ') + (correct?q.feedbackCorrect:q.feedbackWrong);
+  updateQuizDots(); updateScoreBar();
+  setTimeout(enableNext, 900);
+}
+
+function enableNext() {
+  const btn = document.getElementById('btn-next');
+  btn.disabled = false;
+  if(quizCurrentQ<9) {
+    btn.textContent = 'Next Question \u2192';
+    btn.onclick = function(){ quizCurrentQ++; quizAnswered=false; renderQuizQuestion(quizCurrentQ); updateUI(); };
+  } else {
+    btn.textContent = 'See Results \u2192';
+    btn.onclick = showResults;
+  }
+}
+
+function updateQuizDots() {
+  for(let i=0;i<10;i++) {
+    const d = document.getElementById('qdot-'+i);
+    if(!d) continue;
+    d.className = 'quiz-dot' + (quizAnswers[i]===true?' correct':quizAnswers[i]===false?' wrong':i===quizCurrentQ?' current':'');
+  }
+}
+
+function updateScoreBar() {
+  const answered = quizAnswers.filter(a=>a!==undefined).length;
+  document.getElementById('quiz-score-fill').style.width = (answered>0?quizScore/answered*100:0)+'%';
+}
+
+function showResults() {
+  const pass = quizScore>=7;
+  const pct = Math.round(quizScore/10*100);
+  const today = new Date().toLocaleDateString('en-KE',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('results-score').textContent = quizScore+'/10';
+  document.getElementById('results-score').style.color = pass?'var(--primary)':'var(--red)';
+  document.getElementById('results-label').textContent = pass?'\u2713 Module Passed':'\u2717 Not Passed';
+  document.getElementById('results-label').style.color = pass?'var(--green)':'var(--red)';
+  if(pass) {
+    document.getElementById('results-msg').textContent = 'You scored '+pct+'% \u2014 above the 70% pass mark. Your completion has been recorded. Please print this page as your record.';
+    document.getElementById('cert-badge').style.display='';
+    document.getElementById('cert-date').textContent='Completed: '+today;
+    document.querySelector('.btn-print').style.display='';
+  } else {
+    document.getElementById('results-msg').textContent = 'You scored '+pct+'% \u2014 below the 70% pass mark. Please review the module and try again, or contact the Legal Directorate at allan@ktb.go.ke or dmutunga@ktb.go.ke for support.';
+    document.getElementById('cert-badge').style.display='none';
+    document.querySelector('.btn-print').style.display='none';
+  }
+  markSectionDone(6);
+  goToSlide(16);
+  const t16 = document.getElementById('tab-16');
+  if(t16) t16.classList.add('active');
+}
+
+function toggleScenario(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('visible');
+  btn.textContent = ans.classList.contains('visible')?'Hide Answer':'Reveal Answer';
+}
+
+init();
+</script>
+</body>
+</html>
