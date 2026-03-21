@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KTB Training · Public Procurement and Asset Disposal Act, 2015</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1a4a2a;
+  --primary-dark:#0f2e19;
+  --primary-light:#2a6b3e;
+  --gold:#C19A28;
+  --gold-light:#d4b44a;
+  --bg:#f5f3ef;
+  --card:#fff;
+  --text:#23272f;
+  --text-light:#555e6a;
+  --red:#b53030;
+  --red-bg:#fdf0f0;
+  --green:#1a7a3a;
+  --green-bg:#eef8f0;
+  --border:#ddd5ca;
+  --radius:10px;
+}
+html,body{overflow:hidden;height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+.shell{display:grid;grid-template-rows:auto auto auto 1fr auto;height:100vh;overflow:hidden}
+
+/* TOP BAR */
+.topbar{background:var(--primary);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.topbar .logo{font-weight:700;letter-spacing:.5px}
+.topbar .module-label{opacity:.85;font-size:13px}
+
+/* PROGRESS PIPS */
+.progress-bar{background:var(--primary-dark);padding:8px 24px;display:flex;gap:6px;align-items:center}
+.pip{width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,.18);transition:background .3s}
+.pip.filled{background:var(--gold)}
+
+/* SECTION TABS */
+.section-tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .2s}
+.tab.active{color:var(--primary);border-bottom-color:var(--gold)}
+.tab .tick{display:none;color:var(--green);font-weight:700}
+.tab.done .tick{display:inline}
+
+/* CONTENT AREA */
+.content-area{overflow-y:auto;padding:0;scroll-behavior:smooth}
+.slide{display:none;padding:32px 24px 100px;max-width:860px;margin:0 auto;width:100%;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM BAR */
+.bottombar{background:#fff;border-top:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.section-indicator{font-size:13px;color:var(--text-light);font-weight:500;white-space:nowrap}
+.nav-controls{display:flex;align-items:center;gap:12px}
+.understood-wrap{display:flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:#faf8f4;user-select:none}
+#understood-btn{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .2s;font-size:12px;color:transparent;flex-shrink:0}
+#understood-btn.checked{background:var(--gold);border-color:var(--gold);color:#fff}
+.understood-label{font-size:13px;color:var(--text-light);white-space:nowrap}
+.nav-btn{padding:10px 28px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+#btn-prev{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+#btn-prev:hover{background:#e8e4dd}
+#btn-next{background:var(--gold);color:#fff}
+#btn-next:hover{background:var(--gold-light)}
+#btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+/* COVER */
+.cover{text-align:center;padding-top:60px}
+.cover .eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:12px}
+.cover h1{font-size:32px;color:var(--primary);line-height:1.25;margin-bottom:8px}
+.cover .subtitle{font-size:16px;color:var(--text-light);margin-bottom:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:32px}
+.chip{background:var(--primary);color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600}
+.chip.gold{background:var(--gold)}
+.begin-btn{display:inline-block;padding:16px 48px;background:var(--gold);color:#fff;font-size:16px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:all .25s;text-transform:uppercase;letter-spacing:1px}
+.begin-btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 4px 16px rgba(193,154,40,.3)}
+.cover-info{background:var(--green-bg);border:1px solid #b8dfc0;border-radius:var(--radius);padding:20px;margin-top:28px;text-align:left;font-size:14px;line-height:1.65;max-width:620px;margin-left:auto;margin-right:auto}
+.cover-info strong{color:var(--primary)}
+.byline{margin-top:20px;font-size:12px;color:var(--text-light);font-style:italic}
+
+/* SECTION CONTENT */
+.section-title{font-size:24px;color:var(--primary);margin-bottom:6px;font-weight:700}
+.section-num{font-size:13px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.callout{border-left:4px solid var(--gold);background:#faf6eb;padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:20px 0;font-size:14px;line-height:1.7}
+.callout.red{border-left-color:var(--red);background:var(--red-bg)}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout strong{color:var(--primary)}
+p{font-size:15px;line-height:1.75;margin-bottom:14px;color:var(--text)}
+h3{font-size:18px;color:var(--primary-dark);margin:24px 0 10px}
+
+/* TABLE */
+.ref-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.ref-table th{background:var(--primary);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+.ref-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.ref-table tr:nth-child(even) td{background:#faf8f4}
+
+/* OBLIGATIONS GRID */
+.obli-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.obli-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:14px;line-height:1.6}
+.obli-card .activity{font-weight:700;color:var(--primary);margin-bottom:4px}
+.obli-card .issue{color:var(--text-light);margin-bottom:4px}
+.obli-card .ref{font-size:12px;color:var(--gold);font-weight:600}
+
+/* DO / DON'T TABLE */
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.do-col,.dont-col{border-radius:var(--radius);padding:18px;font-size:14px;line-height:1.7}
+.do-col{background:var(--green-bg);border:1px solid #b8dfc0}
+.dont-col{background:var(--red-bg);border:1px solid #e6b8b8}
+.do-col h4{color:var(--green);margin-bottom:10px;font-size:15px}
+.dont-col h4{color:var(--red);margin-bottom:10px;font-size:15px}
+.do-col li,.dont-col li{margin-bottom:6px;padding-left:4px}
+.do-col ul,.dont-col ul{padding-left:18px}
+
+/* SCENARIO */
+.scenario{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:20px 0}
+.scenario .label{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gold);letter-spacing:1px;margin-bottom:8px}
+.scenario .prompt{font-size:15px;line-height:1.7;margin-bottom:14px}
+.reveal-btn{background:var(--primary);color:#fff;padding:8px 20px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer}
+.reveal-btn:hover{background:var(--primary-light)}
+.reveal-text{display:none;margin-top:14px;padding:14px;background:#f0faf3;border-radius:8px;font-size:14px;line-height:1.7;border:1px solid #c5e3cc}
+
+/* TIMELINE TABLE */
+.timeline-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.timeline-table th{background:var(--primary);color:#fff;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.timeline-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.timeline-table tr:nth-child(even) td{background:#faf8f4}
+.badge-red{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+
+/* KEY TAKEAWAYS */
+.takeaway{display:flex;gap:14px;align-items:flex-start;margin:14px 0}
+.takeaway-num{background:var(--gold);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.takeaway-text{font-size:14px;line-height:1.65;padding-top:5px}
+
+/* CONTACT CARDS */
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center}
+.contact-card .name{font-weight:700;color:var(--primary);font-size:15px}
+.contact-card .role{font-size:12px;color:var(--text-light);margin:4px 0 8px}
+.contact-card .email{font-size:13px;color:var(--gold);font-weight:600;word-break:break-all}
+
+/* QUIZ */
+.quiz-header{text-align:center;margin-bottom:20px}
+.quiz-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.qdot{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#888;transition:all .3s}
+.qdot.current{border:2px solid var(--gold);color:var(--gold)}
+.qdot.correct{background:var(--green);color:#fff}
+.qdot.wrong{background:var(--red);color:#fff}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:680px;margin:0 auto}
+.q-card .q-num{font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q-card .q-text{font-size:16px;line-height:1.6;margin-bottom:20px;font-weight:600}
+.q-options{display:grid;gap:10px}
+.q-opt{padding:14px 18px;border:2px solid var(--border);border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;background:#fff;text-align:left;font-family:inherit;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.q-opt:hover{border-color:var(--gold);background:#faf6eb}
+.q-opt .letter{font-weight:700;color:var(--primary);flex-shrink:0}
+.q-opt.selected{border-color:var(--gold);background:#faf6eb}
+.q-opt.correct-answer{border-color:var(--green);background:var(--green-bg)}
+.q-opt.wrong-answer{border-color:var(--red);background:var(--red-bg)}
+.q-opt.reveal-correct{border-color:var(--green);background:var(--green-bg)}
+.q-opt.disabled{pointer-events:none;opacity:.85}
+.q-feedback{margin-top:16px;padding:14px;border-radius:8px;font-size:14px;line-height:1.6;display:none}
+.q-feedback.show{display:block}
+.q-feedback.correct{background:var(--green-bg);border:1px solid #b8dfc0;color:var(--green)}
+.q-feedback.wrong{background:var(--red-bg);border:1px solid #e6b8b8;color:var(--red)}
+.score-bar-wrap{max-width:400px;margin:0 auto 20px;text-align:center}
+.score-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px}
+.score-fill{height:100%;background:var(--gold);transition:width .4s;width:0}
+.score-label{font-size:13px;color:var(--text-light)}
+
+/* RESULTS */
+.results-card{text-align:center;max-width:560px;margin:40px auto;background:var(--card);border-radius:16px;padding:48px 40px;border:2px solid var(--gold)}
+.results-card .big-score{font-size:72px;font-weight:800;line-height:1}
+.results-card .big-score.pass{color:var(--primary)}
+.results-card .big-score.fail{color:var(--red)}
+.results-card .result-label{font-size:22px;font-weight:700;margin:8px 0 16px}
+.results-card .result-label.pass{color:var(--primary)}
+.results-card .result-label.fail{color:var(--red)}
+.results-card .result-msg{font-size:14px;line-height:1.7;color:var(--text-light);margin-bottom:24px}
+.cert-badge{display:inline-block;border:1.5px solid var(--gold);border-radius:10px;padding:12px 28px;margin:20px auto;text-align:center}
+.cert-badge .cert-icon{font-size:20px;margin-bottom:2px}
+.cert-badge .cert-title{font-size:14px;font-weight:700;color:var(--primary)}
+.cert-badge .cert-date{font-size:13px;color:var(--text-light);margin-top:2px}
+.print-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:12px 32px;background:transparent;color:var(--text-light);border:none;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none}
+.print-btn:hover{color:var(--primary)}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .obli-grid,.do-dont,.contacts{grid-template-columns:1fr}
+  .cover h1{font-size:24px}
+  .slide{padding:20px 16px 80px}
+  .q-card{padding:16px}
+  .nav-controls{gap:6px}
+  .understood-wrap{padding:6px 8px}
+  .nav-btn{padding:10px 16px;font-size:13px}
+}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .shell{display:block!important;height:auto!important;overflow:visible!important}
+  .bottombar,.topbar,.progress-bar,.section-tabs{display:none!important}
+  .content-area{overflow:visible!important;height:auto!important}
+  .slide{display:none!important;padding:0!important}
+  #slide-16{display:block!important;padding:40px 24px!important}
+  .results-card{border:2px solid var(--gold);box-shadow:none;margin:60px auto;page-break-inside:avoid}
+  .print-btn{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">KTB LEGAL HUB</div>
+    <div class="module-label">Training Module · Procurement Law</div>
+  </div>
+
+  <!-- PROGRESS PIPS -->
+  <div class="progress-bar" id="progress-bar">
+    <div class="pip" data-pip="0"></div>
+    <div class="pip" data-pip="1"></div>
+    <div class="pip" data-pip="2"></div>
+    <div class="pip" data-pip="3"></div>
+    <div class="pip" data-pip="4"></div>
+    <div class="pip" data-pip="5"></div>
+    <div class="pip" data-pip="6"></div>
+  </div>
+
+  <!-- SECTION TABS -->
+  <div class="section-tabs" id="section-tabs">
+    <div class="tab" data-tab="0" onclick="goToSlide(0)">Cover</div>
+    <div class="tab" data-tab="1" onclick="goToSlide(1)">1 · Foundation <span class="tick">✓</span></div>
+    <div class="tab" data-tab="2" onclick="goToSlide(2)">2 · KTB Context <span class="tick">✓</span></div>
+    <div class="tab" data-tab="3" onclick="goToSlide(3)">3 · Obligations <span class="tick">✓</span></div>
+    <div class="tab" data-tab="4" onclick="goToSlide(4)">4 · Compliance <span class="tick">✓</span></div>
+    <div class="tab" data-tab="5" onclick="goToSlide(5)">5 · Consequences <span class="tick">✓</span></div>
+    <div class="tab" data-tab="6" onclick="goToSlide(6)">Quiz <span class="tick">✓</span></div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area" id="content-area">
+
+    <!-- ===================== SLIDE 0: COVER ===================== -->
+    <div class="slide active" id="slide-0">
+      <div class="cover">
+        <div class="eyebrow">Directorate of Legal Services · KTB</div>
+        <h1>Public Procurement and Asset Disposal Act, 2015</h1>
+        <p class="subtitle">& The Public Procurement and Asset Disposal Regulations, 2020</p>
+        <div class="chips">
+          <span class="chip">⏱ 35 min read</span>
+          <span class="chip">📝 10 quiz questions</span>
+          <span class="chip gold">Pass mark: 70%</span>
+          <span class="chip">📅 Commenced 7 Jan 2016</span>
+          <span class="chip">👥 All KTB Staff</span>
+        </div>
+        <button class="begin-btn" onclick="navigate(1)">Begin Training →</button>
+        <div class="cover-info">
+          <strong>What this module covers:</strong> This training walks you through Kenya's public procurement law — what it requires of you personally, how it applies to KTB's day-to-day operations, the procurement methods and thresholds you must follow, and the serious penalties for getting it wrong. It has <strong>5 sections + a 10-question quiz</strong>. You must tick "I have read and understood" before moving to the next section.
+        </div>
+        <div class="byline">Reviewed and approved by Allan Njoroge, Director of Legal Services &amp; Corporation Secretary, Kenya Tourism Board.</div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 1: FOUNDATION ===================== -->
+    <div class="slide" id="slide-1">
+      <div class="section-num">Section 1 of 5</div>
+      <div class="section-title">What Is the Public Procurement Act?</div>
+
+      <div class="callout">
+        <strong>Why does this matter to you personally?</strong> Every time you request goods, services, or works for KTB — whether it is stationery, a conference venue, a marketing agency, or a travel photographer — you are triggering a procurement process governed by this law. If you influence that process improperly, split a tender to avoid thresholds, or accept a gift from a bidder, <strong>you personally face up to 10 years in prison and a KES 4 million fine</strong> (Section 176). This is not just a rule for the procurement team — it is the law for every KTB staff member.
+      </div>
+
+      <p>The <strong>Public Procurement and Asset Disposal Act (No. 33 of 2015)</strong> is Kenya's primary law governing how all government bodies — including state corporations like KTB — buy goods, hire services, commission works, and dispose of assets. It gives effect to Article 227 of the Constitution, which requires that public procurement be fair, equitable, transparent, competitive, and cost-effective.</p>
+
+      <p>The Act replaced the older Public Procurement and Disposal Act of 2005. It is supplemented by the <strong>Public Procurement and Asset Disposal Regulations, 2020</strong> (Legal Notice No. 69 of 2020), which provide the detailed procedures, thresholds, and forms that procuring entities must follow.</p>
+
+      <h3>Who enforces this law?</h3>
+      <p>The <strong>Public Procurement Regulatory Authority (PPRA)</strong>, established under Section 8 of the Act, monitors, investigates, and enforces compliance. Disputes go to the <strong>Public Procurement Administrative Review Board</strong> (Section 27), and ultimately to the High Court.</p>
+
+      <h3>Key Defined Terms</h3>
+      <table class="ref-table">
+        <tr><th>Term</th><th>What It Means in Plain English</th></tr>
+        <tr><td><strong>Procuring Entity</strong></td><td>Any public body (including KTB) that buys goods, services, or works using public money. (Section 2)</td></tr>
+        <tr><td><strong>Accounting Officer</strong></td><td>The person ultimately responsible for ensuring KTB complies with the Act — the CEO. (Section 44)</td></tr>
+        <tr><td><strong>Procurement Function</strong></td><td>The unit within KTB staffed by procurement professionals who manage the buying process. (Section 47)</td></tr>
+        <tr><td><strong>Evaluation Committee</strong></td><td>An ad hoc committee of KTB staff (with relevant expertise) appointed to evaluate bids for a specific procurement. (Section 46)</td></tr>
+        <tr><td><strong>Tender Security</strong></td><td>A guarantee (up to 2% of the tender value) that a bidder provides to show they are serious and won't withdraw. (Section 61)</td></tr>
+        <tr><td><strong>Performance Security</strong></td><td>A guarantee (up to 10% of contract value) that the winning bidder provides to ensure they deliver on the contract. (Section 142)</td></tr>
+        <tr><td><strong>Disadvantaged Group</strong></td><td>Youth, women, persons with disability, and other categories prescribed — at least 30% of KTB's procurement budget must go to these groups. (Section 53(6))</td></tr>
+        <tr><td><strong>Debarment</strong></td><td>Being banned from participating in any public procurement for at least 3 years due to offences under the Act. (Section 41)</td></tr>
+        <tr><td><strong>Direct Procurement</strong></td><td>Buying from a single supplier without competition — only allowed in very specific circumstances like sole-source or emergencies. (Section 103)</td></tr>
+        <tr><td><strong>Framework Agreement</strong></td><td>A pre-arranged agreement with selected suppliers for items whose quantities aren't known upfront — maximum 3 years. (Section 114)</td></tr>
+      </table>
+
+      <h3>Commencement &amp; Application</h3>
+      <p>The Act received Presidential assent on 18 December 2015 and commenced on <strong>7 January 2016</strong>. It repealed the Public Procurement and Disposal Act, 2005 (No. 3 of 2005). The Act applies to all state organs and public entities, including KTB as a state corporation under the State Corporations Act (Cap. 446). Under Section 4, it covers procurement planning, procurement processing, inventory and asset management, disposal of assets, and contract management.</p>
+    </div>
+
+    <!-- ===================== SLIDE 2: KTB CONTEXT ===================== -->
+    <div class="slide" id="slide-2">
+      <div class="section-num">Section 2 of 5</div>
+      <div class="section-title">How Does Procurement Law Affect KTB?</div>
+
+      <p>KTB is a state corporation established under the Tourism Act (Cap 383). Every KTB department triggers procurement obligations — from marketing campaigns to IT equipment, from event venues to consultancy services. Here are the specific ways this law touches KTB's work:</p>
+
+      <div class="obli-grid">
+        <div class="obli-card">
+          <div class="activity">🎯 Marketing Campaigns &amp; Advertising</div>
+          <div class="issue">Hiring advertising agencies, media buying, social media management, or brand ambassadors requires competitive tendering. You cannot simply re-appoint last year's agency without following procurement procedure.</div>
+          <div class="ref">Sections 91–92 (choice of procurement method)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🏨 Event &amp; Conference Services</div>
+          <div class="issue">Booking venues, catering, AV equipment, and event management for tourism expos and trade shows — all must follow RFQ or open tender thresholds. Splitting a conference budget across multiple small orders to avoid thresholds is a criminal offence.</div>
+          <div class="ref">Section 54 (prohibition on splitting contracts)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">📸 Photography &amp; Content Creation</div>
+          <div class="issue">Commissioning photographers, videographers, or content creators for destination marketing. These are consultancy/service procurements that must follow Section 115–133 if advisory/intellectual in nature, or Part IX if non-consultancy services.</div>
+          <div class="ref">Sections 115–116 (consultancy procurement)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">💻 IT Systems &amp; Digital Platforms</div>
+          <div class="issue">Procuring website development, CRM systems, data analytics platforms, or cybersecurity services. Standardisation or compatibility with existing systems may justify additional procurement from the same supplier — but only under the strict conditions of Section 103(2)(d).</div>
+          <div class="ref">Section 103(2)(d) (direct procurement for standardisation)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🛫 Travel Trade Partnerships</div>
+          <div class="issue">Engaging travel agents, tour operators, or airline partners for joint promotions. If KTB is paying for these services using public funds, the Act applies. International partners may involve additional rules under Section 89 on international tendering.</div>
+          <div class="ref">Section 89 (international tendering)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">📋 Board &amp; Governance</div>
+          <div class="issue">Board members who have interests in companies bidding for KTB contracts must declare those interests and recuse themselves. Failure to do so makes the contract voidable, and the awarding officer must reimburse KTB for all costs. (Section 66(7))</div>
+          <div class="ref">Section 66 (conflict of interest in procurement)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🧹 Asset Disposal</div>
+          <div class="issue">Disposing of old vehicles, office furniture, IT equipment, or obsolete promotional materials. KTB must form a disposal committee (Section 163), follow prescribed disposal methods, and cannot sell assets to its own employees except as expressly allowed (Section 166).</div>
+          <div class="ref">Sections 163–166 (disposal of assets)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">👥 AGPO Reservations (30%)</div>
+          <div class="issue">At least 30% of KTB's procurement budget must be reserved for youth, women, and persons with disability. The procurement plan must demonstrate this allocation and be submitted to PPRA within 60 days of the financial year. (Section 157(10))</div>
+          <div class="ref">Sections 53(6), 157(10) (preference &amp; reservations)</div>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="label">🔍 Scenario — Think Before You Click "Reveal"</div>
+        <div class="prompt">
+          KTB's Marketing Director urgently needs a creative agency to produce content for an upcoming international tourism expo in 3 weeks. The budget is KES 2.8 million. The Director says: "We've worked with Agency X before, they know our brand — just give them the job directly. We don't have time for a tender." What should happen?
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text">
+          <strong>Answer:</strong> At KES 2.8 million for services, this falls within the <strong>Request for Quotations</strong> threshold (up to KES 3 million for services per the Second Schedule). The procurement team should issue an RFQ to at least 3 registered suppliers. Direct procurement under Section 103 is <strong>not</strong> justified here — the urgency was foreseeable (the expo date was known in advance), and Section 103(2)(b) specifically excludes urgency caused by the procuring entity's own delay. Familiarity with a supplier is not a lawful ground for direct procurement. The Marketing Director should have planned this procurement at the start of the financial year under Section 53(2).
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 3: CORE OBLIGATIONS ===================== -->
+    <div class="slide" id="slide-3">
+      <div class="section-num">Section 3 of 5</div>
+      <div class="section-title">Your Core Procurement Obligations</div>
+
+      <p>The Act places obligations not just on KTB as an organisation, but on <strong>you as an individual</strong>. Section 45(5) states clearly: "all public officers or State officers involved in procurement or asset disposal processes shall bear responsibility for their actions and omissions." Here is what you must and must not do:</p>
+
+      <div class="do-dont">
+        <div class="do-col">
+          <h4>✅ DO</h4>
+          <ul>
+            <li><strong>Plan ahead</strong> — ensure your department's procurement needs are in the annual procurement plan before the financial year begins (s.53(2))</li>
+            <li><strong>Confirm budget</strong> — never request a procurement unless funds are confirmed in the approved budget (s.53(8))</li>
+            <li><strong>Use standard documents</strong> — always use the standard tender documents issued by PPRA (s.58)</li>
+            <li><strong>Declare conflicts</strong> — if you, your spouse, child, or business associate has any interest in a bidder, declare it in writing and step away from the process (s.66(5)–(6))</li>
+            <li><strong>Sign the confidentiality form</strong> — before participating in any procurement committee, sign the confidentiality declaration (s.67(2))</li>
+            <li><strong>Keep records for 6 years</strong> — all procurement documents must be maintained for at least 6 years after contract completion (s.68(1))</li>
+            <li><strong>Report contract awards</strong> — ensure all awards are published on KTB's notice board and website within 14 days of signing (Reg. 128)</li>
+            <li><strong>Respect the 30% AGPO allocation</strong> — actively ensure disadvantaged groups are included in your procurement plans (s.53(6), s.157(10))</li>
+          </ul>
+        </div>
+        <div class="dont-col">
+          <h4>❌ DON'T</h4>
+          <ul>
+            <li><strong>Don't split contracts</strong> — structuring a purchase as multiple smaller ones to avoid thresholds is a criminal offence (s.54(1))</li>
+            <li><strong>Don't influence evaluations</strong> — any attempt to sway the evaluation committee after bids are submitted is an offence leading to disqualification and disciplinary action (s.65)</li>
+            <li><strong>Don't share confidential bid information</strong> — disclosing tender contents, evaluation details, or bid prices carries a 10-year debarment from government work (s.67(5))</li>
+            <li><strong>Don't accept gifts from bidders</strong> — engagement in corrupt or fraudulent practices makes any resulting contract voidable (s.66(1)–(3))</li>
+            <li><strong>Don't award contracts to yourself, spouse, or children</strong> — Section 59 prohibits this absolutely for officers of the procuring entity</li>
+            <li><strong>Don't start procurement without a plan</strong> — an accounting officer who knowingly starts procurement without confirming the budget commits an offence (s.53(9))</li>
+            <li><strong>Don't change tender prices after opening</strong> — the tender sum as read at opening is final and cannot be corrected, revised, or amended (s.82)</li>
+            <li><strong>Don't approve retrospective procurement</strong> — no procurement approval may be backdated except for genuine urgent needs (s.69(2))</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout red">
+        <strong>⚠️ Criminal Liability Warning:</strong> Under Section 176(2), any individual who commits a procurement offence faces a fine of up to <strong>KES 4 million</strong> or imprisonment for up to <strong>10 years</strong>, or both. A body corporate faces a fine of up to <strong>KES 10 million</strong>. In addition, public officers face internal disciplinary action and may be required to personally reimburse KTB for any losses caused by their actions (Section 54(4), Section 66(7)).
+      </div>
+
+      <div class="scenario">
+        <div class="label">🔍 Scenario — Think Before You Click "Reveal"</div>
+        <div class="prompt">
+          You are appointed to the evaluation committee for a KES 15 million tender for tourism promotion services. During evaluation, you realise that one of the bidding firms is partly owned by your brother-in-law. You didn't know this when you were appointed. The evaluation is already halfway done. What should you do?
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text">
+          <strong>Answer:</strong> Under Section 66(5), you <strong>must not</strong> take part in any further procurement proceedings related to this tender. Under Section 66(6), you must immediately <strong>disclose the conflict of interest in writing</strong> to the procuring entity (through the Accounting Officer). A brother-in-law's spouse is a "relative" under Section 66(11)(b) — "a child, parent, brother or sister of a spouse." If you continue participating and the contract is awarded to that firm, Section 66(7) makes the contract terminable, and the awarding officer must reimburse KTB for all costs incurred.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 4: COMPLIANCE REQUIREMENTS ===================== -->
+    <div class="slide" id="slide-4">
+      <div class="section-num">Section 4 of 5</div>
+      <div class="section-title">Procurement Methods, Thresholds &amp; Key Timelines</div>
+
+      <p>The Act prescribes several procurement methods. <strong>Open tendering is the default method</strong> (Section 91(1)). Alternative methods may only be used when the specific conditions set out in the Act are satisfied. The 2020 Regulations set the financial thresholds:</p>
+
+      <h3>Procurement Method Thresholds (Second Schedule, Regulations 2020)</h3>
+      <table class="ref-table">
+        <tr><th>Method</th><th>Goods</th><th>Works</th><th>Services</th></tr>
+        <tr><td><strong>Open Tender</strong> (National or International)</td><td>No minimum or maximum — determined by budget allocation</td><td>Same</td><td>Same</td></tr>
+        <tr><td><strong>Restricted Tender</strong> (s.102(1)(b))</td><td>Max KES 30 million</td><td>Max KES 30 million</td><td>Max KES 20 million</td></tr>
+        <tr><td><strong>Request for Quotations</strong> (s.105)</td><td>Max KES 3 million per RFQ</td><td>Max KES 5 million per RFQ</td><td>Max KES 3 million per RFQ</td></tr>
+        <tr><td><strong>Low Value Procurement</strong> (s.107)</td><td>Max KES 50,000 per item/year</td><td>Max KES 100,000 per item/year</td><td>Max KES 50,000 per item/year</td></tr>
+        <tr><td><strong>Direct Procurement</strong> (s.103)</td><td colspan="3">No financial threshold — but strict conditions must be met (sole source, emergency, standardisation)</td></tr>
+        <tr><td><strong>Framework Agreement</strong> (s.114)</td><td colspan="3">As prescribed; max term 3 years; min 7 vendors per category</td></tr>
+      </table>
+
+      <h3>Key Compliance Timelines</h3>
+      <table class="timeline-table">
+        <tr><th>What</th><th>Deadline</th><th>Trigger</th><th>Consequence of Missing</th></tr>
+        <tr>
+          <td>Submit procurement plan to PPRA showing AGPO allocation</td>
+          <td><span class="badge-red">60 days</span> after start of financial year</td>
+          <td>Start of financial year</td>
+          <td>Non-compliance reported to Parliament; disciplinary action (s.53(11))</td>
+        </tr>
+        <tr>
+          <td>Minimum tender preparation time (national/county)</td>
+          <td><span class="badge-red">7 days</span> minimum</td>
+          <td>Publication of tender notice</td>
+          <td>Procurement proceedings challengeable at Review Board</td>
+        </tr>
+        <tr>
+          <td>Evaluation of tenders</td>
+          <td><span class="badge-red">30 days</span> maximum</td>
+          <td>Tender opening</td>
+          <td>Offence under s.176(1)(c) — delay without justifiable cause</td>
+        </tr>
+        <tr>
+          <td>Evaluation of consultancy proposals</td>
+          <td><span class="badge-red">21 days</span> maximum</td>
+          <td>Proposal opening</td>
+          <td>Same — unjustified delay is an offence</td>
+        </tr>
+        <tr>
+          <td>Contract signing after notification of award</td>
+          <td><span class="badge-red">14 days</span> standstill period before signing</td>
+          <td>Notification of intention to award (s.87)</td>
+          <td>Contract signed too early is subject to review challenge</td>
+        </tr>
+        <tr>
+          <td>Tender validity extension</td>
+          <td>Max <span class="badge-red">30 days</span>, once only</td>
+          <td>Expiry of original validity period</td>
+          <td>If not extended, procurement must restart (s.88(3))</td>
+        </tr>
+        <tr>
+          <td>Request for administrative review</td>
+          <td><span class="badge-red">14 days</span> from notification of award or breach</td>
+          <td>Notification or occurrence</td>
+          <td>Right to review is lost (s.167(1))</td>
+        </tr>
+        <tr>
+          <td>Review Board to complete review</td>
+          <td><span class="badge-red">21 days</span></td>
+          <td>Receipt of review request</td>
+          <td>Procurement must not be delayed beyond statutory time (s.171(2))</td>
+        </tr>
+        <tr>
+          <td>Judicial review of Review Board decision</td>
+          <td><span class="badge-red">14 days</span></td>
+          <td>Review Board decision</td>
+          <td>Decision becomes final and binding (s.175(1))</td>
+        </tr>
+        <tr>
+          <td>Publish contract awards on notice board &amp; website</td>
+          <td><span class="badge-red">14 days</span> after signing</td>
+          <td>Contract signed</td>
+          <td>Non-compliance; PPRA investigation (s.138)</td>
+        </tr>
+        <tr>
+          <td>Keep procurement records</td>
+          <td>Minimum <span class="badge-red">6 years</span> after contract completion</td>
+          <td>Contract completion or termination</td>
+          <td>Audit failure; potential offence under s.68</td>
+        </tr>
+        <tr>
+          <td>Return performance security</td>
+          <td><span class="badge-red">30 days</span> after final acceptance</td>
+          <td>Accounting officer's final acceptance</td>
+          <td>Breach of contract; supplier complaint (s.145)</td>
+        </tr>
+        <tr>
+          <td>Quarterly report on varied/amended contracts to PPRA</td>
+          <td>End of each quarter</td>
+          <td>Contract variation approved</td>
+          <td>Non-compliance reported (s.139(5))</td>
+        </tr>
+      </table>
+
+      <h3>Contract Variations — Hard Limits</h3>
+      <div class="callout red">
+        <strong>No price increase within 12 months</strong> — Section 139(3) prohibits any upward contract price variation within the first 12 months of signing. After 12 months, the maximum quantity variation for goods is 15%, and the cumulative price increase cannot exceed 25% of the original contract price. If variations would push the price above 25%, a fresh tender must be issued (Section 139(6)).
+      </div>
+
+      <h3>Performance Security</h3>
+      <p>A winning bidder must submit performance security of up to 10% of the contract value before signing (Section 142). Per Regulation 135, this is required for contracts above <strong>KES 5 million</strong> for goods, works, and non-consultancy services. For AGPO categories (women, youth, persons with disability), the performance security is capped at 1% of the contract sum (Section 142(3)).</p>
+    </div>
+
+    <!-- ===================== SLIDE 5: CONSEQUENCES ===================== -->
+    <div class="slide" id="slide-5">
+      <div class="section-num">Section 5 of 5</div>
+      <div class="section-title">Consequences, Response Steps &amp; Key Contacts</div>
+
+      <h3>Penalty Provisions</h3>
+      <table class="ref-table">
+        <tr><th>Offence</th><th>Penalty for Individuals</th><th>Penalty for Corporates</th></tr>
+        <tr><td>Any offence under Section 176 (obstruction, splitting tenders, influencing evaluations, divulging confidential info, fraudulent acts, signing contracts contrary to Act)</td><td>Fine up to <strong>KES 4 million</strong> and/or imprisonment up to <strong>10 years</strong></td><td>Fine up to <strong>KES 10 million</strong></td></tr>
+        <tr><td>General penalty — any offence with no specific penalty (s.177)</td><td>Same: KES 4 million and/or 10 years</td><td>KES 10 million</td></tr>
+        <tr><td>Procurement at inflated prices (s.54(4))</td><td colspan="2">Personal liability to <strong>reimburse KTB</strong> for the loss, in addition to other sanctions</td></tr>
+        <tr><td>Conflict of interest — contract awarded to relative (s.66(7))</td><td colspan="2">Contract terminated; <strong>awarding officer reimburses all costs</strong> to KTB</td></tr>
+        <tr><td>Debarment (s.41)</td><td colspan="2">Banned from all public procurement for minimum <strong>3 years</strong></td></tr>
+        <tr><td>Divulging confidential information (s.67(5))</td><td colspan="2">Debarred and <strong>prohibited from government work for 10 years</strong></td></tr>
+      </table>
+
+      <h3>What To Do When Something Goes Wrong</h3>
+      <div class="callout green">
+        <strong>Step-by-step response guide:</strong>
+        <ol style="margin-top:10px;padding-left:20px;line-height:2">
+          <li><strong>Stop and report</strong> — if you become aware of any irregularity (bid manipulation, splitting, conflict of interest, bribery attempt), immediately report it to the Head of Procurement or the Legal Directorate. Do not try to fix it yourself.</li>
+          <li><strong>Document everything</strong> — write down what you observed, when, and who was involved. Preserve any emails, messages, or documents.</li>
+          <li><strong>Declare your own conflict</strong> — if you discover you have a personal conflict, disclose it in writing to the Accounting Officer immediately (s.66(5)–(6)).</li>
+          <li><strong>Do not destroy records</strong> — procurement records must be kept for 6 years (s.68). Destroying or concealing documents is obstruction under s.176(1)(a).</li>
+          <li><strong>Cooperate with investigators</strong> — PPRA investigators have the legal power to access all premises, books, records, and electronic documents (s.36). Obstruction is a criminal offence.</li>
+          <li><strong>Contact the Legal Directorate</strong> — Allan Njoroge and Doreen Mutunga are your first points of contact for any procurement compliance question.</li>
+        </ol>
+      </div>
+
+      <div class="callout">
+        <strong>🛡️ Protection from Personal Liability:</strong> Section 178 provides that you will not be personally liable for acts done <strong>in good faith</strong> in the performance of your duties. KTB will indemnify employees who are sued for actions taken in their official capacity, provided they were not guilty of gross negligence, misconduct, or grave abuse of office. The key is: follow the law, document your decisions, and report problems early.
+      </div>
+
+      <h3>5 Key Takeaways</h3>
+      <div class="takeaway"><div class="takeaway-num">1</div><div class="takeaway-text"><strong>Open tendering is the default.</strong> Every alternative method requires specific justification under the Act. If you're not sure which method applies, ask the Procurement Function.</div></div>
+      <div class="takeaway"><div class="takeaway-num">2</div><div class="takeaway-text"><strong>Never split contracts to avoid thresholds.</strong> This is a criminal offence with up to 10 years imprisonment. If your genuine need exceeds an RFQ threshold, use open tender — don't break it into smaller pieces.</div></div>
+      <div class="takeaway"><div class="takeaway-num">3</div><div class="takeaway-text"><strong>Declare conflicts early.</strong> If you, your spouse, child, parent, sibling, or in-law has any interest in a bidder, disclose it in writing and withdraw from the process. Silence makes you personally liable.</div></div>
+      <div class="takeaway"><div class="takeaway-num">4</div><div class="takeaway-text"><strong>30% goes to AGPO.</strong> KTB must reserve at least 30% of its procurement budget for youth, women, and persons with disability. Tender security is waived for these groups — they use a Tender Securing Declaration instead.</div></div>
+      <div class="takeaway"><div class="takeaway-num">5</div><div class="takeaway-text"><strong>You are personally responsible.</strong> Section 45(5) makes every officer involved in procurement personally responsible for their actions and omissions. Good faith + proper documentation = your best protection.</div></div>
+
+      <h3>Your Legal Directorate Contacts</h3>
+      <div class="contacts">
+        <div class="contact-card">
+          <div class="name">Allan Njoroge</div>
+          <div class="role">Director of Legal Services &amp; Corporation Secretary</div>
+          <div class="email">allan@ktb.go.ke</div>
+        </div>
+        <div class="contact-card">
+          <div class="name">Doreen Mutunga</div>
+          <div class="role">Legal Officer</div>
+          <div class="email">dmutunga@ktb.go.ke</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 6: QUIZ ===================== -->
+    <div class="slide" id="slide-6">
+      <div class="quiz-header">
+        <div class="section-num">Assessment</div>
+        <div class="section-title" style="margin-bottom:12px">Knowledge Check — 10 Questions</div>
+        <div class="score-bar-wrap">
+          <div class="score-label">Score: <span id="score-display">0</span>/10</div>
+          <div class="score-bar"><div class="score-fill" id="score-fill"></div></div>
+        </div>
+        <div class="quiz-dots" id="quiz-dots"></div>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+
+    <!-- ===================== SLIDE 16: RESULTS ===================== -->
+    <div class="slide" id="slide-16">
+      <div class="results-card" id="results-card">
+        <div class="big-score" id="final-score"></div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-msg" id="result-msg"></div>
+        <div class="cert-badge" id="cert-badge">
+          <div class="cert-icon">🏛</div>
+          <div class="cert-title">Public Procurement &amp; Asset Disposal Act 2015</div>
+          <div class="cert-date" id="cert-date"></div>
+        </div>
+        <div><button class="print-btn" onclick="window.print()">🖨 Print completion record</button></div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar" id="bottombar">
+    <div class="section-indicator" id="section-indicator"></div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Back</button>
+      <div class="understood-wrap" id="understood-wrap" onclick="toggleUnderstood()">
+        <div id="understood-btn">✓</div>
+        <span class="understood-label">I have read and understood this section</span>
+      </div>
+      <button class="nav-btn" id="btn-next" onclick="navigate(1)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== QUIZ DATA ==========
+const quizData = [
+  {
+    q: "What is the DEFAULT procurement method under the Public Procurement and Asset Disposal Act?",
+    opts: ["Request for Quotations", "Open Tendering", "Restricted Tendering", "Direct Procurement"],
+    correct: 1,
+    correctFeedback: "Correct! Section 91(1) states that open tendering shall be the preferred procurement method for goods, works, and services.",
+    wrongFeedback: "Incorrect. Section 91(1) clearly states that open tendering is the preferred (default) procurement method. Alternative methods may only be used when the specific conditions in the Act are satisfied."
+  },
+  {
+    q: "Under the 2020 Regulations, what is the maximum value per request for a Request for Quotations for GOODS?",
+    opts: ["KES 1 million", "KES 3 million", "KES 5 million", "KES 10 million"],
+    correct: 1,
+    correctFeedback: "Correct! The Second Schedule of the 2020 Regulations sets the RFQ threshold for goods at KES 3 million per request.",
+    wrongFeedback: "Incorrect. The Second Schedule of the 2020 Regulations sets the RFQ limit for goods at KES 3 million. Works has a higher limit of KES 5 million."
+  },
+  {
+    q: "KTB's Procurement Officer discovers that a Marketing Manager's spouse owns 40% of a company that has submitted a bid. What must happen?",
+    opts: [
+      "Nothing — 40% is not a controlling interest",
+      "The Marketing Manager must disclose the conflict in writing and withdraw from all procurement decisions on that tender",
+      "The bid should be automatically disqualified",
+      "The Procurement Officer should inform the bidder and ask them to withdraw"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Under Section 66(5)–(6), any employee with a conflict of interest must not take part in the procurement and must disclose the conflict in writing. A spouse's ownership constitutes a 'relative' interest under Section 66(8) and (11).",
+    wrongFeedback: "Incorrect. Section 66(5)–(6) requires the employee to disclose the conflict in writing and withdraw from all decisions. The 'relative' definition in Section 66(11) includes a spouse. The bid is not automatically disqualified, but the staff member must step aside."
+  },
+  {
+    q: "A KTB officer needs to buy promotional materials worth KES 8 million but submits three separate requisitions of KES 2.5 million each. This is:",
+    opts: [
+      "Good practice — it keeps each purchase within RFQ thresholds",
+      "A criminal offence — splitting contracts to avoid procurement thresholds violates Section 54",
+      "Acceptable if the items are genuinely different categories",
+      "Permitted as long as the Accounting Officer approves"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 54(1) prohibits structuring procurement as two or more procurements to avoid using the required procedure. This is a criminal offence under Section 176.",
+    wrongFeedback: "Incorrect. This is contract splitting, which is prohibited under Section 54(1). The officer is structuring a single procurement as multiple smaller ones to avoid the open tender threshold. This is a criminal offence under Section 176."
+  },
+  {
+    q: "How long must KTB keep procurement records after a contract is completed?",
+    opts: ["2 years", "4 years", "6 years", "10 years"],
+    correct: 2,
+    correctFeedback: "Correct! Section 68(1) requires procurement records to be kept for at least six years after the contract is completed, or after proceedings were terminated if no contract resulted.",
+    wrongFeedback: "Incorrect. Section 68(1) requires a minimum of 6 years. If no contract resulted, records must be kept for 6 years after the procurement proceedings were terminated."
+  },
+  {
+    q: "What is the maximum penalty for an individual convicted of a procurement offence under Section 176?",
+    opts: [
+      "KES 1 million fine or 3 years imprisonment",
+      "KES 4 million fine or 10 years imprisonment, or both",
+      "KES 10 million fine or 5 years imprisonment",
+      "KES 2 million fine and mandatory debarment"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 176(2)(a) provides that a natural person faces a fine not exceeding KES 4 million or imprisonment up to 10 years, or both.",
+    wrongFeedback: "Incorrect. Section 176(2)(a) states that an individual faces up to KES 4 million fine or up to 10 years imprisonment, or both. A body corporate faces up to KES 10 million."
+  },
+  {
+    q: "What minimum percentage of KTB's procurement budget must be reserved for youth, women, and persons with disability?",
+    opts: ["10%", "20%", "30%", "40%"],
+    correct: 2,
+    correctFeedback: "Correct! Sections 53(6) and 157(10) both require that at least 30% of every procuring entity's procurement value be allocated to these groups.",
+    wrongFeedback: "Incorrect. Both Section 53(6) and Section 157(10) mandate a minimum of 30% reservation for youth, women, and persons with disability."
+  },
+  {
+    q: "Within how many days of receiving a review request must the Public Procurement Administrative Review Board complete its review?",
+    opts: ["7 days", "14 days", "21 days", "30 days"],
+    correct: 2,
+    correctFeedback: "Correct! Section 171(1) requires the Review Board to complete its review within 21 days of receiving the request.",
+    wrongFeedback: "Incorrect. Under Section 171(1), the Review Board must complete its review within 21 days. A person must file the review within 14 days of notification (Section 167(1))."
+  },
+  {
+    q: "KTB wants to hire the same IT vendor that built its website to add new features, arguing compatibility with existing systems. Under what condition is this direct procurement lawful?",
+    opts: [
+      "It is always lawful if the existing vendor is willing",
+      "It is lawful under Section 103(2)(d) if there is a genuine need for compatibility with existing technology, the original procurement was effective, the new procurement is limited in size relative to the original, and the price is reasonable",
+      "It is lawful as long as the value is below KES 3 million",
+      "It requires approval from the National Treasury"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 103(2)(d) allows direct procurement for standardisation or compatibility, but all four conditions must be met: effectiveness of original procurement, limited size of new procurement, reasonable price, and unsuitability of alternatives.",
+    wrongFeedback: "Incorrect. Section 103(2)(d) permits direct procurement for compatibility/standardisation, but it requires meeting ALL conditions: the original procurement was effective, the new procurement is limited in size relative to the original, the price is reasonable, and alternatives are unsuitable."
+  },
+  {
+    q: "After tender opening, the tender sum read out loud:",
+    opts: [
+      "Can be corrected for arithmetical errors by the evaluation committee",
+      "Is absolute and final — it cannot be corrected, revised, adjusted, or amended (Section 82)",
+      "Can be revised downward but not upward",
+      "Can be amended if both parties agree in writing"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 82(1) states that the tender sum as submitted and read out during opening is absolute and final and shall not be subject to correction, revision, adjustment, or amendment by any person or entity.",
+    wrongFeedback: "Incorrect. Section 82(1) is clear: the tender sum read at opening is absolute and final. No corrections, revisions, adjustments, or amendments are permitted. The only exceptions are for direct procurement (s.103), competitive negotiations (s.131), and framework/multiple awards (s.141)."
+  }
+];
+
+// ========== STATE ==========
+let currentSlide = 0;
+let understood = false;
+let sectionsDone = [false,false,false,false,false,false];
+let quizQuestion = 0;
+let quizAnswers = new Array(10).fill(null);
+let score = 0;
+
+// ========== INIT ==========
+function init() {
+  buildQuizDots();
+  buildQuizQuestion(0);
+  updateUI();
+}
+
+// ========== NAVIGATION ==========
+function navigate(dir) {
+  if (currentSlide === 0 && dir === 1) { goToSlide(1); return; }
+  if (currentSlide >= 1 && currentSlide <= 5) {
+    if (dir === 1) { markSectionDone(currentSlide); goToSlide(currentSlide + 1); }
+    else if (dir === -1) { goToSlide(currentSlide - 1); }
+  }
+  else if (currentSlide === 6) {
+    if (dir === 1) {
+      if (quizQuestion < 9) { quizQuestion++; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(16); showResults(); }
+    }
+    else if (dir === -1) {
+      if (quizQuestion > 0) { quizQuestion--; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(5); }
+    }
+  }
+  else if (currentSlide === 16 && dir === -1) { goToSlide(6); }
+}
+
+function goToSlide(n) {
+  // Don't allow skipping ahead beyond completed sections
+  if (n >= 1 && n <= 5 && n > 1) {
+    for (let i = 1; i < n; i++) {
+      if (!sectionsDone[i]) return;
+    }
+  }
+  if (n === 6) {
+    for (let i = 1; i <= 5; i++) { if (!sectionsDone[i]) return; }
+  }
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  let slideEl = document.getElementById('slide-' + n);
+  if (slideEl) slideEl.classList.add('active');
+  currentSlide = n;
+  understood = false;
+  document.getElementById('content-area').scrollTop = 0;
+  updateUI();
+}
+
+function markSectionDone(n) {
+  if (n >= 1 && n <= 5) sectionsDone[n] = true;
+  updateTabs();
+}
+
+// ========== UI UPDATES ==========
+function updateUI() {
+  // Pips
+  let pips = document.querySelectorAll('.pip');
+  let fillCount = currentSlide === 16 ? 7 : (currentSlide === 6 ? 6 : currentSlide);
+  pips.forEach((p, i) => p.classList.toggle('filled', i < fillCount));
+
+  // Tabs
+  updateTabs();
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  let activeTab = document.querySelector('.tab[data-tab="' + (currentSlide === 16 ? 6 : currentSlide) + '"]');
+  if (activeTab) activeTab.classList.add('active');
+
+  // Bottom bar
+  let uWrap = document.getElementById('understood-wrap');
+  let btnNext = document.getElementById('btn-next');
+  let btnPrev = document.getElementById('btn-prev');
+  let uBtn = document.getElementById('understood-btn');
+  let secInd = document.getElementById('section-indicator');
+
+  uBtn.classList.remove('checked');
+  btnPrev.style.display = currentSlide === 0 ? 'none' : '';
+
+  // Section indicator text
+  const sectionNames = {0:'',1:'Section 1 — Foundation',2:'Section 2 — KTB Context',3:'Section 3 — Your Obligations',4:'Section 4 — Compliance & Timelines',5:'Section 5 — Consequences & Response',6:'Quiz',16:'Results'};
+  secInd.textContent = sectionNames[currentSlide] || '';
+
+  if (currentSlide === 0) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = 'none';
+    document.getElementById('bottombar').style.display = 'none';
+  } else {
+    document.getElementById('bottombar').style.display = 'flex';
+  }
+
+  if (currentSlide >= 1 && currentSlide <= 5) {
+    uWrap.style.display = 'flex';
+    btnNext.style.display = '';
+    btnNext.disabled = !understood;
+    btnNext.textContent = 'Next →';
+  } else if (currentSlide === 6) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = '';
+    btnNext.disabled = (quizAnswers[quizQuestion] === null);
+    btnNext.textContent = quizQuestion < 9 ? 'Next Question →' : 'See Results →';
+  } else if (currentSlide === 16) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = 'none';
+  }
+}
+
+function updateTabs() {
+  for (let i = 1; i <= 5; i++) {
+    let tab = document.querySelector('.tab[data-tab="' + i + '"]');
+    if (tab) tab.classList.toggle('done', sectionsDone[i]);
+  }
+}
+
+// ========== UNDERSTOOD ==========
+function toggleUnderstood() {
+  understood = !understood;
+  document.getElementById('understood-btn').classList.toggle('checked', understood);
+  document.getElementById('btn-next').disabled = !understood;
+}
+
+// ========== QUIZ ==========
+function buildQuizDots() {
+  let dots = document.getElementById('quiz-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    let d = document.createElement('div');
+    d.className = 'qdot';
+    d.textContent = (i + 1);
+    dots.appendChild(d);
+  }
+}
+
+function updateQuizDots() {
+  let dots = document.querySelectorAll('.qdot');
+  dots.forEach((d, i) => {
+    d.classList.remove('current', 'correct', 'wrong');
+    if (i === quizQuestion) d.classList.add('current');
+    if (quizAnswers[i] !== null) {
+      d.classList.add(quizAnswers[i] === quizData[i].correct ? 'correct' : 'wrong');
+    }
+  });
+}
+
+function updateScoreBar() {
+  score = quizAnswers.filter((a, i) => a === quizData[i].correct).length;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('score-fill').style.width = (score * 10) + '%';
+}
+
+function buildQuizQuestion(qi) {
+  let qd = quizData[qi];
+  let container = document.getElementById('quiz-container');
+  let answered = quizAnswers[qi] !== null;
+
+  let html = '<div class="q-card">';
+  html += '<div class="q-num">Question ' + (qi + 1) + ' of 10</div>';
+  html += '<div class="q-text">' + qd.q + '</div>';
+  html += '<div class="q-options">';
+  let letters = ['A', 'B', 'C', 'D'];
+  for (let i = 0; i < qd.opts.length; i++) {
+    let cls = 'q-opt';
+    if (answered) {
+      cls += ' disabled';
+      if (i === quizAnswers[qi] && i !== qd.correct) cls += ' wrong-answer';
+      if (i === qd.correct) cls += ' reveal-correct correct-answer';
+    }
+    html += '<button class="' + cls + '" onclick="answerQuestion(' + qi + ',' + i + ')">';
+    html += '<span class="letter">' + letters[i] + '.</span> ' + qd.opts[i];
+    html += '</button>';
+  }
+  html += '</div>';
+
+  if (answered) {
+    let isCorrect = quizAnswers[qi] === qd.correct;
+    html += '<div class="q-feedback show ' + (isCorrect ? 'correct' : 'wrong') + '">';
+    html += isCorrect ? '✅ ' + qd.correctFeedback : '❌ ' + qd.wrongFeedback;
+    html += '</div>';
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+  updateQuizDots();
+}
+
+function answerQuestion(qi, oi) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi;
+  updateScoreBar();
+  buildQuizQuestion(qi);
+  setTimeout(function() {
+    document.getElementById('btn-next').disabled = false;
+  }, 900);
+}
+
+function enableNext() {
+  document.getElementById('btn-next').disabled = false;
+}
+
+// ========== RESULTS ==========
+function showResults() {
+  score = quizAnswers.filter((a, i) => a === quizData[i].correct).length;
+  let pass = score >= 7;
+  let pct = score * 10;
+  let el = document.getElementById('final-score');
+  el.textContent = score + '/10';
+  el.className = 'big-score ' + (pass ? 'pass' : 'fail');
+
+  let label = document.getElementById('result-label');
+  label.textContent = pass ? '✓ Module Passed' : '✗ Not Passed';
+  label.className = 'result-label ' + (pass ? 'pass' : 'fail');
+
+  let msg = document.getElementById('result-msg');
+  msg.textContent = pass
+    ? 'You scored ' + pct + '% — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.'
+    : 'You scored ' + pct + '% — below the 70% pass mark. Please review the module sections and retake the quiz. Contact the Legal Directorate (allan@ktb.go.ke) if you need assistance.';
+
+  let d = new Date();
+  let dateStr = d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('cert-date').textContent = 'Completed ' + dateStr + ' · KTB Legal Hub';
+
+  // Hide cert badge if failed
+  document.getElementById('cert-badge').style.display = pass ? 'inline-block' : 'none';
+}
+
+// ========== START ==========
+init();
+</script>
+</body>
+</html>
