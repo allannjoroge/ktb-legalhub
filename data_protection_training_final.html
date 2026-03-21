@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Protection Act 2019 — KTB Training</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --maroon:    #6B1D1D;
+  --maroon-d:  #4a1212;
+  --maroon-l:  #8a2424;
+  --gold:      #C19A28;
+  --gold-l:    #e8c96a;
+  --gold-bg:   #fdf8ec;
+  --ink:       #1c1c1e;
+  --body:      #3a3a3c;
+  --muted:     #6e6e73;
+  --border:    #e5e1d8;
+  --cream:     #faf8f4;
+  --white:     #ffffff;
+  --green:     #1a6b47;
+  --green-bg:  #edf7f2;
+  --red:       #c0392b;
+  --red-bg:    #fdf0ee;
+  --blue:      #1a3a6b;
+  --blue-bg:   #eef3fb;
+  --amber:     #92520a;
+  --amber-bg:  #fff8ec;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ── SHELL ──────────────────────────────────────────── */
+.shell {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── TOP BAR ────────────────────────────────────────── */
+.topbar {
+  background: var(--maroon-d);
+  border-bottom: 3px solid var(--gold);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.tb-logo {
+  background: var(--gold);
+  color: var(--maroon-d);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.tb-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+.tb-right { display: flex; align-items: center; gap: 16px; }
+.tb-timer {
+  font-size: 12px;
+  color: var(--gold-l);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: rgba(255,255,255,0.08);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.tb-step { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* ── PROGRESS BAR ───────────────────────────────────── */
+.prog-bar-zone {
+  background: var(--maroon-d);
+  padding: 0 24px 10px;
+  flex-shrink: 0;
+}
+.prog-steps {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.prog-step-pip {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.prog-step-pip.done     { background: var(--gold); }
+.prog-step-pip.active   { background: rgba(193,154,40,0.45); }
+.prog-step-pip.current  {
+  background: rgba(193,154,40,0.45);
+  position: relative;
+  overflow: visible;
+}
+
+/* ── SECTION TABS (breadcrumb) ──────────────────────── */
+.section-tabs {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.section-tabs::-webkit-scrollbar { display: none; }
+.stab {
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  transition: color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.stab.active { color: var(--maroon); border-bottom-color: var(--gold); font-weight: 700; }
+.stab.done   { color: var(--green); }
+.stab .stab-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.stab.active .stab-num { background: var(--maroon); color: var(--white); }
+.stab.done   .stab-num { background: var(--green);  color: var(--white); }
+
+/* ── CONTENT AREA ───────────────────────────────────── */
+.content-area {
+  overflow-y: auto;
+  padding: 32px 0 20px;
+  position: relative;
+}
+.content-area::-webkit-scrollbar { width: 5px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── SLIDE ──────────────────────────────────────────── */
+.slide {
+  display: none;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 28px;
+  animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1) both;
+}
+.slide.active { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideBack {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.slide.back { animation: slideBack 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── SECTION HEADER ─────────────────────────────────── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+.sec-num {
+  width: 46px; height: 46px;
+  background: var(--maroon);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(107,29,29,0.3);
+}
+.sec-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.sec-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--maroon); line-height: 1.2; }
+
+/* ── TYPOGRAPHY ─────────────────────────────────────── */
+.body-text { font-size: 15px; color: var(--body); line-height: 1.8; margin-bottom: 16px; }
+.body-text:last-of-type { margin-bottom: 0; }
+
+/* ── CALLOUT ────────────────────────────────────────── */
+.callout {
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 16px 0;
+  border-left: 4px solid;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; }
+.callout-body {}
+.callout-title { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; }
+.callout-text { font-size: 13.5px; line-height: 1.65; }
+.callout.info  { background: var(--blue-bg);  border-color: var(--blue);  }
+.callout.info  .callout-title { color: var(--blue); }
+.callout.alert { background: var(--red-bg);   border-color: var(--red);   }
+.callout.alert .callout-title { color: var(--red); }
+.callout.good  { background: var(--green-bg); border-color: var(--green); }
+.callout.good  .callout-title { color: var(--green); }
+.callout.gold  { background: var(--gold-bg);  border-color: var(--gold);  }
+.callout.gold  .callout-title { color: var(--amber); }
+
+/* ── DATA GRID (2 col) ──────────────────────────────── */
+.data-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width:560px) { .data-grid-2 { grid-template-columns: 1fr; } }
+
+/* ── CARD ───────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.card-title { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+.card-body  { font-size: 13px; color: var(--body); line-height: 1.6; }
+
+/* ── TABLE ──────────────────────────────────────────── */
+.mod-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+.mod-table th { background: var(--maroon); color: var(--white); padding: 9px 13px; text-align: left; font-size: 12.5px; font-weight: 600; }
+.mod-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.mod-table tr:nth-child(even) td { background: #faf8f5; }
+.mod-table .tag { font-weight: 700; color: var(--red); white-space: nowrap; }
+
+/* ── PRINCIPLES GRID ────────────────────────────────── */
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width:560px) { .principles-grid { grid-template-columns: 1fr; } }
+.p-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--maroon);
+  border-radius: 6px;
+  padding: 14px;
+}
+.p-num { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--maroon); opacity: 0.25; line-height: 1; }
+.p-name { font-size: 12.5px; font-weight: 700; color: var(--maroon); margin-bottom: 4px; }
+.p-desc { font-size: 12.5px; color: var(--body); line-height: 1.55; }
+
+/* ── DO / DON'T ─────────────────────────────────────── */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 14px 0; }
+@media (max-width:520px) { .do-dont { grid-template-columns: 1fr; } }
+.dd-head { padding: 10px 14px; font-size: 12.5px; font-weight: 700; }
+.dd-head.do   { background: var(--green); color: var(--white); }
+.dd-head.dont { background: var(--red);   color: var(--white); }
+.dd-item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 14px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.5; }
+.dd-item:last-child { border-bottom: none; }
+.dd-item .t { color: var(--green); font-size: 13px; flex-shrink: 0; margin-top: 2px; font-weight: 700; }
+.dd-item .x { color: var(--red);   font-size: 13px; flex-shrink: 0; margin-top: 2px; font-weight: 700; }
+
+/* ── STEPS ──────────────────────────────────────────── */
+.steps { margin: 14px 0; }
+.step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px dashed var(--border); align-items: flex-start; }
+.step:last-child { border-bottom: none; }
+.step-num { width: 32px; height: 32px; background: var(--maroon); color: var(--white); border-radius: 50%; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-title { font-weight: 700; font-size: 13.5px; color: var(--maroon); margin-bottom: 2px; }
+.step-desc { font-size: 13.5px; color: var(--body); line-height: 1.6; }
+
+/* ── SCENARIO ───────────────────────────────────────── */
+.scenario { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 14px 0; }
+.scen-head { background: var(--gold-bg); border-bottom: 1px solid #e8d98a; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.scen-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); background: rgba(193,154,40,0.15); padding: 2px 8px; border-radius: 3px; }
+.scen-title { font-size: 13px; font-weight: 600; color: var(--body); }
+.scen-body { padding: 14px 16px; }
+.scen-q { font-size: 13.5px; color: var(--body); line-height: 1.7; font-style: italic; margin-bottom: 12px; }
+.scen-reveal { display: none; border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 4px; }
+.scen-reveal.open { display: block; }
+.scen-ans { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.scen-exp { font-size: 13px; color: var(--body); line-height: 1.65; }
+.scen-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--maroon); color: var(--white); border: none; border-radius: 5px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+.scen-btn:hover { background: var(--maroon-l); }
+
+/* ── TAKEAWAYS ──────────────────────────────────────── */
+.takeaways { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.takeaway { display: flex; gap: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; align-items: flex-start; }
+.tk-num { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 28px; text-align: center; }
+.tk-text { font-size: 13.5px; color: var(--body); line-height: 1.6; padding-top: 2px; }
+.tk-text strong { color: var(--maroon); }
+
+/* ── CONTACT GRID ───────────────────────────────────── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width:520px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; gap: 10px; align-items: flex-start; }
+.cc-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--maroon); color: var(--white); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cc-name { font-weight: 700; font-size: 13.5px; color: var(--ink); }
+.cc-role { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+.cc-email { font-size: 12px; color: var(--maroon); font-weight: 500; }
+
+/* ── COVER / HERO ───────────────────────────────────── */
+.cover {
+  background: linear-gradient(135deg, var(--maroon-d) 0%, var(--maroon) 60%, #8a2424 100%);
+  border-radius: 12px;
+  padding: 36px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.cover::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-5H15v-5h5v-.5zM20 20.5V21h5v5h5v5H20v-5h5v-5h-5v-.5z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.cover-eyebrow { display: inline-block; background: rgba(193,154,40,0.2); border: 1px solid var(--gold); color: var(--gold-l); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 12px; border-radius: 20px; margin-bottom: 16px; position: relative; }
+.cover h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.2; margin-bottom: 6px; position: relative; }
+.cover h1 span { color: var(--gold-l); font-style: italic; }
+.cover-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 24px; position: relative; }
+.cover-chips { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; position: relative; }
+.cover-chip { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: rgba(255,255,255,0.85); }
+.cover-chip strong { color: var(--gold-l); }
+
+/* ── QUIZ ───────────────────────────────────────────── */
+.quiz-q {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.quiz-q-head {
+  background: var(--maroon-d);
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.q-badge { background: var(--gold); color: var(--maroon-d); font-weight: 700; font-size: 10.5px; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+.q-text { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.45; }
+.q-opts { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px;
+  cursor: pointer; font-size: 13.5px; color: var(--body); background: var(--white);
+  text-align: left; font-family: 'DM Sans', sans-serif; line-height: 1.5;
+  width: 100%; transition: border-color 0.15s, background 0.15s;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--maroon); background: #fdf5f5; }
+.q-opt.correct  { border-color: var(--green); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.q-opt.wrong    { border-color: var(--red);   background: var(--red-bg);   color: var(--red); }
+.q-opt.reveal   { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.q-opt:disabled { cursor: default; }
+.q-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.q-opt.correct .q-letter { background: var(--green); color: var(--white); }
+.q-opt.wrong   .q-letter { background: var(--red);   color: var(--white); }
+.q-opt.reveal  .q-letter { background: var(--green); color: var(--white); }
+.q-fb { margin: 0 16px 14px; padding: 10px 14px; border-radius: 6px; font-size: 13px; line-height: 1.6; display: none; }
+.q-fb.show { display: block; }
+.q-fb.ok  { background: var(--green-bg); color: var(--green); border: 1px solid #a8dcc0; }
+.q-fb.err { background: var(--red-bg);   color: var(--red);   border: 1px solid #f0b8b3; }
+
+/* ── QUIZ NAV ───────────────────────────────────────── */
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.quiz-dots { display: flex; gap: 5px; }
+.qdot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+.qdot.answered { background: var(--green); }
+.qdot.current  { background: var(--maroon); }
+
+/* ── RESULTS ────────────────────────────────────────── */
+.results-card {
+  background: var(--white);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+}
+.res-score { font-family: 'DM Serif Display', serif; font-size: 80px; line-height: 1; margin-bottom: 4px; }
+.res-score.pass { color: var(--green); }
+.res-score.fail { color: var(--red); }
+.res-label { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.res-label.pass { color: var(--green); }
+.res-label.fail { color: var(--red); }
+.res-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+.res-badge { display: inline-block; background: var(--gold-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 12px 20px; font-size: 13px; color: var(--amber); font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+.cert-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--maroon); color: var(--white); border: none; border-radius: 6px; padding: 11px 22px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+.cert-btn:hover { background: var(--maroon-l); }
+
+/* ── BOTTOM BAR ─────────────────────────────────────── */
+.bottom-bar {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.bb-left { display: flex; align-items: center; gap: 10px; }
+.bb-section-name { font-size: 12px; color: var(--muted); }
+.bb-section-name strong { color: var(--body); }
+
+/* understood checkbox */
+.understood-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  padding: 7px 14px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--body);
+  background: var(--white);
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.understood-wrap:hover { border-color: var(--gold); background: var(--gold-bg); }
+.understood-wrap.checked {
+  border-color: var(--green);
+  background: var(--green-bg);
+  color: var(--green);
+  font-weight: 600;
+}
+.uc-box {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.understood-wrap.checked .uc-box { background: var(--green); border-color: var(--green); color: var(--white); }
+
+/* next / prev buttons */
+.bb-btns { display: flex; gap: 10px; align-items: center; }
+.btn-prev {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-prev:hover { border-color: var(--maroon); color: var(--maroon); }
+.btn-next {
+  background: var(--maroon);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap-6px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.btn-next.enabled { opacity: 1; pointer-events: all; }
+.btn-next.enabled:hover { background: var(--maroon-l); }
+.btn-next span { margin-left: 4px; }
+
+/* ── COVER NEXT ─────────────────────────────────────── */
+.cover-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--maroon-d);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  margin-top: 24px;
+  position: relative;
+}
+.cover-start:hover { background: var(--gold-l); transform: translateY(-1px); }
+
+/* ── QUIZ SCORE BAR ─────────────────────────────────── */
+.score-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.score-track { width: 80px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.score-fill  { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="tb-logo">KTB</div>
+      <div class="tb-title">Data Protection Act 2019 — Staff Training</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-timer" id="timer">00:00</div>
+      <div class="tb-step" id="step-counter">Step 1 of 9</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS PIPS -->
+  <div class="prog-bar-zone">
+    <div class="prog-steps" id="prog-steps"></div>
+  </div>
+
+  <!-- SECTION TABS -->
+  <div class="section-tabs" id="section-tabs"></div>
+
+  <!-- CONTENT -->
+  <div class="content-area" id="content-area">
+
+    <!-- SLIDE 0: COVER -->
+    <div class="slide active" id="slide-0">
+      <div class="cover">
+        <div class="cover-eyebrow">Directorate of Legal Services · KTB</div>
+        <h1>Data Protection <span>Act 2019</span></h1>
+        <div class="cover-sub">Staff Compliance Training · Kenya Tourism Board · Internal Use Only</div>
+        <div class="cover-chips">
+          <div class="cover-chip"><span>⏱</span> <strong>~15 min</strong> reading</div>
+          <div class="cover-chip"><span>📋</span> <strong>10</strong> quiz questions</div>
+          <div class="cover-chip"><span>🎯</span> Pass mark <strong>70%</strong></div>
+          <div class="cover-chip"><span>📅</span> Deadline <strong>30 Apr 2026</strong></div>
+        </div>
+        <button class="cover-start" onclick="startModule()">Begin Training <span>→</span></button>
+      </div>
+      <div class="callout info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Before you start</div>
+          <div class="callout-text">This module has 5 learning sections and a 10-question quiz. Read each section carefully — the <strong>Next</strong> button only activates after you confirm you have understood. Your time is recorded for compliance purposes.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 1: WHAT IS THE ACT -->
+    <div class="slide" id="slide-1">
+      <div class="sec-head">
+        <div class="sec-num">1</div>
+        <div><div class="sec-label">Foundation</div><div class="sec-title">What is the Data Protection Act?</div></div>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-icon">⚖️</div>
+        <div class="callout-body">
+          <div class="callout-title">Why this matters to you personally</div>
+          <div class="callout-text">The Act places obligations on <strong>individuals</strong> who handle personal data — not just on organisations. As a KTB staff member, you have personal legal responsibilities under this law.</div>
+        </div>
+      </div>
+
+      <p class="body-text">The <strong>Data Protection Act No. 24 of 2019</strong> is Kenya's primary law governing how personal data is collected, stored, used, and shared. It applies to all organisations — including state corporations like KTB — that handle personal data about individuals.</p>
+
+      <p class="body-text">The Act established the <strong>Office of the Data Protection Commissioner (ODPC)</strong> with powers to investigate complaints, conduct audits, and impose fines on non-compliant organisations.</p>
+
+      <p class="body-text"><strong>Personal data</strong> means any information that can identify a living individual:</p>
+
+      <div class="data-grid-2">
+        <div class="callout good" style="margin:0">
+          <div class="callout-body">
+            <div class="callout-title">Standard personal data</div>
+            <div class="callout-text" style="font-size:13px;">Name · ID/passport number · Email &amp; phone · Physical address · Photos &amp; images · Payment details · Travel records</div>
+          </div>
+        </div>
+        <div class="callout alert" style="margin:0">
+          <div class="callout-body">
+            <div class="callout-title">Sensitive data — higher protection</div>
+            <div class="callout-text" style="font-size:13px;">Health &amp; medical records · Race/ethnic origin · Religious beliefs · Biometric data · Criminal records · Immigration status</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: HOW IT AFFECTS KTB -->
+    <div class="slide" id="slide-2">
+      <div class="sec-head">
+        <div class="sec-num">2</div>
+        <div><div class="sec-label">KTB Context</div><div class="sec-title">How does this affect KTB?</div></div>
+      </div>
+
+      <p class="body-text">KTB collects and processes personal data every day across multiple functions. Here is where the Act applies directly to our work:</p>
+
+      <table class="mod-table">
+        <thead><tr><th>KTB Activity</th><th>Personal Data Involved</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Marketing databases</strong></td><td>Names, emails, nationality, travel preferences of tourists and trade partners</td></tr>
+          <tr><td><strong>HR &amp; payroll</strong></td><td>Staff personal &amp; financial data, medical information, next of kin details</td></tr>
+          <tr><td><strong>Events &amp; conferences</strong></td><td>Attendee registration data, photos, contact details</td></tr>
+          <tr><td><strong>Photography &amp; media</strong></td><td>Images of individuals at KTB events and destinations</td></tr>
+          <tr><td><strong>Website &amp; digital</strong></td><td>IP addresses, cookies, online behaviour data</td></tr>
+          <tr><td><strong>Supplier contracts</strong></td><td>Contact names, email addresses, ID numbers</td></tr>
+        </tbody>
+      </table>
+
+      <div class="scenario">
+        <div class="scen-head"><span class="scen-tag">📌 Scenario</span><span class="scen-title">The Marketing Database</span></div>
+        <div class="scen-body">
+          <p class="scen-q">KTB's marketing team has a database of 50,000 travel agents. A colleague wants to use this list for a new unrelated campaign. Is this allowed without further checks?</p>
+          <button class="scen-btn" onclick="toggleScen(this)">🔍 Reveal answer</button>
+          <div class="scen-reveal">
+            <div class="scen-ans">✗ No — not without verifying consent.</div>
+            <div class="scen-exp">Every person must have consented to receive <em>this type</em> of marketing. Using the list for a different campaign requires confirming that the original consent covers this new use. When in doubt, contact Legal before sending.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: 8 PRINCIPLES -->
+    <div class="slide" id="slide-3">
+      <div class="sec-head">
+        <div class="sec-num">3</div>
+        <div><div class="sec-label">Core Principles</div><div class="sec-title">The 8 Data Protection Principles</div></div>
+      </div>
+      <p class="body-text">Your conduct must reflect these eight principles in everything you do with personal data.</p>
+      <div class="principles-grid">
+        <div class="p-card"><div class="p-num">01</div><div class="p-name">Lawfulness &amp; Fairness</div><div class="p-desc">Only collect data when you have a legal reason — consent, a contract, or a legal obligation. Not "just in case."</div></div>
+        <div class="p-card"><div class="p-num">02</div><div class="p-name">Purpose Limitation</div><div class="p-desc">Only use data for the purpose it was collected. An event database cannot be used for unrelated marketing.</div></div>
+        <div class="p-card"><div class="p-num">03</div><div class="p-name">Data Minimisation</div><div class="p-desc">Collect only what you actually need. Remove form fields asking for information you will never use.</div></div>
+        <div class="p-card"><div class="p-num">04</div><div class="p-name">Accuracy</div><div class="p-desc">Keep records accurate and up to date. If someone corrects their details, update your records promptly.</div></div>
+        <div class="p-card"><div class="p-num">05</div><div class="p-name">Storage Limitation</div><div class="p-desc">Do not keep personal data longer than necessary. Old spreadsheets and email lists should be regularly purged.</div></div>
+        <div class="p-card"><div class="p-num">06</div><div class="p-name">Integrity &amp; Confidentiality</div><div class="p-desc">Protect data from unauthorised access. Use strong passwords, lock your screen, don't share credentials.</div></div>
+        <div class="p-card"><div class="p-num">07</div><div class="p-name">Accountability</div><div class="p-desc">KTB must demonstrate compliance — keep records of consent, processing activities, and incidents.</div></div>
+        <div class="p-card"><div class="p-num">08</div><div class="p-name">Data Sovereignty</div><div class="p-desc">Data about Kenyans should generally remain in Kenya. Transferring abroad requires specific safeguards and Legal clearance.</div></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: YOUR OBLIGATIONS -->
+    <div class="slide" id="slide-4">
+      <div class="sec-head">
+        <div class="sec-num">4</div>
+        <div><div class="sec-label">Your Responsibilities</div><div class="sec-title">What you must and must not do</div></div>
+      </div>
+
+      <div class="do-dont">
+        <div>
+          <div class="dd-head do">✅ You MUST do these</div>
+          <div class="dd-item"><span class="t">✓</span><span>Get proper consent before collecting personal data</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Tell people why you are collecting their data</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Use strong, unique passwords for all systems</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Lock your screen when you leave your desk</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Report any suspected breach to Legal immediately</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Delete personal data when no longer needed</span></div>
+          <div class="dd-item"><span class="t">✓</span><span>Share data only with those who need it for their work</span></div>
+        </div>
+        <div>
+          <div class="dd-head dont">❌ You must NEVER do these</div>
+          <div class="dd-item"><span class="x">✗</span><span>Share personal data with unauthorised people</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Send personal data by unencrypted email</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Share your login credentials with colleagues</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Store personal data on personal devices or USB drives</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Use data for purposes other than why it was collected</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Keep databases without a defined purpose or owner</span></div>
+          <div class="dd-item"><span class="x">✗</span><span>Transfer data outside Kenya without Legal clearance</span></div>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="scen-head"><span class="scen-tag">📌 Scenario</span><span class="scen-title">The Borrowed Login</span></div>
+        <div class="scen-body">
+          <p class="scen-q">A trusted colleague urgently needs access to a document and asks to borrow your SharePoint login "just for five minutes." What do you do?</p>
+          <button class="scen-btn" onclick="toggleScen(this)">🔍 Reveal answer</button>
+          <div class="scen-reveal">
+            <div class="scen-ans">✗ Refuse — and direct them to IT to reset their own password.</div>
+            <div class="scen-exp">Sharing login credentials is always a security breach — no exceptions. Every person must access systems through their own authenticated account so all access to personal data can be audited and traced.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: INCIDENTS -->
+    <div class="slide" id="slide-5">
+      <div class="sec-head">
+        <div class="sec-num">5</div>
+        <div><div class="sec-label">Incidents &amp; Response</div><div class="sec-title">What to do if something goes wrong</div></div>
+      </div>
+
+      <div class="callout alert">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">The 72-hour rule — a hard legal deadline</div>
+          <div class="callout-text">KTB must notify the ODPC within <strong>72 hours</strong> of becoming aware of a breach. This clock starts when <em>anyone at KTB</em> becomes aware — not just Legal. Report immediately. Do not investigate yourself first.</div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><div class="step-title">STOP</div><div class="step-desc">Do not attempt to fix it yourself or cover it up.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div><div class="step-title">CONTAIN</div><div class="step-desc">If safe to do so — close a file, change a password — act immediately.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div><div class="step-title">REPORT — within the hour</div><div class="step-desc">Email <strong>allan@ktb.go.ke</strong> or <strong>dmutunga@ktb.go.ke</strong>. Do this within the hour, not the next morning.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div><div class="step-title">DOCUMENT</div><div class="step-desc">Write down what happened, when you noticed, and every action taken. Essential for the ODPC notification.</div></div></div>
+      </div>
+
+      <div class="callout gold">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">The golden rule</div>
+          <div class="callout-text">When in doubt about anything involving personal data — <strong>ask Legal before you act.</strong> Always better to pause and check than to breach.</div>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card"><div class="cc-avatar">AN</div><div><div class="cc-name">Allan Njoroge</div><div class="cc-role">Director, Legal Services &amp; Corporation Secretary</div><div class="cc-email">allan@ktb.go.ke</div></div></div>
+        <div class="contact-card"><div class="cc-avatar">DM</div><div><div class="cc-name">Doreen Mutunga</div><div class="cc-role">Deputy Director, Legal Services</div><div class="cc-email">dmutunga@ktb.go.ke</div></div></div>
+      </div>
+
+      <div class="takeaways" style="margin-top:16px;">
+        <p class="body-text" style="margin-bottom:6px;"><strong>5 things to remember:</strong></p>
+        <div class="takeaway"><div class="tk-num">1</div><div class="tk-text"><strong>Personal data belongs to the individual</strong> — KTB is a custodian, not an owner.</div></div>
+        <div class="takeaway"><div class="tk-num">2</div><div class="tk-text"><strong>Only collect what you need</strong>, and only use it for the purpose you collected it for.</div></div>
+        <div class="takeaway"><div class="tk-num">3</div><div class="tk-text"><strong>Protect data like money</strong> — unauthorised access is a breach even if nothing is misused.</div></div>
+        <div class="takeaway"><div class="tk-num">4</div><div class="tk-text"><strong>Report immediately</strong> — the 72-hour clock starts when anyone at KTB becomes aware.</div></div>
+        <div class="takeaway"><div class="tk-num">5</div><div class="tk-text"><strong>When in doubt, ask Legal first</strong> — always better to check than to breach.</div></div>
+      </div>
+    </div>
+
+    <!-- SLIDES 6–15: QUIZ QUESTIONS (one per slide) -->
+    <div class="slide" id="slide-6">
+      <div class="sec-head">
+        <div class="sec-num" style="background:var(--gold);color:var(--maroon-d);">?</div>
+        <div><div class="sec-label">Knowledge Check</div><div class="sec-title">Quiz — 10 Questions</div></div>
+      </div>
+      <div class="callout info" style="margin-bottom:16px;">
+        <div class="callout-icon">📋</div>
+        <div class="callout-body">
+          <div class="callout-title">Instructions</div>
+          <div class="callout-text">Answer each question one at a time. Select your answer to see instant feedback, then proceed to the next question. You need <strong>7 out of 10 (70%)</strong> to pass. Questions are drawn from the content you have just read.</div>
+        </div>
+      </div>
+      <div id="quiz-question-container"></div>
+      <div class="quiz-nav">
+        <div class="score-mini">
+          <span id="quiz-score-text">0 / 0 correct</span>
+          <div class="score-track"><div class="score-fill" id="score-fill" style="width:0%"></div></div>
+        </div>
+        <div class="quiz-dots" id="quiz-dots"></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 16: RESULTS -->
+    <div class="slide" id="slide-16">
+      <div class="results-card" id="results-card">
+        <div class="res-score" id="res-score">—</div>
+        <div class="res-label" id="res-label">—</div>
+        <div class="res-sub" id="res-sub">—</div>
+        <div class="res-badge" id="res-badge">—</div><br>
+        <button class="cert-btn" onclick="window.print()">🖨️ Print completion record</button>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="bb-left">
+      <div class="bb-section-name" id="bb-section-name">Introduction</div>
+    </div>
+    <div class="bb-btns">
+      <button class="btn-prev" id="btn-prev" onclick="navigate(-1)" style="display:none;">← Back</button>
+      <button class="understood-wrap" id="understood-btn" onclick="toggleUnderstood()" style="display:none;">
+        <div class="uc-box" id="uc-box">✓</div>
+        <span id="understood-label">I have read and understood this section</span>
+      </button>
+      <button class="btn-next" id="btn-next" onclick="navigate(1)">Next <span>→</span></button>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════
+const SECTIONS = [
+  { id: 'cover',        label: 'Start',          slide: 0,  requiresCheck: false },
+  { id: 'what',         label: 'What is the Act?', slide: 1, requiresCheck: true  },
+  { id: 'ktb',          label: 'How it affects KTB', slide: 2, requiresCheck: true },
+  { id: 'principles',   label: '8 Principles',   slide: 3,  requiresCheck: true  },
+  { id: 'obligations',  label: 'Your obligations', slide: 4, requiresCheck: true  },
+  { id: 'incidents',    label: 'Incidents',       slide: 5,  requiresCheck: true  },
+  { id: 'quiz',         label: 'Quiz',            slide: 6,  requiresCheck: false },
+  { id: 'results',      label: 'Results',         slide: 16, requiresCheck: false },
+];
+
+// learning sections only (for the tabs)
+const LEARNING_SECTIONS = SECTIONS.filter(s => s.requiresCheck);
+
+const QUESTIONS = [
+  { q: "Which of the following is 'sensitive personal data' requiring higher protection?",
+    opts: ["Email address and phone number","Name and physical address","Health and medical records","Job title and department"],
+    ans: 2, fb: { ok: "Correct! The Act specifically classifies health data, biometric data, racial/ethnic origin, religious beliefs, and criminal records as sensitive personal data.", no: "Incorrect. Health and medical records are sensitive personal data under the Act, requiring additional safeguards beyond standard personal data." }},
+  { q: "KTB's marketing team wants to send an email campaign. What must they confirm before sending?",
+    opts: ["The email is well-designed","Recipients have consented to this marketing and there is an unsubscribe option","The list has more than 1,000 contacts","The CEO has approved the campaign"],
+    ans: 1, fb: { ok: "Correct! Marketing requires explicit consent from each recipient, and an unsubscribe mechanism is legally required.", no: "Incorrect. Explicit consent from each recipient and a mandatory unsubscribe option are legal requirements before sending marketing communications." }},
+  { q: "A laptop with unencrypted tourist passport numbers is lost. What is KTB's maximum time to notify the ODPC?",
+    opts: ["7 days from the incident","24 hours from IT discovering it","72 hours from when KTB becomes aware","30 days from notifying affected individuals"],
+    ans: 2, fb: { ok: "Correct! 72 hours from when anyone at KTB becomes aware — not just when Legal or IT is informed. Report immediately.", no: "Incorrect. The Act imposes a strict 72-hour notification window from the moment KTB becomes aware of a reportable breach." }},
+  { q: "Under 'data minimisation,' what should a KTB event registration form do?",
+    opts: ["Collect as much information as possible","Collect only the information needed for the specific event","Require national ID numbers as standard","Require next-of-kin details for all events"],
+    ans: 1, fb: { ok: "Correct! Collect only what is genuinely necessary for the stated purpose. Excess data collection is a violation.", no: "Incorrect. Data minimisation requires collecting only what is genuinely needed for the specific purpose of the event." }},
+  { q: "A member of the public requests a copy of all data KTB holds about them. Within how many days must KTB respond?",
+    opts: ["7 days","14 days","30 days","60 days"],
+    ans: 2, fb: { ok: "Correct! KTB must respond to Subject Access Requests within 30 days.", no: "Incorrect. The Act requires a response to Subject Access Requests within 30 days of receipt." }},
+  { q: "A trusted colleague urgently asks to use your SharePoint login. What should you do?",
+    opts: ["Share it — it is a genuine emergency","Share it, then change your password immediately after","Refuse and direct them to IT to reset their own password","Share only if a manager authorises it verbally"],
+    ans: 2, fb: { ok: "Correct! Sharing login credentials is always a security breach — no exceptions. Direct them to IT.", no: "Incorrect. Sharing credentials is always a breach regardless of circumstances. Every person must use their own authenticated account." }},
+  { q: "A travel agent in Germany says they did not consent to KTB's mailing list and requests removal. What must KTB do?",
+    opts: ["Explain the Act does not apply to non-Kenyans","Remove them immediately and confirm the removal","Investigate whether they consented before acting","Transfer the request to marketing to decide"],
+    ans: 1, fb: { ok: "Correct! The right to withdraw consent must be honoured immediately for marketing, regardless of the individual's location.", no: "Incorrect. The right to withdraw consent must be honoured immediately. KTB's activities abroad also attract obligations under laws like GDPR." }},
+  { q: "Which best describes 'purpose limitation' under the Data Protection Act?",
+    opts: ["You can use any data for any purpose as long as it stays within KTB","Data collected for one purpose cannot be used for a different incompatible purpose without fresh consent","Tourist data can freely be shared with government ministries","You can expand data use as long as you update your privacy notice within 90 days"],
+    ans: 1, fb: { ok: "Correct! Purpose limitation means data must stay within the original purpose. Any new use generally requires fresh consent.", no: "Incorrect. Purpose limitation strictly limits data use to the original stated purpose. Reuse requires a new legal basis." }},
+  { q: "An unknown person sends a WhatsApp message claiming to be a supplier and asks for names and contacts of KTB's procurement team. What should you do?",
+    opts: ["Provide the information — it is publicly known anyway","Check with procurement, then share if they confirm the person","Refer the request to the Legal Directorate before sharing anything","Share only job titles, not names"],
+    ans: 2, fb: { ok: "Correct! Requests for personal data from unverified parties must always go through Legal first. Social engineering is a common cause of breaches.", no: "Incorrect. Any request for personal data from an unknown or unverified party must be referred to Legal before any data is shared." }},
+  { q: "Under the Act, what is a 'data processor' as distinct from a 'data controller'?",
+    opts: ["A staff member who enters data into KTB's systems","A third party (such as a vendor) that processes personal data on KTB's behalf","The IT department responsible for KTB's databases","The ODPC official who handles breach notifications"],
+    ans: 1, fb: { ok: "Correct! KTB as data controller decides why and how data is processed. External vendors handling that data are data processors — and KTB remains responsible for their compliance.", no: "Incorrect. A data processor is an external organisation (vendor, contractor, cloud provider) that processes data on KTB's instructions." }},
+];
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let currentSlide   = 0;    // 0 = cover, 1-5 = sections, 6 = quiz, 16 = results
+let understood     = false;
+let quizIndex      = 0;    // current question (0-9)
+let quizAnswers    = new Array(QUESTIONS.length).fill(null);
+let timerSeconds   = 0;
+let timerInterval  = null;
+let sectionsDone   = new Set();
+
+// map slide index → section index (for tabs)
+const TOTAL_SLIDES = 17; // 0-16 but we jump 6→6(quiz)→16
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  buildPips();
+  buildTabs();
+  buildQuizDots();
+  renderQuestion(0);
+  updateUI();
+  startTimer();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const m = String(Math.floor(timerSeconds / 60)).padStart(2,'0');
+    const s = String(timerSeconds % 60).padStart(2,'0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  PROGRESS PIPS
+// ═══════════════════════════════════════════════════════
+function buildPips() {
+  const wrap = document.getElementById('prog-steps');
+  // 8 pips: cover + 5 sections + quiz + results
+  for (let i = 0; i < 8; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'prog-step-pip';
+    pip.id = `pip-${i}`;
+    wrap.appendChild(pip);
+  }
+}
+
+function pipIndex() {
+  // map slide → pip index
+  if (currentSlide === 0)  return 0;
+  if (currentSlide <= 5)   return currentSlide;
+  if (currentSlide === 6)  return 6;
+  if (currentSlide === 16) return 7;
+  return 6;
+}
+
+function updatePips() {
+  const current = pipIndex();
+  for (let i = 0; i < 8; i++) {
+    const pip = document.getElementById(`pip-${i}`);
+    pip.className = 'prog-step-pip';
+    if (i < current)  pip.classList.add('done');
+    if (i === current) pip.classList.add('active');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════
+function buildTabs() {
+  const wrap = document.getElementById('section-tabs');
+  LEARNING_SECTIONS.forEach((sec, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'stab';
+    tab.id = `tab-${sec.id}`;
+    tab.innerHTML = `<span class="stab-num">${i+1}</span>${sec.label}`;
+    wrap.appendChild(tab);
+  });
+}
+
+function updateTabs() {
+  LEARNING_SECTIONS.forEach(sec => {
+    const tab = document.getElementById(`tab-${sec.id}`);
+    if (!tab) return;
+    tab.className = 'stab';
+    if (sectionsDone.has(sec.id)) {
+      tab.classList.add('done');
+      tab.querySelector('.stab-num').textContent = '✓';
+    } else {
+      tab.querySelector('.stab-num').textContent = LEARNING_SECTIONS.indexOf(sec) + 1;
+    }
+    if (currentSlide === sec.slide) tab.classList.add('active');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════════════
+function buildQuizDots() {
+  const wrap = document.getElementById('quiz-dots');
+  QUESTIONS.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'qdot';
+    dot.id = `qdot-${i}`;
+    wrap.appendChild(dot);
+  });
+}
+
+function renderQuestion(index) {
+  const q = QUESTIONS[index];
+  const container = document.getElementById('quiz-question-container');
+  container.innerHTML = `
+    <div class="quiz-q">
+      <div class="quiz-q-head">
+        <span class="q-badge">Q${index+1} / ${QUESTIONS.length}</span>
+        <span class="q-text">${q.q}</span>
+      </div>
+      <div class="q-opts">
+        ${q.opts.map((o, oi) => `
+          <button class="q-opt" id="qopt-${oi}" onclick="answerQuestion(${index}, ${oi})">
+            <span class="q-letter">${String.fromCharCode(65+oi)}</span>
+            <span>${o}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-fb" id="q-fb"></div>
+    </div>
+  `;
+  updateQuizDots();
+  updateScoreBar();
+}
+
+function answerQuestion(qi, oi) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi;
+
+  const correct = QUESTIONS[qi].ans;
+  const isOk = oi === correct;
+
+  for (let i = 0; i < QUESTIONS[qi].opts.length; i++) {
+    const btn = document.getElementById(`qopt-${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === oi && isOk)  btn.classList.add('correct');
+    if (i === oi && !isOk) btn.classList.add('wrong');
+    if (i === correct && !isOk) btn.classList.add('reveal');
+  }
+
+  const fb = document.getElementById('q-fb');
+  fb.classList.add('show');
+  fb.classList.add(isOk ? 'ok' : 'err');
+  fb.innerHTML = isOk
+    ? `✓ &nbsp;<strong>Correct!</strong> ${QUESTIONS[qi].fb.ok}`
+    : `✗ &nbsp;<strong>Incorrect.</strong> ${QUESTIONS[qi].fb.no}`;
+
+  updateQuizDots();
+  updateScoreBar();
+
+  // auto-enable next after short delay
+  setTimeout(() => {
+    enableNext();
+  }, 900);
+}
+
+function updateQuizDots() {
+  QUESTIONS.forEach((q, i) => {
+    const dot = document.getElementById(`qdot-${i}`);
+    if (!dot) return;
+    dot.className = 'qdot';
+    if (quizAnswers[i] !== null) dot.classList.add('answered');
+    if (i === quizIndex) dot.classList.add('current');
+  });
+}
+
+function updateScoreBar() {
+  const answered = quizAnswers.filter(a => a !== null).length;
+  const correct  = quizAnswers.filter((a, i) => a === QUESTIONS[i].ans).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('quiz-score-text').textContent = `${correct} / ${answered} correct`;
+  document.getElementById('score-fill').style.width = pct + '%';
+}
+
+function showResults() {
+  const correct = quizAnswers.filter((a, i) => a === QUESTIONS[i].ans).length;
+  const pct = Math.round((correct / QUESTIONS.length) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('res-score').textContent = `${correct}/10`;
+  document.getElementById('res-score').className = `res-score ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('res-label').textContent = passed ? '✓ Module Passed' : '✗ Not Passed';
+  document.getElementById('res-label').className = `res-label ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('res-sub').textContent = passed
+    ? `You scored ${pct}% — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.`
+    : `You scored ${pct}% — below the 70% pass mark. Please review the module content and contact the Legal Directorate.`;
+  document.getElementById('res-badge').innerHTML = passed
+    ? `🏅 Data Protection Act 2019<br>Completed ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} · KTB Legal Hub`
+    : `📚 Please review the highlighted sections and retake the module.`;
+
+  clearInterval(timerInterval);
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+function startModule() {
+  navigate(1);
+}
+
+function navigate(dir) {
+  const contentArea = document.getElementById('content-area');
+
+  // determine next slide
+  let next = currentSlide;
+
+  if (dir === 1) {
+    // forward
+    if (currentSlide === 0)  next = 1;
+    else if (currentSlide >= 1 && currentSlide <= 5) next = currentSlide + 1;
+    else if (currentSlide === 5) next = 6;
+    else if (currentSlide === 6) {
+      // quiz: advance question or go to results
+      if (quizIndex < QUESTIONS.length - 1) {
+        quizIndex++;
+        renderQuestion(quizIndex);
+        resetUnderstood();
+        updateUI();
+        contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      } else {
+        // all questions done — go to results
+        next = 16;
+        showResults();
+      }
+    }
+  } else {
+    // backward
+    if (currentSlide === 1)  next = 0;
+    else if (currentSlide >= 2 && currentSlide <= 5) next = currentSlide - 1;
+    else if (currentSlide === 6) {
+      if (quizIndex > 0) {
+        quizIndex--;
+        renderQuestion(quizIndex);
+        updateUI();
+        contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      } else {
+        next = 5;
+      }
+    }
+    else if (currentSlide === 16) next = 6;
+  }
+
+  if (next === currentSlide) return;
+
+  // hide current slide
+  const oldSlide = document.getElementById(`slide-${currentSlide}`);
+  if (oldSlide) { oldSlide.classList.remove('active'); oldSlide.classList.remove('back'); }
+
+  // mark section done if moving forward from a content section
+  if (dir === 1 && currentSlide >= 1 && currentSlide <= 5) {
+    const sec = SECTIONS[currentSlide];
+    if (sec) sectionsDone.add(sec.id);
+  }
+
+  currentSlide = next;
+  resetUnderstood();
+
+  // show new slide
+  const newSlide = document.getElementById(`slide-${currentSlide}`);
+  if (newSlide) {
+    newSlide.classList.remove('back');
+    if (dir === -1) newSlide.classList.add('back');
+    newSlide.classList.add('active');
+  }
+
+  contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+  updateUI();
+}
+
+// ═══════════════════════════════════════════════════════
+//  UNDERSTOOD TOGGLE
+// ═══════════════════════════════════════════════════════
+function toggleUnderstood() {
+  understood = !understood;
+  const btn = document.getElementById('understood-btn');
+  btn.classList.toggle('checked', understood);
+  document.getElementById('uc-box').textContent = understood ? '✓' : '✓';
+  document.getElementById('understood-label').textContent = understood
+    ? 'Understood ✓'
+    : 'I have read and understood this section';
+  if (understood) enableNext(); else disableNext();
+}
+
+function resetUnderstood() {
+  understood = false;
+  const btn = document.getElementById('understood-btn');
+  if (btn) {
+    btn.classList.remove('checked');
+    document.getElementById('understood-label').textContent = 'I have read and understood this section';
+  }
+}
+
+function enableNext()  { document.getElementById('btn-next').classList.add('enabled'); }
+function disableNext() { document.getElementById('btn-next').classList.remove('enabled'); }
+
+// ═══════════════════════════════════════════════════════
+//  UI UPDATE
+// ═══════════════════════════════════════════════════════
+const SECTION_NAMES = {
+  0:  'Introduction',
+  1:  'Section 1 — What is the Act?',
+  2:  'Section 2 — How it affects KTB',
+  3:  'Section 3 — The 8 Principles',
+  4:  'Section 4 — Your Obligations',
+  5:  'Section 5 — Incidents & Response',
+  6:  `Quiz — Question ${quizIndex+1} of ${QUESTIONS.length}`,
+  16: 'Results',
+};
+
+function updateUI() {
+  const isQuiz    = currentSlide === 6;
+  const isResults = currentSlide === 16;
+  const isCover   = currentSlide === 0;
+  const isContent = currentSlide >= 1 && currentSlide <= 5;
+
+  // step counter
+  let stepNum;
+  if (isCover)   stepNum = '1 of 9';
+  else if (isContent) stepNum = `${currentSlide + 1} of 9`;
+  else if (isQuiz)    stepNum = `${quizIndex + 7} of 9`;
+  else stepNum = '9 of 9';
+  document.getElementById('step-counter').textContent = `Step ${stepNum}`;
+
+  // section name
+  const nameMap = { ...SECTION_NAMES, 6: `Quiz — Q${quizIndex+1} of ${QUESTIONS.length}` };
+  document.getElementById('bb-section-name').textContent = nameMap[currentSlide] || '';
+
+  // understood checkbox
+  const understoodBtn = document.getElementById('understood-btn');
+  understoodBtn.style.display = isContent ? 'flex' : 'none';
+
+  // prev button
+  const prevBtn = document.getElementById('btn-prev');
+  prevBtn.style.display = (isCover || isResults) ? 'none' : 'flex';
+
+  // next button
+  const nextBtn = document.getElementById('btn-next');
+  if (isResults) {
+    nextBtn.style.display = 'none';
+  } else if (isCover) {
+    nextBtn.style.display = 'none'; // cover uses its own start button
+  } else if (isContent) {
+    nextBtn.textContent = 'Next →';
+    nextBtn.style.display = 'flex';
+    if (understood) enableNext(); else disableNext();
+  } else if (isQuiz) {
+    const answered = quizAnswers[quizIndex] !== null;
+    const isLast   = quizIndex === QUESTIONS.length - 1;
+    nextBtn.textContent = isLast ? 'See Results →' : `Next Question →`;
+    nextBtn.style.display = 'flex';
+    if (answered) enableNext(); else disableNext();
+  }
+
+  updatePips();
+  updateTabs();
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCENARIO TOGGLE
+// ═══════════════════════════════════════════════════════
+function toggleScen(btn) {
+  const reveal = btn.nextElementSibling;
+  reveal.classList.toggle('open');
+  btn.textContent = reveal.classList.contains('open') ? '🔼 Hide answer' : '🔍 Reveal answer';
+}
+
+// ── BOOT ──────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
