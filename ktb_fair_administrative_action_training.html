@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KTB Training · Fair Administrative Action Act (Cap. 7L)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2d3a4a;
+  --primary-dark:#1a2530;
+  --primary-light:#3f5060;
+  --gold:#C19A28;
+  --gold-light:#d4b44a;
+  --bg:#f5f3ef;
+  --card:#fff;
+  --text:#23272f;
+  --text-light:#555e6a;
+  --red:#b53030;
+  --red-bg:#fdf0f0;
+  --green:#1a7a3a;
+  --green-bg:#eef8f0;
+  --border:#ddd5ca;
+  --radius:10px;
+}
+html,body{overflow:hidden;height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+.shell{display:grid;grid-template-rows:auto auto auto 1fr auto;height:100vh;overflow:hidden}
+
+/* TOP BAR */
+.topbar{background:var(--primary);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.topbar .logo{font-weight:700;letter-spacing:.5px}
+.topbar .module-label{opacity:.85;font-size:13px}
+
+/* PROGRESS PIPS */
+.progress-bar{background:var(--primary-dark);padding:8px 24px;display:flex;gap:6px;align-items:center}
+.pip{width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,.18);transition:background .3s}
+.pip.filled{background:var(--gold)}
+
+/* SECTION TABS */
+.section-tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .2s}
+.tab.active{color:var(--primary);border-bottom-color:var(--gold)}
+.tab .tick{display:none;color:var(--green);font-weight:700}
+.tab.done .tick{display:inline}
+
+/* CONTENT AREA */
+.content-area{overflow-y:auto;padding:0;scroll-behavior:smooth}
+.slide{display:none;padding:32px 24px 100px;max-width:860px;margin:0 auto;width:100%;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM BAR */
+.bottombar{background:#fff;border-top:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.section-indicator{font-size:13px;color:var(--text-light);font-weight:500;white-space:nowrap}
+.nav-controls{display:flex;align-items:center;gap:12px}
+.understood-wrap{display:flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:#faf8f4;user-select:none}
+#understood-btn{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .2s;font-size:12px;color:transparent;flex-shrink:0}
+#understood-btn.checked{background:var(--gold);border-color:var(--gold);color:#fff}
+.understood-label{font-size:13px;color:var(--text-light);white-space:nowrap}
+.nav-btn{padding:10px 28px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+#btn-prev{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+#btn-prev:hover{background:#e8e4dd}
+#btn-next{background:var(--gold);color:#fff}
+#btn-next:hover{background:var(--gold-light)}
+#btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+/* COVER */
+.cover{text-align:center;padding-top:60px}
+.cover .eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:12px}
+.cover h1{font-size:32px;color:var(--primary);line-height:1.25;margin-bottom:8px}
+.cover .subtitle{font-size:16px;color:var(--text-light);margin-bottom:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:32px}
+.chip{background:var(--primary);color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600}
+.chip.gold{background:var(--gold)}
+.begin-btn{display:inline-block;padding:16px 48px;background:var(--gold);color:#fff;font-size:16px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:all .25s;text-transform:uppercase;letter-spacing:1px}
+.begin-btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 4px 16px rgba(193,154,40,.3)}
+.cover-info{background:var(--green-bg);border:1px solid #b8dfc0;border-radius:var(--radius);padding:20px;margin-top:28px;text-align:left;font-size:14px;line-height:1.65;max-width:620px;margin-left:auto;margin-right:auto}
+.cover-info strong{color:var(--primary)}
+.byline{margin-top:20px;font-size:12px;color:var(--text-light);font-style:italic}
+
+/* SECTION CONTENT */
+.section-title{font-size:24px;color:var(--primary);margin-bottom:6px;font-weight:700}
+.section-num{font-size:13px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.callout{border-left:4px solid var(--gold);background:#faf6eb;padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:20px 0;font-size:14px;line-height:1.7}
+.callout.red{border-left-color:var(--red);background:var(--red-bg)}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout strong{color:var(--primary)}
+p{font-size:15px;line-height:1.75;margin-bottom:14px;color:var(--text)}
+h3{font-size:18px;color:var(--primary-dark);margin:24px 0 10px}
+
+/* TABLE */
+.ref-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.ref-table th{background:var(--primary);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+.ref-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.ref-table tr:nth-child(even) td{background:#faf8f4}
+
+/* OBLIGATIONS GRID */
+.obli-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.obli-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:14px;line-height:1.6}
+.obli-card .activity{font-weight:700;color:var(--primary);margin-bottom:4px}
+.obli-card .issue{color:var(--text-light);margin-bottom:4px}
+.obli-card .ref{font-size:12px;color:var(--gold);font-weight:600}
+
+/* DO / DON'T TABLE */
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.do-col,.dont-col{border-radius:var(--radius);padding:18px;font-size:14px;line-height:1.7}
+.do-col{background:var(--green-bg);border:1px solid #b8dfc0}
+.dont-col{background:var(--red-bg);border:1px solid #e6b8b8}
+.do-col h4{color:var(--green);margin-bottom:10px;font-size:15px}
+.dont-col h4{color:var(--red);margin-bottom:10px;font-size:15px}
+.do-col li,.dont-col li{margin-bottom:6px;padding-left:4px}
+.do-col ul,.dont-col ul{padding-left:18px}
+
+/* SCENARIO */
+.scenario{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:20px 0}
+.scenario .label{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gold);letter-spacing:1px;margin-bottom:8px}
+.scenario .prompt{font-size:15px;line-height:1.7;margin-bottom:14px}
+.reveal-btn{background:var(--primary);color:#fff;padding:8px 20px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer}
+.reveal-btn:hover{background:var(--primary-light)}
+.reveal-text{display:none;margin-top:14px;padding:14px;background:#edf2f7;border-radius:8px;font-size:14px;line-height:1.7;border:1px solid #c5d0dc}
+
+/* TIMELINE TABLE */
+.timeline-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.timeline-table th{background:var(--primary);color:#fff;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.timeline-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.timeline-table tr:nth-child(even) td{background:#faf8f4}
+.badge-red{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+
+/* KEY TAKEAWAYS */
+.takeaway{display:flex;gap:14px;align-items:flex-start;margin:14px 0}
+.takeaway-num{background:var(--gold);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.takeaway-text{font-size:14px;line-height:1.65;padding-top:5px}
+
+/* CONTACT CARDS */
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center}
+.contact-card .name{font-weight:700;color:var(--primary);font-size:15px}
+.contact-card .role{font-size:12px;color:var(--text-light);margin:4px 0 8px}
+.contact-card .email{font-size:13px;color:var(--gold);font-weight:600;word-break:break-all}
+
+/* QUIZ */
+.quiz-header{text-align:center;margin-bottom:20px}
+.quiz-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.qdot{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#888;transition:all .3s}
+.qdot.current{border:2px solid var(--gold);color:var(--gold)}
+.qdot.correct{background:var(--green);color:#fff}
+.qdot.wrong{background:var(--red);color:#fff}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:680px;margin:0 auto}
+.q-card .q-num{font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q-card .q-text{font-size:16px;line-height:1.6;margin-bottom:20px;font-weight:600}
+.q-options{display:grid;gap:10px}
+.q-opt{padding:14px 18px;border:2px solid var(--border);border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;background:#fff;text-align:left;font-family:inherit;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.q-opt:hover{border-color:var(--gold);background:#faf6eb}
+.q-opt .letter{font-weight:700;color:var(--primary);flex-shrink:0}
+.q-opt.correct-answer{border-color:var(--green);background:var(--green-bg)}
+.q-opt.wrong-answer{border-color:var(--red);background:var(--red-bg)}
+.q-opt.reveal-correct{border-color:var(--green);background:var(--green-bg)}
+.q-opt.disabled{pointer-events:none;opacity:.85}
+.q-feedback{margin-top:16px;padding:14px;border-radius:8px;font-size:14px;line-height:1.6;display:none}
+.q-feedback.show{display:block}
+.q-feedback.correct{background:var(--green-bg);border:1px solid #b8dfc0;color:var(--green)}
+.q-feedback.wrong{background:var(--red-bg);border:1px solid #e6b8b8;color:var(--red)}
+.score-bar-wrap{max-width:400px;margin:0 auto 20px;text-align:center}
+.score-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px}
+.score-fill{height:100%;background:var(--gold);transition:width .4s;width:0}
+.score-label{font-size:13px;color:var(--text-light)}
+
+/* RESULTS */
+.results-card{text-align:center;max-width:560px;margin:40px auto;background:var(--card);border-radius:16px;padding:48px 40px;border:2px solid var(--gold)}
+.results-card .big-score{font-size:72px;font-weight:800;line-height:1}
+.results-card .big-score.pass{color:var(--primary)}
+.results-card .big-score.fail{color:var(--red)}
+.results-card .result-label{font-size:22px;font-weight:700;margin:8px 0 16px}
+.results-card .result-label.pass{color:var(--primary)}
+.results-card .result-label.fail{color:var(--red)}
+.results-card .result-msg{font-size:14px;line-height:1.7;color:var(--text-light);margin-bottom:24px}
+.cert-badge{display:inline-block;border:1.5px solid var(--gold);border-radius:10px;padding:12px 28px;margin:20px auto;text-align:center}
+.cert-badge .cert-icon{font-size:20px;margin-bottom:2px}
+.cert-badge .cert-title{font-size:14px;font-weight:700;color:var(--primary)}
+.cert-badge .cert-date{font-size:13px;color:var(--text-light);margin-top:2px}
+.print-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:12px 32px;background:transparent;color:var(--text-light);border:none;font-size:14px;font-weight:500;cursor:pointer}
+.print-btn:hover{color:var(--primary)}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .obli-grid,.do-dont,.contacts{grid-template-columns:1fr}
+  .cover h1{font-size:24px}
+  .slide{padding:20px 16px 80px}
+  .q-card{padding:16px}
+  .nav-controls{gap:6px}
+  .understood-wrap{padding:6px 8px}
+  .nav-btn{padding:10px 16px;font-size:13px}
+}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .shell{display:block!important;height:auto!important;overflow:visible!important}
+  .bottombar,.topbar,.progress-bar,.section-tabs{display:none!important}
+  .content-area{overflow:visible!important;height:auto!important}
+  .slide{display:none!important;padding:0!important}
+  #slide-16{display:block!important;padding:40px 24px!important}
+  .results-card{border:2px solid var(--gold);box-shadow:none;margin:60px auto;page-break-inside:avoid}
+  .print-btn{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">KTB LEGAL HUB</div>
+    <div class="module-label">Training Module · Administrative Justice</div>
+  </div>
+
+  <!-- PROGRESS PIPS -->
+  <div class="progress-bar" id="progress-bar">
+    <div class="pip" data-pip="0"></div>
+    <div class="pip" data-pip="1"></div>
+    <div class="pip" data-pip="2"></div>
+    <div class="pip" data-pip="3"></div>
+    <div class="pip" data-pip="4"></div>
+    <div class="pip" data-pip="5"></div>
+    <div class="pip" data-pip="6"></div>
+  </div>
+
+  <!-- SECTION TABS -->
+  <div class="section-tabs" id="section-tabs">
+    <div class="tab" data-tab="0" onclick="goToSlide(0)">Cover</div>
+    <div class="tab" data-tab="1" onclick="goToSlide(1)">1 · Foundation <span class="tick">✓</span></div>
+    <div class="tab" data-tab="2" onclick="goToSlide(2)">2 · KTB Context <span class="tick">✓</span></div>
+    <div class="tab" data-tab="3" onclick="goToSlide(3)">3 · Obligations <span class="tick">✓</span></div>
+    <div class="tab" data-tab="4" onclick="goToSlide(4)">4 · Procedures <span class="tick">✓</span></div>
+    <div class="tab" data-tab="5" onclick="goToSlide(5)">5 · Remedies <span class="tick">✓</span></div>
+    <div class="tab" data-tab="6" onclick="goToSlide(6)">Quiz <span class="tick">✓</span></div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area" id="content-area">
+
+    <!-- ===================== SLIDE 0: COVER ===================== -->
+    <div class="slide active" id="slide-0">
+      <div class="cover">
+        <div class="eyebrow">Directorate of Legal Services · KTB</div>
+        <h1>Fair Administrative Action Act</h1>
+        <p class="subtitle">Cap. 7L — Giving effect to Article 47 of the Constitution</p>
+        <div class="chips">
+          <span class="chip">⏱ 30 min read</span>
+          <span class="chip">📝 10 quiz questions</span>
+          <span class="chip gold">Pass mark: 70%</span>
+          <span class="chip">📅 Commenced 17 Jun 2015</span>
+          <span class="chip">👥 All KTB Staff</span>
+        </div>
+        <button class="begin-btn" onclick="navigate(1)">Begin Training →</button>
+        <div class="cover-info">
+          <strong>This module has been developed by the Directorate of Legal Services</strong> to help all KTB staff understand their obligations under Kenya's Fair Administrative Action Act (Cap. 7L). The module covers what fair administrative action means, how it applies to KTB's decision-making, and the rights of people affected by your decisions.
+          <br><br>It includes <strong>five sections and a ten-question quiz</strong>. You must score at least 70% to pass.
+        </div>
+        <div class="byline">Reviewed and approved by Allan Njoroge, Director of Legal Services &amp; Corporation Secretary, Kenya Tourism Board.</div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 1: FOUNDATION ===================== -->
+    <div class="slide" id="slide-1">
+      <div class="section-num">Section 1 of 5</div>
+      <div class="section-title">What Is the Fair Administrative Action Act?</div>
+
+      <div class="callout">
+        <strong>Why does this matter to you personally?</strong> Every time you make a decision at KTB that affects someone else — declining a supplier application, terminating a contract, denying leave, disciplining a staff member, rejecting a sponsorship request, or removing someone from a database — you are taking an <strong>administrative action</strong>. This Act says that every person affected by your decisions has the constitutional right to be treated fairly, given reasons, and allowed to challenge those decisions. If you skip these steps, KTB's decision can be overturned by a court and you may have to start again from scratch.
+      </div>
+
+      <p>The <strong>Fair Administrative Action Act (Cap. 7L)</strong> was enacted in 2015 to give effect to <strong>Article 47 of the Constitution</strong>, which guarantees every person the right to administrative action that is expeditious, efficient, lawful, reasonable, and procedurally fair. It applies to every state and non-state body exercising administrative authority — including KTB.</p>
+
+      <p>In plain terms: whenever KTB (or any of its officers) exercises a power, performs a function, or makes a decision that affects someone's legal rights or interests, that action must be done fairly, with reasons, and with the opportunity for the affected person to be heard.</p>
+
+      <h3>Who does this Act apply to?</h3>
+      <p>Section 3 makes the Act very broad. It applies to any person exercising administrative authority, performing a judicial or quasi-judicial function, or whose action, omission, or decision affects the legal rights or interests of any person. This means it covers KTB as an institution, KTB's Board, and <strong>every individual KTB staff member</strong> who makes decisions affecting others.</p>
+
+      <h3>The oversight body</h3>
+      <p>The <strong>Commission on Administrative Justice (Office of the Ombudsman)</strong> is the body that receives complaints about administrative injustice. However, any aggrieved person can also go directly to the <strong>High Court</strong> for judicial review (Section 7).</p>
+
+      <h3>Key Defined Terms</h3>
+      <table class="ref-table">
+        <tr><th>Term</th><th>What It Means in Plain English</th></tr>
+        <tr><td><strong>Administrative action</strong></td><td>Any power, function, duty, act, omission, or decision by a person or body that affects someone else's legal rights or interests. (Section 2)</td></tr>
+        <tr><td><strong>Administrator</strong></td><td>The person who takes the administrative action or makes the decision — at KTB, this could be any staff member, manager, committee, or the Board. (Section 2)</td></tr>
+        <tr><td><strong>Empowering provision</strong></td><td>The law, rule, agreement, or instrument that gives you the authority to take the action. You must act within the boundaries of this provision. (Section 2)</td></tr>
+        <tr><td><strong>Decision</strong></td><td>Any administrative or quasi-judicial decision that is made, proposed to be made, or required to be made. A "failure" to make a decision (including a refusal) also counts. (Section 2)</td></tr>
+        <tr><td><strong>Judicial review</strong></td><td>The process by which a court examines whether an administrative decision was lawful, reasonable, and procedurally fair — and can overturn it if it was not. (Sections 7–11)</td></tr>
+        <tr><td><strong>Procedural fairness</strong></td><td>The requirement that the decision-maker follows a fair process — notice, hearing, reasons — not just reaches a fair outcome.</td></tr>
+      </table>
+
+      <h3>Commencement</h3>
+      <p>The Act was assented to on 27 May 2015 and commenced on <strong>17 June 2015</strong>. It applies to all proceedings pending at the time it came into force (Section 14). It operates alongside, not in place of, the common law rules of natural justice (Section 12).</p>
+    </div>
+
+    <!-- ===================== SLIDE 2: KTB CONTEXT ===================== -->
+    <div class="slide" id="slide-2">
+      <div class="section-num">Section 2 of 5</div>
+      <div class="section-title">How Does Fair Administrative Action Affect KTB?</div>
+
+      <p>KTB staff make administrative decisions every day. Many of these decisions affect the legal rights or interests of suppliers, partners, staff members, event participants, and the public. Each of these decisions must comply with the Act. Here are the KTB-specific situations where this law applies:</p>
+
+      <div class="obli-grid">
+        <div class="obli-card">
+          <div class="activity">📋 Procurement Decisions</div>
+          <div class="issue">Disqualifying a bidder, debarring a supplier, terminating a procurement process, or rejecting a tender — each of these affects a person's legal rights and requires prior notice, reasons, and an opportunity to respond.</div>
+          <div class="ref">Section 4(3)(a)–(g)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">👥 HR &amp; Disciplinary Actions</div>
+          <div class="issue">Issuing warnings, suspending staff, denying promotions, terminating employment, or rejecting leave requests. The staff member has a right to notice, a hearing, and written reasons before any adverse action is taken.</div>
+          <div class="ref">Section 4(2)–(4)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🤝 Sponsorship &amp; Partnership Decisions</div>
+          <div class="issue">Declining a hotel's request to be featured in KTB's marketing, rejecting a tour operator's partnership proposal, or removing a partner from KTB's preferred list. These decisions affect commercial interests and trigger fairness obligations.</div>
+          <div class="ref">Section 4(3)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">📢 Public Notices &amp; Policy Changes</div>
+          <div class="issue">When KTB changes a policy that affects the tourism industry — e.g. new criteria for tourism service provider listings, new event participation rules — it must issue public notice, invite views, and consider them before acting.</div>
+          <div class="ref">Section 5(1)(a)–(d)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🗃️ Database &amp; Registration Decisions</div>
+          <div class="issue">Removing a travel agent from KTB's trade partner database, de-listing an accommodation provider, or refusing registration. The affected person has a right to know why and to challenge the decision.</div>
+          <div class="ref">Section 4(3), Section 6</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">💰 Financial &amp; Contract Decisions</div>
+          <div class="issue">Withholding payment to a contractor, applying liquidated damages, terminating a contract for poor performance, or varying contract terms adversely. Each requires notice, reasons, and an opportunity for the affected party to respond.</div>
+          <div class="ref">Section 4(3)–(4)</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">🏛️ Board Decisions</div>
+          <div class="issue">Board resolutions that affect individuals — e.g. approving a staff restructuring, terminating the CEO's contract, or debarring a supplier — are administrative actions subject to fairness requirements.</div>
+          <div class="ref">Section 3, Section 4</div>
+        </div>
+        <div class="obli-card">
+          <div class="activity">📧 Complaints &amp; Dispute Resolution</div>
+          <div class="issue">When KTB receives a complaint from a member of the public, a staff member, or a supplier and decides to reject it or take no action — that decision is also an administrative action requiring reasons.</div>
+          <div class="ref">Section 4(2), Section 6</div>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="label">🔍 Scenario — Think Before You Click "Reveal"</div>
+        <div class="prompt">
+          A tour operator who has participated in KTB-organised roadshows for the past three years is suddenly excluded from the next roadshow. When they enquire, a Marketing Manager tells them informally that they have been "blacklisted" but offers no written explanation or reason. The operator says they were never notified or given a chance to respond. Has KTB complied with the Fair Administrative Action Act?
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text">
+          <strong>Answer: No.</strong> Excluding a tour operator from KTB-organised roadshows adversely affects their commercial interests — this is an administrative action under Section 2. Under Section 4(3), KTB was required to: (a) give prior and adequate notice of the proposed exclusion and the reasons for it, (b) give the operator an opportunity to be heard and make representations, (d) provide a statement of reasons, and (g) share the information or evidence relied upon. The operator could apply to court for judicial review under Section 7, arguing procedural unfairness (s.7(2)(c)) and denial of a hearing (s.7(2)(a)(v)). A court could set aside the exclusion and direct KTB to reconsider after following the correct process (Section 11(1)(e)).
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 3: CORE OBLIGATIONS ===================== -->
+    <div class="slide" id="slide-3">
+      <div class="section-num">Section 3 of 5</div>
+      <div class="section-title">Your Core Fair Administrative Action Obligations</div>
+
+      <p>Article 47 of the Constitution and Section 4 of the Act create personal obligations on <strong>every KTB officer who makes decisions affecting others</strong>. These are not optional courtesies — they are legally enforceable rights that people can take you to court over.</p>
+
+      <div class="do-dont">
+        <div class="do-col">
+          <h4>✅ DO</h4>
+          <ul>
+            <li><strong>Give prior notice</strong> — before taking any action that will adversely affect someone, tell them what you intend to do and why (s.4(3)(a))</li>
+            <li><strong>Allow a hearing</strong> — give the affected person an opportunity to be heard, make representations, and attend proceedings (s.4(3)(b), s.4(4)(a)–(b))</li>
+            <li><strong>Provide written reasons</strong> — every person has the right to be given written reasons for any administrative action taken against them (s.4(2))</li>
+            <li><strong>Inform them of appeal rights</strong> — tell the person about any right to review, internal appeal, or external challenge (s.4(3)(c))</li>
+            <li><strong>Share the evidence</strong> — give the person the information, materials, and evidence you are relying on to make your decision (s.4(3)(g))</li>
+            <li><strong>Allow cross-examination</strong> — let the affected person question people who give adverse evidence against them (s.4(4)(c))</li>
+            <li><strong>Act within your authority</strong> — only make decisions you are legally empowered to make under the relevant law or instrument (s.7(2)(a)(i))</li>
+            <li><strong>Respond to requests for reasons within 30 days</strong> — if someone asks why an action was taken, you must respond in writing within 30 days (s.6(3))</li>
+          </ul>
+        </div>
+        <div class="dont-col">
+          <h4>❌ DON'T</h4>
+          <ul>
+            <li><strong>Don't act without notice</strong> — taking an adverse decision without telling the affected person first violates s.4(3)(a) and can be overturned</li>
+            <li><strong>Don't deny a hearing</strong> — refusing to let someone respond before you decide is a ground for judicial review (s.7(2)(a)(v))</li>
+            <li><strong>Don't act on bias</strong> — if you have a personal interest or pre-formed view, you should not be the decision-maker; bias is a ground for review (s.7(2)(a)(iv))</li>
+            <li><strong>Don't act on someone else's direction</strong> — if you make a decision because someone unauthorised told you to, that is a ground for review (s.7(2)(g))</li>
+            <li><strong>Don't ignore relevant facts</strong> — failing to consider relevant information is a separate ground for overturning your decision (s.7(2)(f))</li>
+            <li><strong>Don't delay unreasonably</strong> — unreasonable delay in making a decision you are required to make is itself reviewable (s.7(2)(j))</li>
+            <li><strong>Don't refuse to give reasons</strong> — if you fail to provide reasons when asked, the court will presume your decision was made without good reason (s.6(4))</li>
+            <li><strong>Don't act disproportionately</strong> — your action must be proportionate to the interests or rights affected; an extreme response to a minor issue is reviewable (s.7(2)(l))</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout red">
+        <strong>⚠️ Presumption against you:</strong> Section 6(4) creates a powerful legal presumption: if you fail to give reasons for your decision when asked, the court will <strong>presume your decision was taken without good reason</strong>. This means the burden shifts to KTB to prove the decision was justified. Always document your reasons at the time you make the decision — not after someone challenges it.
+      </div>
+
+      <div class="scenario">
+        <div class="label">🔍 Scenario — Think Before You Click "Reveal"</div>
+        <div class="prompt">
+          The HR Manager decides to transfer a KTB staff member from the Nairobi office to a regional office. The staff member is told about the transfer on Friday afternoon and is expected to report to the new station on Monday. The staff member says this is unfair. Is it?
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text">
+          <strong>Answer: Yes, this likely violates the Act.</strong> A transfer that affects a staff member's working conditions and personal life is an administrative action under Section 2. Under Section 4(3), the employee should have received: (a) prior and adequate notice with reasons for the proposed transfer, (b) an opportunity to be heard and make representations (e.g., family circumstances, health issues), and (c) notice of any right to internal appeal. Two days' notice for a station transfer is unlikely to constitute "adequate" notice. The employee could apply to the High Court for judicial review, and a court could set aside the transfer under Section 11(1)(e) for being procedurally unfair (Section 7(2)(c)).
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 4: COMPLIANCE PROCEDURES ===================== -->
+    <div class="slide" id="slide-4">
+      <div class="section-num">Section 4 of 5</div>
+      <div class="section-title">Procedures, Timelines &amp; Judicial Review Grounds</div>
+
+      <h3>The Fair Process Checklist</h3>
+      <p>Before taking any administrative action that will adversely affect someone, follow this checklist based on Section 4(3)–(4):</p>
+
+      <table class="timeline-table">
+        <tr><th>Step</th><th>What You Must Do</th><th>Section Reference</th></tr>
+        <tr><td><strong>1. Notice</strong></td><td>Give prior and adequate written notice of the proposed action, stating the nature of the decision and the reasons</td><td>s.4(3)(a)</td></tr>
+        <tr><td><strong>2. Evidence</strong></td><td>Share the information, materials, and evidence you are relying on</td><td>s.4(3)(g)</td></tr>
+        <tr><td><strong>3. Hearing</strong></td><td>Give the person an opportunity to attend proceedings, be heard, and make representations — in person or with an expert of their choice</td><td>s.4(3)(b), s.4(4)(a)–(b)</td></tr>
+        <tr><td><strong>4. Cross-examination</strong></td><td>Allow the person to question anyone who gives adverse evidence against them</td><td>s.4(4)(c)</td></tr>
+        <tr><td><strong>5. Adjournment</strong></td><td>Grant a request for adjournment where necessary to ensure a fair hearing</td><td>s.4(4)(d)</td></tr>
+        <tr><td><strong>6. Decision + Reasons</strong></td><td>Make your decision and provide written reasons</td><td>s.4(2), s.6</td></tr>
+        <tr><td><strong>7. Appeal notice</strong></td><td>Inform the person of their right to review or internal appeal, and the right to legal representation</td><td>s.4(3)(c), (e)</td></tr>
+      </table>
+
+      <h3>Key Timelines</h3>
+      <table class="timeline-table">
+        <tr><th>What</th><th>Deadline</th><th>Trigger</th><th>Consequence</th></tr>
+        <tr>
+          <td>Respond to a request for reasons</td>
+          <td><span class="badge-red">30 days</span></td>
+          <td>Receipt of the request (s.6(3))</td>
+          <td>If you fail, court presumes decision was made without good reason (s.6(4))</td>
+        </tr>
+        <tr>
+          <td>Court must determine judicial review application</td>
+          <td><span class="badge-red">90 days</span> of filing</td>
+          <td>Filing of the application (s.8)</td>
+          <td>Court is required to decide within this period</td>
+        </tr>
+        <tr>
+          <td>Applicant must file "without unreasonable delay"</td>
+          <td>No fixed deadline — but delay is fatal</td>
+          <td>The administrative action or decision (s.9(1))</td>
+          <td>Late applications may be dismissed for delay</td>
+        </tr>
+        <tr>
+          <td>Public notice for actions affecting the public</td>
+          <td>Before taking action</td>
+          <td>Proposed action likely to materially affect a group or the public (s.5(1))</td>
+          <td>Decision can be overturned for failure to consult</td>
+        </tr>
+      </table>
+
+      <h3>The 15 Grounds for Judicial Review (Section 7(2))</h3>
+      <p>A court can overturn KTB's administrative decision on any of these grounds. Every KTB decision-maker should know them:</p>
+
+      <table class="ref-table">
+        <tr><th>#</th><th>Ground</th><th>What It Means at KTB</th></tr>
+        <tr><td>1</td><td>Not authorised (s.7(2)(a)(i))</td><td>You made a decision you had no legal power to make</td></tr>
+        <tr><td>2</td><td>Excess of jurisdiction (s.7(2)(a)(ii))</td><td>You went beyond the scope of your delegated authority</td></tr>
+        <tr><td>3</td><td>Unlawful delegation (s.7(2)(a)(iii))</td><td>You acted on delegated power that was not lawfully given</td></tr>
+        <tr><td>4</td><td>Bias (s.7(2)(a)(iv))</td><td>You had a personal interest or pre-formed view — or could reasonably be suspected of it</td></tr>
+        <tr><td>5</td><td>Denied a hearing (s.7(2)(a)(v))</td><td>You didn't give the person a reasonable chance to state their case</td></tr>
+        <tr><td>6</td><td>Procedural non-compliance (s.7(2)(b))</td><td>You didn't follow a mandatory procedure set out in the empowering law</td></tr>
+        <tr><td>7</td><td>Procedural unfairness (s.7(2)(c))</td><td>The process you followed was unfair, even if not in breach of a specific rule</td></tr>
+        <tr><td>8</td><td>Error of law (s.7(2)(d))</td><td>Your decision was based on a misunderstanding of the law</td></tr>
+        <tr><td>9</td><td>Ulterior motive (s.7(2)(e))</td><td>You used your power for a purpose other than its intended one</td></tr>
+        <tr><td>10</td><td>Ignored relevant facts (s.7(2)(f))</td><td>You failed to consider information you should have considered</td></tr>
+        <tr><td>11</td><td>Acted on unauthorised direction (s.7(2)(g))</td><td>Someone not authorised by law told you to act, and you did</td></tr>
+        <tr><td>12</td><td>Bad faith (s.7(2)(h))</td><td>You acted dishonestly or with malicious intent</td></tr>
+        <tr><td>13</td><td>Not rationally connected (s.7(2)(i))</td><td>Your decision doesn't logically connect to its purpose, the law, the evidence, or your stated reasons</td></tr>
+        <tr><td>14</td><td>Unreasonable / disproportionate (s.7(2)(k)–(l))</td><td>The decision is excessive relative to the rights affected</td></tr>
+        <tr><td>15</td><td>Violated legitimate expectations (s.7(2)(m))</td><td>You broke a promise, established practice, or policy that the person reasonably relied on</td></tr>
+      </table>
+
+      <h3>Exhaustion of Remedies</h3>
+      <p>Section 9(2) requires that <strong>all internal appeal mechanisms must be exhausted before going to court</strong>. This means KTB must actually have internal appeal or review processes — and must tell affected persons about them. If KTB has no internal process, a person can go straight to court.</p>
+    </div>
+
+    <!-- ===================== SLIDE 5: CONSEQUENCES & RESPONSE ===================== -->
+    <div class="slide" id="slide-5">
+      <div class="section-num">Section 5 of 5</div>
+      <div class="section-title">Consequences, Remedies &amp; Key Contacts</div>
+
+      <h3>What Can a Court Do If KTB Gets It Wrong?</h3>
+      <p>Under Section 11, the court has wide powers when it finds that KTB's administrative action was unlawful, unreasonable, or procedurally unfair:</p>
+
+      <table class="ref-table">
+        <tr><th>Court Order</th><th>What It Means for KTB</th></tr>
+        <tr><td><strong>Declare rights</strong> (s.11(1)(a))</td><td>The court states what the parties' rights are — e.g. that the affected person had a right to be heard</td></tr>
+        <tr><td><strong>Restrain KTB</strong> (s.11(1)(b))</td><td>The court stops KTB from continuing the action that breached the law</td></tr>
+        <tr><td><strong>Order reasons</strong> (s.11(1)(c))</td><td>The court directs KTB to give reasons for its decision</td></tr>
+        <tr><td><strong>Prohibit action</strong> (s.11(1)(d))</td><td>The court bans KTB from acting in a particular manner</td></tr>
+        <tr><td><strong>Set aside &amp; remit</strong> (s.11(1)(e))</td><td>The court cancels the decision and sends it back to KTB to redo it properly — with or without directions</td></tr>
+        <tr><td><strong>Compel performance</strong> (s.11(1)(f))</td><td>If KTB failed to act when it was required to, the court orders KTB to perform that duty</td></tr>
+        <tr><td><strong>Temporary relief</strong> (s.11(1)(i))</td><td>The court can grant an interim injunction stopping KTB from acting while the case is heard</td></tr>
+        <tr><td><strong>Costs &amp; compensation</strong> (s.11(1)(j))</td><td>The court can order KTB to pay the applicant's legal costs and monetary compensation</td></tr>
+      </table>
+
+      <div class="callout red">
+        <strong>⚠️ Real cost to KTB:</strong> When a court sets aside KTB's decision, KTB must redo the entire process — with notice, hearings, and reasons. This means delays to procurement, HR actions, and partnerships, plus legal fees and potential compensation payments. It also causes reputational damage. The cheapest and fastest route is always to follow fair process the first time.
+      </div>
+
+      <h3>What To Do When You Need to Make an Administrative Decision</h3>
+      <div class="callout green">
+        <strong>Step-by-step response guide:</strong>
+        <ol style="margin-top:10px;padding-left:20px;line-height:2">
+          <li><strong>Identify the action</strong> — is what you are about to do likely to adversely affect someone's legal rights or interests? If yes, this Act applies.</li>
+          <li><strong>Check your authority</strong> — confirm that you are authorised to make this decision under the relevant law, policy, or delegation.</li>
+          <li><strong>Give written notice</strong> — notify the affected person of the proposed action, the reasons for it, and the evidence you are relying on.</li>
+          <li><strong>Hold a hearing</strong> — give the person an opportunity to respond, in person or in writing, before you make your decision.</li>
+          <li><strong>Consider their response</strong> — genuinely consider the representations made. Document that you did so.</li>
+          <li><strong>Make your decision and give written reasons</strong> — record your decision, the reasons for it, and inform the person of their right to review or appeal.</li>
+          <li><strong>If in doubt, consult Legal</strong> — contact Allan Njoroge or Doreen Mutunga before taking any action you are unsure about.</li>
+        </ol>
+      </div>
+
+      <div class="callout">
+        <strong>🛡️ Section 12 — Natural Justice Still Applies:</strong> The Act is "in addition to and not in derogation from the general principles of common law and the rules of natural justice." This means that even if a specific requirement of the Act doesn't apply, the basic common-law duty to act fairly still does. When in doubt, err on the side of more process, not less.
+      </div>
+
+      <h3>5 Key Takeaways</h3>
+      <div class="takeaway"><div class="takeaway-num">1</div><div class="takeaway-text"><strong>Every decision that affects someone's rights triggers this Act.</strong> It doesn't matter how minor you think the decision is — if it adversely affects a person's legal rights or interests, you must follow fair process.</div></div>
+      <div class="takeaway"><div class="takeaway-num">2</div><div class="takeaway-text"><strong>Notice → Hearing → Reasons → Appeal.</strong> This is the core sequence. Give notice, let the person respond, make your decision with written reasons, and tell them how to challenge it.</div></div>
+      <div class="takeaway"><div class="takeaway-num">3</div><div class="takeaway-text"><strong>No reasons = no good reason.</strong> If you fail to give reasons when asked, the law presumes your decision was made without justification (Section 6(4)). Always document your reasoning at the time of the decision.</div></div>
+      <div class="takeaway"><div class="takeaway-num">4</div><div class="takeaway-text"><strong>Courts have wide remedial powers.</strong> A court can cancel your decision, order KTB to redo the process, issue injunctions, and award costs and compensation. Prevention is far cheaper than litigation.</div></div>
+      <div class="takeaway"><div class="takeaway-num">5</div><div class="takeaway-text"><strong>Internal mechanisms matter.</strong> KTB must have internal appeal processes and must tell affected persons about them. If there's no internal remedy, people go straight to court (Section 9(2)).</div></div>
+
+      <h3>Your Legal Directorate Contacts</h3>
+      <div class="contacts">
+        <div class="contact-card">
+          <div class="name">Allan Njoroge</div>
+          <div class="role">Director of Legal Services &amp; Corporation Secretary</div>
+          <div class="email">allan@ktb.go.ke</div>
+        </div>
+        <div class="contact-card">
+          <div class="name">Doreen Mutunga</div>
+          <div class="role">Legal Officer</div>
+          <div class="email">dmutunga@ktb.go.ke</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 6: QUIZ ===================== -->
+    <div class="slide" id="slide-6">
+      <div class="quiz-header">
+        <div class="section-num">Assessment</div>
+        <div class="section-title" style="margin-bottom:12px">Knowledge Check — 10 Questions</div>
+        <div class="score-bar-wrap">
+          <div class="score-label">Score: <span id="score-display">0</span>/10</div>
+          <div class="score-bar"><div class="score-fill" id="score-fill"></div></div>
+        </div>
+        <div class="quiz-dots" id="quiz-dots"></div>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+
+    <!-- ===================== SLIDE 16: RESULTS ===================== -->
+    <div class="slide" id="slide-16">
+      <div class="results-card" id="results-card">
+        <div class="big-score" id="final-score"></div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-msg" id="result-msg"></div>
+        <div class="cert-badge" id="cert-badge">
+          <div class="cert-icon">⚖️</div>
+          <div class="cert-title">Fair Administrative Action Act (Cap. 7L)</div>
+          <div class="cert-date" id="cert-date"></div>
+        </div>
+        <div><button class="print-btn" onclick="window.print()">🖨 Print completion record</button></div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar" id="bottombar">
+    <div class="section-indicator" id="section-indicator"></div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Back</button>
+      <div class="understood-wrap" id="understood-wrap" onclick="toggleUnderstood()">
+        <div id="understood-btn">✓</div>
+        <span class="understood-label">I have read and understood this section</span>
+      </div>
+      <button class="nav-btn" id="btn-next" onclick="navigate(1)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== QUIZ DATA ==========
+const quizData = [
+  {
+    q: "Article 47 of the Constitution guarantees every person the right to administrative action that is:",
+    opts: [
+      "Lawful, reasonable, and procedurally fair",
+      "Expeditious, efficient, lawful, reasonable, and procedurally fair",
+      "Fair and equitable",
+      "Transparent, competitive, and cost-effective"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 4(1) of the Act, giving effect to Article 47, states every person has the right to administrative action that is expeditious, efficient, lawful, reasonable, and procedurally fair.",
+    wrongFeedback: "Incorrect. Section 4(1) lists all five requirements: expeditious, efficient, lawful, reasonable, and procedurally fair. 'Transparent, competitive, and cost-effective' relates to procurement (Article 227), not administrative action."
+  },
+  {
+    q: "KTB's Procurement team rejects a supplier's bid without giving any reasons. The supplier writes to KTB requesting reasons. Within how many days must KTB respond?",
+    opts: ["7 days", "14 days", "30 days", "90 days"],
+    correct: 2,
+    correctFeedback: "Correct! Section 6(3) requires the administrator to furnish written reasons within 30 days of receiving the request.",
+    wrongFeedback: "Incorrect. Section 6(3) sets the deadline at 30 days. If KTB fails to respond, Section 6(4) creates a presumption that the decision was taken without good reason."
+  },
+  {
+    q: "What happens if an administrator fails to provide reasons for a decision when asked under Section 6?",
+    opts: [
+      "The decision is automatically reversed",
+      "The administrator faces criminal penalties",
+      "In court proceedings, the decision is presumed to have been taken without good reason",
+      "Nothing — reasons are optional"
+    ],
+    correct: 2,
+    correctFeedback: "Correct! Section 6(4) creates this presumption: in the absence of proof to the contrary, the decision is presumed to have been taken without good reason.",
+    wrongFeedback: "Incorrect. Under Section 6(4), the decision is not automatically reversed, but in any review proceedings it will be presumed to have been taken without good reason — the burden shifts to the administrator to prove otherwise."
+  },
+  {
+    q: "Before taking an administrative action that adversely affects someone, Section 4(3) requires the administrator to provide all of the following EXCEPT:",
+    opts: [
+      "Prior and adequate notice of the proposed action and reasons",
+      "An opportunity to be heard and make representations",
+      "Automatic legal representation paid for by the administrator",
+      "Information, materials, and evidence to be relied upon"
+    ],
+    correct: 2,
+    correctFeedback: "Correct! Section 4(3)(e) requires notice of the right to legal representation — but the Act does not require the administrator to pay for legal representation. The person has the right to bring their own lawyer.",
+    wrongFeedback: "Incorrect. Section 4(3)(e) provides notice of the right to legal representation, not automatic free representation. The other three options — notice (s.4(3)(a)), hearing (s.4(3)(b)), and evidence (s.4(3)(g)) — are all mandatory."
+  },
+  {
+    q: "KTB changes its criteria for listing tourism service providers without consulting the industry first. A group of delisted operators complains. Which section did KTB likely violate?",
+    opts: [
+      "Section 4 — individual fair process",
+      "Section 5 — administrative action affecting the public",
+      "Section 7 — judicial review",
+      "Section 12 — natural justice"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 5(1) applies when an administrative action is likely to materially and adversely affect a group of persons or the general public. KTB should have issued a public notice, invited views, and considered them before changing the criteria.",
+    wrongFeedback: "Incorrect. This scenario involves a policy change affecting a group — that triggers Section 5(1), which requires public notice, invitation of views, and consideration of submissions before acting."
+  },
+  {
+    q: "A KTB manager transfers a staff member without notice or hearing. The staff member applies for judicial review. On what ground is the court MOST likely to review the decision?",
+    opts: [
+      "Unreasonableness (s.7(2)(k))",
+      "Procedural unfairness (s.7(2)(c))",
+      "Error of law (s.7(2)(d))",
+      "Bad faith (s.7(2)(h))"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Failure to give notice and a hearing is a textbook case of procedural unfairness under Section 7(2)(c). The action was procedurally unfair because mandatory fairness requirements in Section 4(3) were not followed.",
+    wrongFeedback: "Incorrect. While multiple grounds might apply, the most direct ground is procedural unfairness (s.7(2)(c)) — the decision was made without the notice and hearing required by Section 4(3)."
+  },
+  {
+    q: "Section 9(2) requires that before going to court for judicial review, a person must first:",
+    opts: [
+      "File a complaint with the police",
+      "Exhaust all internal mechanisms for appeal or review",
+      "Pay a court deposit of 10% of the claim",
+      "Wait 90 days after the decision"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 9(2) requires that all internal appeal or review mechanisms and remedies under any written law must be exhausted before the court will hear a judicial review application.",
+    wrongFeedback: "Incorrect. Section 9(2) requires exhaustion of internal mechanisms first. However, Section 9(4) allows the court to exempt this requirement in exceptional circumstances in the interest of justice."
+  },
+  {
+    q: "Within how many days must a court determine a judicial review application under this Act?",
+    opts: ["30 days", "45 days", "90 days", "No time limit"],
+    correct: 2,
+    correctFeedback: "Correct! Section 8 requires that an application for judicial review or an appeal under this Act shall be determined within 90 days of filing.",
+    wrongFeedback: "Incorrect. Section 8 sets the deadline at 90 days from the date of filing the application."
+  },
+  {
+    q: "A KTB Board member who has a business relationship with a contractor votes on whether to terminate that contractor's contract. If the contractor seeks judicial review, the most relevant ground is:",
+    opts: [
+      "Acted on unauthorised direction (s.7(2)(g))",
+      "Bias or reasonable suspicion of bias (s.7(2)(a)(iv))",
+      "Violated legitimate expectations (s.7(2)(m))",
+      "Abuse of discretion (s.7(2)(j))"
+    ],
+    correct: 1,
+    correctFeedback: "Correct! Section 7(2)(a)(iv) allows review where the decision-maker was biased or may reasonably be suspected of bias. A board member with a business relationship with the contractor should have recused themselves.",
+    wrongFeedback: "Incorrect. The key ground is bias under Section 7(2)(a)(iv) — the board member's business relationship creates a reasonable suspicion of bias. The member should have declared the interest and recused themselves."
+  },
+  {
+    q: "The Fair Administrative Action Act operates:",
+    opts: [
+      "In place of common law natural justice rules",
+      "Only when no other written law applies",
+      "In addition to and not in derogation from common law and natural justice",
+      "Only for decisions by national government bodies"
+    ],
+    correct: 2,
+    correctFeedback: "Correct! Section 12 states the Act is 'in addition to and not in derogation from the general principles of common law and the rules of natural justice.' Both apply simultaneously.",
+    wrongFeedback: "Incorrect. Section 12 is clear: the Act adds to, rather than replaces, common law and natural justice. It also applies to all state and non-state agencies (Section 3), not just national government."
+  }
+];
+
+// ========== STATE ==========
+let currentSlide = 0;
+let understood = false;
+let sectionsDone = [false,false,false,false,false,false];
+let quizQuestion = 0;
+let quizAnswers = new Array(10).fill(null);
+let score = 0;
+
+// ========== INIT ==========
+function init() {
+  buildQuizDots();
+  buildQuizQuestion(0);
+  updateUI();
+}
+
+// ========== NAVIGATION ==========
+function navigate(dir) {
+  if (currentSlide === 0 && dir === 1) { goToSlide(1); return; }
+  if (currentSlide >= 1 && currentSlide <= 5) {
+    if (dir === 1) { markSectionDone(currentSlide); goToSlide(currentSlide + 1); }
+    else if (dir === -1) { goToSlide(currentSlide - 1); }
+  }
+  else if (currentSlide === 6) {
+    if (dir === 1) {
+      if (quizQuestion < 9) { quizQuestion++; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(16); showResults(); }
+    }
+    else if (dir === -1) {
+      if (quizQuestion > 0) { quizQuestion--; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(5); }
+    }
+  }
+  else if (currentSlide === 16 && dir === -1) { goToSlide(6); }
+}
+
+function goToSlide(n) {
+  if (n >= 1 && n <= 5 && n > 1) {
+    for (let i = 1; i < n; i++) { if (!sectionsDone[i]) return; }
+  }
+  if (n === 6) {
+    for (let i = 1; i <= 5; i++) { if (!sectionsDone[i]) return; }
+  }
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  let slideEl = document.getElementById('slide-' + n);
+  if (slideEl) slideEl.classList.add('active');
+  currentSlide = n;
+  understood = false;
+  document.getElementById('content-area').scrollTop = 0;
+  updateUI();
+}
+
+function markSectionDone(n) {
+  if (n >= 1 && n <= 5) sectionsDone[n] = true;
+  updateTabs();
+}
+
+// ========== UI UPDATES ==========
+function updateUI() {
+  let pips = document.querySelectorAll('.pip');
+  let fillCount = currentSlide === 16 ? 7 : (currentSlide === 6 ? 6 : currentSlide);
+  pips.forEach((p, i) => p.classList.toggle('filled', i < fillCount));
+
+  updateTabs();
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  let activeTab = document.querySelector('.tab[data-tab="' + (currentSlide === 16 ? 6 : currentSlide) + '"]');
+  if (activeTab) activeTab.classList.add('active');
+
+  // Bottom bar
+  let uWrap = document.getElementById('understood-wrap');
+  let btnNext = document.getElementById('btn-next');
+  let btnPrev = document.getElementById('btn-prev');
+  let uBtn = document.getElementById('understood-btn');
+  let secInd = document.getElementById('section-indicator');
+
+  uBtn.classList.remove('checked');
+  btnPrev.style.display = currentSlide === 0 ? 'none' : '';
+
+  const sectionNames = {0:'',1:'Section 1 — Foundation',2:'Section 2 — KTB Context',3:'Section 3 — Your Obligations',4:'Section 4 — Procedures & Timelines',5:'Section 5 — Remedies & Contacts',6:'Quiz',16:'Results'};
+  secInd.textContent = sectionNames[currentSlide] || '';
+
+  if (currentSlide === 0) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = 'none';
+    document.getElementById('bottombar').style.display = 'none';
+  } else {
+    document.getElementById('bottombar').style.display = 'flex';
+  }
+
+  if (currentSlide >= 1 && currentSlide <= 5) {
+    uWrap.style.display = 'flex';
+    btnNext.style.display = '';
+    btnNext.disabled = !understood;
+    btnNext.textContent = 'Next →';
+  } else if (currentSlide === 6) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = '';
+    btnNext.disabled = (quizAnswers[quizQuestion] === null);
+    btnNext.textContent = quizQuestion < 9 ? 'Next Question →' : 'See Results →';
+  } else if (currentSlide === 16) {
+    uWrap.style.display = 'none';
+    btnNext.style.display = 'none';
+  }
+}
+
+function updateTabs() {
+  for (let i = 1; i <= 5; i++) {
+    let tab = document.querySelector('.tab[data-tab="' + i + '"]');
+    if (tab) tab.classList.toggle('done', sectionsDone[i]);
+  }
+}
+
+// ========== UNDERSTOOD ==========
+function toggleUnderstood() {
+  understood = !understood;
+  document.getElementById('understood-btn').classList.toggle('checked', understood);
+  document.getElementById('btn-next').disabled = !understood;
+}
+
+// ========== QUIZ ==========
+function buildQuizDots() {
+  let dots = document.getElementById('quiz-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    let d = document.createElement('div');
+    d.className = 'qdot';
+    d.textContent = (i + 1);
+    dots.appendChild(d);
+  }
+}
+
+function updateQuizDots() {
+  let dots = document.querySelectorAll('.qdot');
+  dots.forEach((d, i) => {
+    d.classList.remove('current', 'correct', 'wrong');
+    if (i === quizQuestion) d.classList.add('current');
+    if (quizAnswers[i] !== null) {
+      d.classList.add(quizAnswers[i] === quizData[i].correct ? 'correct' : 'wrong');
+    }
+  });
+}
+
+function updateScoreBar() {
+  score = quizAnswers.filter((a, i) => a === quizData[i].correct).length;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('score-fill').style.width = (score * 10) + '%';
+}
+
+function buildQuizQuestion(qi) {
+  let qd = quizData[qi];
+  let container = document.getElementById('quiz-container');
+  let answered = quizAnswers[qi] !== null;
+  let html = '<div class="q-card">';
+  html += '<div class="q-num">Question ' + (qi + 1) + ' of 10</div>';
+  html += '<div class="q-text">' + qd.q + '</div>';
+  html += '<div class="q-options">';
+  let letters = ['A', 'B', 'C', 'D'];
+  for (let i = 0; i < qd.opts.length; i++) {
+    let cls = 'q-opt';
+    if (answered) {
+      cls += ' disabled';
+      if (i === quizAnswers[qi] && i !== qd.correct) cls += ' wrong-answer';
+      if (i === qd.correct) cls += ' reveal-correct correct-answer';
+    }
+    html += '<button class="' + cls + '" onclick="answerQuestion(' + qi + ',' + i + ')">';
+    html += '<span class="letter">' + letters[i] + '.</span> ' + qd.opts[i];
+    html += '</button>';
+  }
+  html += '</div>';
+  if (answered) {
+    let isCorrect = quizAnswers[qi] === qd.correct;
+    html += '<div class="q-feedback show ' + (isCorrect ? 'correct' : 'wrong') + '">';
+    html += isCorrect ? '✅ ' + qd.correctFeedback : '❌ ' + qd.wrongFeedback;
+    html += '</div>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+  updateQuizDots();
+}
+
+function answerQuestion(qi, oi) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi;
+  updateScoreBar();
+  buildQuizQuestion(qi);
+  setTimeout(function() {
+    document.getElementById('btn-next').disabled = false;
+  }, 900);
+}
+
+// ========== RESULTS ==========
+function showResults() {
+  score = quizAnswers.filter((a, i) => a === quizData[i].correct).length;
+  let pass = score >= 7;
+  let pct = score * 10;
+  let el = document.getElementById('final-score');
+  el.textContent = score + '/10';
+  el.className = 'big-score ' + (pass ? 'pass' : 'fail');
+
+  let label = document.getElementById('result-label');
+  label.textContent = pass ? '✓ Module Passed' : '✗ Not Passed';
+  label.className = 'result-label ' + (pass ? 'pass' : 'fail');
+
+  let msg = document.getElementById('result-msg');
+  msg.textContent = pass
+    ? 'You scored ' + pct + '% — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.'
+    : 'You scored ' + pct + '% — below the 70% pass mark. Please review the module sections and retake the quiz. Contact the Legal Directorate (allan@ktb.go.ke) if you need assistance.';
+
+  let d = new Date();
+  let dateStr = d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('cert-date').textContent = 'Completed ' + dateStr + ' · KTB Legal Hub';
+  document.getElementById('cert-badge').style.display = pass ? 'inline-block' : 'none';
+}
+
+// ========== START ==========
+init();
+</script>
+</body>
+</html>
