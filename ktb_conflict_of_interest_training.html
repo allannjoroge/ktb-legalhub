@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conflict of Interest Act 2025 — KTB Training Module</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:      #1a2a4a;
+  --navy-d:    #0f1d35;
+  --navy-l:    #253a62;
+  --gold:      #C19A28;
+  --gold-l:    #e8c96a;
+  --gold-bg:   #fdf8ec;
+  --ink:       #1c1c1e;
+  --body:      #3a3a3c;
+  --muted:     #6e6e73;
+  --border:    #e5e1d8;
+  --cream:     #faf8f4;
+  --white:     #ffffff;
+  --green:     #1a6b47;
+  --green-bg:  #edf7f2;
+  --red:       #c0392b;
+  --red-bg:    #fdf0ee;
+  --blue:      #1a3a6b;
+  --blue-bg:   #eef3fb;
+  --amber:     #92520a;
+  --amber-bg:  #fff8ec;
+  --teal:      #0a5c5c;
+  --teal-bg:   #e6f4f4;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--body); font-size: 15px; line-height: 1.7; }
+
+/* SHELL */
+.shell { display: grid; grid-template-rows: auto auto auto 1fr auto; height: 100vh; overflow: hidden; }
+
+/* TOP BAR */
+.topbar { background: var(--navy-d); border-bottom: 3px solid var(--gold); padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; }
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.tb-logo { background: var(--gold); color: var(--navy-d); font-weight: 700; font-size: 11px; padding: 3px 9px; border-radius: 2px; letter-spacing: 0.5px; flex-shrink: 0; }
+.tb-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+.tb-right { display: flex; align-items: center; gap: 16px; }
+.tb-timer { font-size: 12px; color: var(--gold-l); font-weight: 600; font-variant-numeric: tabular-nums; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 4px; }
+.tb-step { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* PROGRESS PIPS */
+.prog-bar-zone { background: var(--navy-d); padding: 0 24px 10px; flex-shrink: 0; }
+.prog-steps { display: flex; gap: 4px; }
+.prog-step-pip { flex: 1; height: 5px; background: rgba(255,255,255,0.12); border-radius: 3px; transition: background 0.3s; }
+.prog-step-pip.done   { background: var(--gold); }
+.prog-step-pip.active { background: rgba(193,154,40,0.45); }
+
+/* SECTION TABS */
+.section-tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; flex-shrink: 0; }
+.section-tabs::-webkit-scrollbar { display: none; }
+.stab { padding: 10px 14px; font-size: 12px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 5px; cursor: default; transition: color 0.2s, border-color 0.2s; flex-shrink: 0; }
+.stab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 700; }
+.stab.done   { color: var(--green); }
+.stab .stab-num { width: 18px; height: 18px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+.stab.active .stab-num { background: var(--navy); color: var(--white); }
+.stab.done   .stab-num { background: var(--green); color: var(--white); }
+
+/* CONTENT */
+.content-area { overflow-y: auto; padding: 28px 0 20px; }
+.content-area::-webkit-scrollbar { width: 5px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* SLIDE */
+.slide { display: none; max-width: 780px; margin: 0 auto; padding: 0 28px; animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+.slide.active { display: block; }
+@keyframes slideIn  { from { opacity: 0; transform: translateX(32px); }  to { opacity: 1; transform: translateX(0); } }
+@keyframes slideBack{ from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: translateX(0); } }
+.slide.back { animation: slideBack 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* SECTION HEADER */
+.sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+.sec-num { width: 46px; height: 46px; background: var(--navy); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 22px; flex-shrink: 0; box-shadow: 0 4px 14px rgba(26,42,74,0.3); }
+.sec-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.sec-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); line-height: 1.2; }
+
+/* TYPOGRAPHY */
+.body-text { font-size: 15px; color: var(--body); line-height: 1.8; margin-bottom: 14px; }
+
+/* CALLOUT */
+.callout { border-radius: 8px; padding: 14px 18px; margin: 14px 0; border-left: 4px solid; display: flex; gap: 12px; align-items: flex-start; }
+.callout-icon { font-size: 20px; flex-shrink: 0; }
+.callout-title { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; }
+.callout-text  { font-size: 13.5px; line-height: 1.65; }
+.callout.info  { background: var(--blue-bg);  border-color: var(--blue);  } .callout.info  .callout-title { color: var(--blue); }
+.callout.alert { background: var(--red-bg);   border-color: var(--red);   } .callout.alert .callout-title { color: var(--red); }
+.callout.good  { background: var(--green-bg); border-color: var(--green); } .callout.good  .callout-title { color: var(--green); }
+.callout.gold  { background: var(--gold-bg);  border-color: var(--gold);  } .callout.gold  .callout-title { color: var(--amber); }
+.callout.teal  { background: var(--teal-bg);  border-color: var(--teal);  } .callout.teal  .callout-title { color: var(--teal); }
+
+/* TABLE */
+.mod-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+.mod-table th { background: var(--navy); color: var(--white); padding: 9px 13px; text-align: left; font-size: 12.5px; font-weight: 600; }
+.mod-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.mod-table tr:nth-child(even) td { background: #faf8f5; }
+.mod-table .warn { color: var(--red); font-weight: 700; white-space: nowrap; }
+
+/* GRID */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media(max-width:560px){ .grid-2 { grid-template-columns: 1fr; } }
+
+/* CARDS */
+.info-card { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--navy); border-radius: 6px; padding: 14px; }
+.ic-num  { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); opacity: 0.25; line-height: 1; }
+.ic-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.ic-desc { font-size: 13px; color: var(--body); line-height: 1.55; }
+
+/* SCENARIO */
+.scenario { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 14px 0; }
+.scen-head { background: var(--gold-bg); border-bottom: 1px solid #e8d98a; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.scen-tag  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); background: rgba(193,154,40,0.15); padding: 2px 8px; border-radius: 3px; }
+.scen-title{ font-size: 13px; font-weight: 600; color: var(--body); }
+.scen-body { padding: 14px 16px; }
+.scen-q    { font-size: 13.5px; color: var(--body); line-height: 1.7; font-style: italic; margin-bottom: 10px; }
+.scen-reveal { display: none; border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 4px; }
+.scen-reveal.open { display: block; }
+.scen-ans  { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.scen-exp  { font-size: 13px; color: var(--body); line-height: 1.65; }
+.scen-btn  { display: inline-flex; align-items: center; gap: 5px; background: var(--navy); color: var(--white); border: none; border-radius: 5px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+.scen-btn:hover { background: var(--navy-l); }
+
+/* DO/DON'T */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 14px 0; }
+@media(max-width:520px){ .do-dont { grid-template-columns: 1fr; } }
+.dd-head { padding: 10px 14px; font-size: 12.5px; font-weight: 700; }
+.dd-head.do   { background: var(--green); color: var(--white); }
+.dd-head.dont { background: var(--red);   color: var(--white); }
+.dd-item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 14px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.5; }
+.dd-item:last-child { border-bottom: none; }
+.dd-item .t { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.dd-item .x { color: var(--red);   font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+
+/* STEPS */
+.steps { margin: 14px 0; }
+.step { display: flex; gap: 14px; padding: 11px 0; border-bottom: 1px dashed var(--border); align-items: flex-start; }
+.step:last-child { border-bottom: none; }
+.step-num { width: 32px; height: 32px; background: var(--navy); color: var(--white); border-radius: 50%; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-title { font-weight: 700; font-size: 13.5px; color: var(--navy); margin-bottom: 2px; }
+.step-desc  { font-size: 13.5px; color: var(--body); line-height: 1.6; }
+
+/* TAKEAWAYS */
+.takeaways { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.takeaway { display: flex; gap: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.tk-num  { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 28px; text-align: center; }
+.tk-text { font-size: 13.5px; color: var(--body); line-height: 1.6; padding-top: 2px; }
+.tk-text strong { color: var(--navy); }
+
+/* CONTACT GRID */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media(max-width:520px){ .contact-grid { grid-template-columns: 1fr; } }
+.contact-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; gap: 10px; }
+.cc-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy); color: var(--white); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cc-name  { font-weight: 700; font-size: 13.5px; color: var(--ink); }
+.cc-role  { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+.cc-email { font-size: 12px; color: var(--navy); font-weight: 500; }
+
+/* COVER */
+.cover { background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%); border-radius: 12px; padding: 36px 32px; text-align: center; position: relative; overflow: hidden; margin-bottom: 20px; }
+.cover::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-5H15v-5h5v-.5z'/%3E%3C/g%3E%3C/svg%3E"); }
+.cover-eyebrow { display: inline-block; background: rgba(193,154,40,0.2); border: 1px solid var(--gold); color: var(--gold-l); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 12px; border-radius: 20px; margin-bottom: 16px; position: relative; }
+.cover h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 4vw, 34px); color: var(--white); line-height: 1.2; margin-bottom: 6px; position: relative; }
+.cover h1 span { color: var(--gold-l); font-style: italic; }
+.cover-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 24px; position: relative; }
+.cover-chips { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; position: relative; margin-bottom: 24px; }
+.cover-chip { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: rgba(255,255,255,0.85); }
+.cover-chip strong { color: var(--gold-l); }
+.cover-start { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--navy-d); border: none; border-radius: 8px; padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; position: relative; }
+.cover-start:hover { background: var(--gold-l); transform: translateY(-1px); }
+
+/* OBLIGATIONS GRID */
+.obligations-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media(max-width:560px){ .obligations-grid { grid-template-columns: 1fr; } }
+.ob-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 13px; border-left: 3px solid var(--navy); }
+.ob-title { font-size: 12.5px; font-weight: 700; color: var(--navy); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+.ob-desc  { font-size: 12.5px; color: var(--body); line-height: 1.55; }
+.ob-law   { font-size: 10.5px; color: var(--muted); margin-top: 4px; font-style: italic; }
+
+/* QUIZ */
+.quiz-q { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.quiz-q-head { background: var(--navy-d); padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px; }
+.q-badge { background: var(--gold); color: var(--navy-d); font-weight: 700; font-size: 10.5px; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+.q-text  { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.45; }
+.q-opts  { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.q-opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13.5px; color: var(--body); background: var(--white); text-align: left; font-family: 'DM Sans', sans-serif; line-height: 1.5; width: 100%; transition: border-color 0.15s, background 0.15s; }
+.q-opt:hover:not(:disabled) { border-color: var(--navy); background: #f0f3f8; }
+.q-opt.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.q-opt.wrong   { border-color: var(--red);   background: var(--red-bg);   color: var(--red); }
+.q-opt.reveal  { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.q-opt:disabled { cursor: default; }
+.q-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.q-opt.correct .q-letter { background: var(--green); color: var(--white); }
+.q-opt.wrong   .q-letter { background: var(--red);   color: var(--white); }
+.q-opt.reveal  .q-letter { background: var(--green); color: var(--white); }
+.q-fb { margin: 0 16px 14px; padding: 10px 14px; border-radius: 6px; font-size: 13px; line-height: 1.6; display: none; }
+.q-fb.show { display: block; }
+.q-fb.ok  { background: var(--green-bg); color: var(--green); border: 1px solid #a8dcc0; }
+.q-fb.err { background: var(--red-bg);   color: var(--red);   border: 1px solid #f0b8b3; }
+
+/* QUIZ NAV */
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.quiz-dots { display: flex; gap: 5px; }
+.qdot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+.qdot.answered { background: var(--green); }
+.qdot.current  { background: var(--navy); }
+.score-mini { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.score-track { width: 80px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.score-fill  { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s; }
+
+/* RESULTS */
+.results-card { background: var(--white); border: 2px solid var(--gold); border-radius: 12px; padding: 32px; text-align: center; }
+.res-score { font-family: 'DM Serif Display', serif; font-size: 80px; line-height: 1; margin-bottom: 4px; }
+.res-score.pass { color: var(--green); } .res-score.fail { color: var(--red); }
+.res-label { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.res-label.pass { color: var(--green); } .res-label.fail { color: var(--red); }
+.res-sub   { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+.res-badge { display: inline-block; background: var(--gold-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 12px 20px; font-size: 13px; color: var(--amber); font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+.cert-btn  { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); color: var(--white); border: none; border-radius: 6px; padding: 11px 22px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+.cert-btn:hover { background: var(--navy-l); }
+
+/* BOTTOM BAR */
+.bottom-bar { background: var(--white); border-top: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; }
+.bb-section-name { font-size: 12px; color: var(--muted); }
+.bb-btns { display: flex; gap: 10px; align-items: center; }
+.btn-prev { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+.btn-prev:hover { border-color: var(--navy); color: var(--navy); }
+.understood-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 7px 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--body); background: var(--white); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.understood-wrap:hover { border-color: var(--gold); background: var(--gold-bg); }
+.understood-wrap.checked { border-color: var(--green); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.uc-box { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; flex-shrink: 0; }
+.understood-wrap.checked .uc-box { background: var(--green); border-color: var(--green); color: var(--white); }
+.btn-next { background: var(--navy); color: var(--white); border: none; border-radius: 6px; padding: 9px 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; display: flex; align-items: center; opacity: 0.35; pointer-events: none; }
+.btn-next.enabled { opacity: 1; pointer-events: all; }
+.btn-next.enabled:hover { background: var(--navy-l); }
+
+/* DECLARATIONS TABLE */
+.decl-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+.decl-table th { background: var(--navy); color: var(--white); padding: 8px 12px; text-align: left; font-size: 12px; }
+.decl-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.decl-table tr:nth-child(even) td { background: #faf8f5; }
+.timeline-badge { display: inline-block; background: var(--red-bg); color: var(--red); border: 1px solid #f0b8b3; border-radius: 3px; font-size: 11px; font-weight: 700; padding: 2px 7px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="tb-logo">KTB</div>
+    <div class="tb-title">Conflict of Interest Act 2025 — Staff Training</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-timer" id="timer">00:00</div>
+    <div class="tb-step" id="step-counter">Step 1 of 9</div>
+  </div>
+</div>
+
+<!-- PROGRESS PIPS -->
+<div class="prog-bar-zone">
+  <div class="prog-steps" id="prog-steps"></div>
+</div>
+
+<!-- SECTION TABS -->
+<div class="section-tabs" id="section-tabs"></div>
+
+<!-- CONTENT -->
+<div class="content-area" id="content-area">
+
+  <!-- SLIDE 0: COVER -->
+  <div class="slide active" id="slide-0">
+    <div class="cover">
+      <div class="cover-eyebrow">Directorate of Legal Services · KTB</div>
+      <h1>Conflict of <span>Interest Act 2025</span></h1>
+      <div class="cover-sub">Staff Compliance Training · Kenya Tourism Board · Act No. 11 of 2025</div>
+      <div class="cover-chips">
+        <div class="cover-chip"><span>⏱</span> <strong>~15 min</strong> reading</div>
+        <div class="cover-chip"><span>📋</span> <strong>10</strong> quiz questions</div>
+        <div class="cover-chip"><span>🎯</span> Pass mark <strong>70%</strong></div>
+        <div class="cover-chip"><span>⚖️</span> Commenced <strong>19 Aug 2025</strong></div>
+        <div class="cover-chip"><span>👥</span> <strong>All KTB staff</strong></div>
+      </div>
+      <button class="cover-start" onclick="startModule()">Begin Training <span>→</span></button>
+    </div>
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <div class="callout-title">Before you start</div>
+        <div class="callout-text">The Conflict of Interest Act 2025 commenced on 19 August 2025 and repealed the old Public Officer Ethics Act. It introduces new obligations for <strong>all public officers at KTB</strong> — including stricter rules on gifts, outside employment, decision-making, and post-employment restrictions. This module has 5 learning sections and a 10-question quiz.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: WHAT IS THE ACT -->
+  <div class="slide" id="slide-1">
+    <div class="sec-head">
+      <div class="sec-num">1</div>
+      <div>
+        <div class="sec-label">Foundation</div>
+        <div class="sec-title">What is the Conflict of Interest Act?</div>
+      </div>
+    </div>
+
+    <div class="callout alert">
+      <div class="callout-icon">🆕</div>
+      <div class="callout-body">
+        <div class="callout-title">This is a new law — the old rules have changed</div>
+        <div class="callout-text">The Conflict of Interest Act 2025 (Act No. 11 of 2025) commenced on <strong>19 August 2025</strong> and fully repealed the Public Officer Ethics Act (Cap. 185B). If you have been following the old rules, you need to read this module carefully — several obligations are stricter under the new Act.</div>
+      </div>
+    </div>
+
+    <p class="body-text">A <strong>conflict of interest</strong> arises when a public officer's private interests could improperly influence — or could reasonably be seen to influence — the way they perform their official duties. The Act covers three situations: where a conflict actually exists, where it could reasonably appear to exist, and where it could arise in the future.</p>
+
+    <p class="body-text">The Act is administered by the <strong>Ethics and Anti-Corruption Commission (EACC)</strong>, which has powers to investigate, recommend disciplinary action, and refer matters to the Director of Public Prosecutions. For KTB as a state corporation, your responsible Commission is the <strong>Public Service Commission</strong>.</p>
+
+    <table class="mod-table">
+      <thead><tr><th>Key Definition</th><th>Plain English Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conflict of interest</strong></td><td>When your private interests could improperly affect how you do your job</td></tr>
+        <tr><td><strong>Private interest</strong></td><td>Any personal benefit, privilege, or advantage you or your family could gain from your position</td></tr>
+        <tr><td><strong>Public officer</strong></td><td>All KTB staff — as defined under Article 260 of the Constitution</td></tr>
+        <tr><td><strong>Reporting entity</strong></td><td>KTB — as a state corporation under Cap. 446, KTB is a reporting entity</td></tr>
+        <tr><td><strong>Significant official dealing</strong></td><td>Any engagement with an entity that could be seen to influence your decisions — supplying goods, giving advice, having oversight</td></tr>
+        <tr><td><strong>Complimentary treatment</strong></td><td>Free travel, hospitality, training, scholarship or medical treatment offered by someone who deals with KTB</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout gold">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">The appearance test</div>
+        <div class="callout-text">You do not have to actually benefit from a conflict for it to be a violation. If a reasonable person looking at the situation from outside would think your judgment could be influenced by a private interest — that is enough. Always ask yourself: <em>"How would this look if it was reported in a newspaper?"</em></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: KTB CONTEXT -->
+  <div class="slide" id="slide-2">
+    <div class="sec-head">
+      <div class="sec-num">2</div>
+      <div>
+        <div class="sec-label">KTB Context</div>
+        <div class="sec-title">How does this affect KTB specifically?</div>
+      </div>
+    </div>
+
+    <p class="body-text">KTB engages daily with suppliers, tourism operators, media agencies, event companies, consultants, and government bodies. Many of these relationships create opportunities for conflicts to arise — sometimes without staff realising it. Here are the situations most likely to arise at KTB:</p>
+
+    <div class="obligations-grid">
+      <div class="ob-card">
+        <div class="ob-title">🛒 Procurement decisions</div>
+        <div class="ob-desc">Participating in evaluating or awarding a tender to a company where you, a family member, or a close associate has an interest.</div>
+        <div class="ob-law">Section 10, 19 — conflict in decision-making and contracts</div>
+      </div>
+      <div class="ob-card">
+        <div class="ob-title">🎁 Gifts from suppliers</div>
+        <div class="ob-desc">Receiving gifts, hospitality, complimentary hotel stays, air tickets, or any other benefit from a KTB supplier or tourism partner.</div>
+        <div class="ob-law">Section 16, 17, 18 — gifts and complimentary treatment</div>
+      </div>
+      <div class="ob-card">
+        <div class="ob-title">💼 Side businesses</div>
+        <div class="ob-desc">Running or having a financial interest in a consultancy, tour operator, hotel, or agency that has or could have dealings with KTB.</div>
+        <div class="ob-law">Section 19, 20, 23 — contracts and restricted employment</div>
+      </div>
+      <div class="ob-card">
+        <div class="ob-title">👥 Recruitment</div>
+        <div class="ob-desc">Being involved in a recruitment or selection process where a family member, relative, or close associate is a candidate.</div>
+        <div class="ob-law">Section 21 — conflict in recruitment</div>
+      </div>
+      <div class="ob-card">
+        <div class="ob-title">📢 Job offers while in post</div>
+        <div class="ob-desc">Being approached for employment by a company or organisation that has dealings with KTB, and not disclosing or allowing it to influence your decisions.</div>
+        <div class="ob-law">Section 15 — offers of outside employment</div>
+      </div>
+      <div class="ob-card">
+        <div class="ob-title">📊 Use of official information</div>
+        <div class="ob-desc">Using non-public information obtained through your KTB role to benefit yourself, a family member, or another person — for example in business decisions.</div>
+        <div class="ob-law">Section 13 — misuse of official information</div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scen-head"><span class="scen-tag">📌 Scenario</span><span class="scen-title">The Tourism Partner Invitation</span></div>
+      <div class="scen-body">
+        <p class="scen-q">A hotel chain that has a contract with KTB invites a senior marketing officer for a complimentary three-night stay at their new Mombasa property, saying it will help the officer "understand the product better." The officer is also involved in reviewing KTB's marketing contracts. Should the officer accept?</p>
+        <button class="scen-btn" onclick="toggleScen(this)">🔍 Reveal answer</button>
+        <div class="scen-reveal">
+          <div class="scen-ans">✗ No — this is complimentary treatment from a party with significant official dealings with KTB.</div>
+          <div class="scen-exp">Section 18 prohibits accepting complimentary treatment unless it is required in an official capacity or in exceptional circumstances. A hotel with a KTB contract qualifies as having significant official dealings. The officer must decline or, if there is a genuine official reason, declare the acceptance within 48 hours in writing to the reporting authority. Given the officer's role in contract review, this creates an obvious appearance of conflict regardless of intent.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: KEY OBLIGATIONS -->
+  <div class="slide" id="slide-3">
+    <div class="sec-head">
+      <div class="sec-num">3</div>
+      <div>
+        <div class="sec-label">Your Legal Obligations</div>
+        <div class="sec-title">What the Act requires you to do</div>
+      </div>
+    </div>
+
+    <p class="body-text">The Act imposes specific obligations on every KTB staff member. These are not optional or aspirational — they are legal requirements with criminal penalties for breach.</p>
+
+    <div class="do-dont">
+      <div>
+        <div class="dd-head do">✅ You MUST do these</div>
+        <div class="dd-item"><span class="t">✓</span><span>Actively avoid any real, apparent, or potential conflict of interest</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Disclose any private interest that affects your official duties immediately</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Recuse yourself from any discussion or decision where you have a conflict</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Declare any gift received within 48 hours — even if you did not keep it</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Report any job offer from an entity that deals with KTB within 7 days</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Submit your declaration of income, assets and liabilities on time</span></div>
+        <div class="dd-item"><span class="t">✓</span><span>Get permission before taking any other paid employment</span></div>
+      </div>
+      <div>
+        <div class="dd-head dont">❌ You must NEVER do these</div>
+        <div class="dd-item"><span class="x">✗</span><span>Make a decision that affects an entity where you have a private interest</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Accept gifts, cash, or complimentary treatment from suppliers or contractors</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Be a party to or beneficiary of any KTB contract — in your own name or through a family member</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Use your KTB position to influence decisions for personal benefit</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Participate in recruitment where a relative or associate is a candidate</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Use non-public KTB information for personal or business gain</span></div>
+        <div class="dd-item"><span class="x">✗</span><span>Conceal a conflict of interest or collude with another officer to do so</span></div>
+      </div>
+    </div>
+
+    <div class="callout alert">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">The gifts rule — read this carefully</div>
+        <div class="callout-text">You may <em>never</em> accept a gift from anyone who has an interest in KTB's decisions, carries on regulated activities with KTB, or has a contractual relationship with KTB — regardless of the value of the gift. The only exception is gifts received in an official protocol capacity that are non-monetary and within customary standards. Even then, you must declare within <strong>48 hours</strong>. This applies to gifts received by your family members too — if you know a family member has received a gift from a KTB stakeholder, you must declare it.</div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scen-head"><span class="scen-tag">📌 Scenario</span><span class="scen-title">The Procurement Officer's Company</span></div>
+      <div class="scen-body">
+        <p class="scen-q">A KTB procurement officer's spouse runs a printing company. KTB issues a tender for branded promotional materials. The officer argues they will recuse themselves from the evaluation — so there is no problem. Is the recusal enough?</p>
+        <button class="scen-btn" onclick="toggleScen(this)">🔍 Reveal answer</button>
+        <div class="scen-reveal">
+          <div class="scen-ans">✗ No — recusal alone is not sufficient here.</div>
+          <div class="scen-exp">Section 19 prohibits a public officer from being a party to or beneficiary of a contract with their reporting entity — and this extends to contracts with entities in which a public officer has a private interest. The spouse's company should not bid on the tender at all. Additionally, the officer must have disclosed this interest in their conflict of interest register. The recusal must be formally recorded and transmitted to the Commission within 60 days (Section 30). Simply stepping away informally is not enough.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: DECLARATIONS -->
+  <div class="slide" id="slide-4">
+    <div class="sec-head">
+      <div class="sec-num">4</div>
+      <div>
+        <div class="sec-label">Compliance Requirements</div>
+        <div class="sec-title">Declarations, disclosures and timelines</div>
+      </div>
+    </div>
+
+    <p class="body-text">The Act creates mandatory declaration obligations for all public officers. Missing a declaration deadline is itself a criminal offence. Here are the key timelines you must know:</p>
+
+    <table class="decl-table">
+      <thead><tr><th>Declaration Type</th><th>When Required</th><th>Deadline</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Initial declaration</strong><br><span style="font-size:11px;color:var(--muted);">Income, assets &amp; liabilities</span></td><td>On joining KTB as a public officer</td><td><span class="timeline-badge">30 days of appointment</span></td></tr>
+        <tr><td><strong>Biennial declaration</strong><br><span style="font-size:11px;color:var(--muted);">Income, assets &amp; liabilities</span></td><td>Every two years during service — statement date is 1 November</td><td><span class="timeline-badge">By 31 December of declaration year</span></td></tr>
+        <tr><td><strong>Final declaration</strong><br><span style="font-size:11px;color:var(--muted);">Income, assets &amp; liabilities</span></td><td>On leaving KTB</td><td><span class="timeline-badge">30 days after ceasing service</span></td></tr>
+        <tr><td><strong>Gift declaration</strong><br><span style="font-size:11px;color:var(--muted);">Any gift or benefit received</span></td><td>Whenever a gift is received (including by family)</td><td><span class="timeline-badge">48 hours of receipt</span></td></tr>
+        <tr><td><strong>Job offer disclosure</strong><br><span style="font-size:11px;color:var(--muted);">Outside employment offer</span></td><td>When approached with an offer by an entity with KTB dealings</td><td><span class="timeline-badge">7 days of receiving offer</span></td></tr>
+        <tr><td><strong>Job acceptance disclosure</strong><br><span style="font-size:11px;color:var(--muted);">Accepting outside employment</span></td><td>If you accept permitted outside employment</td><td><span class="timeline-badge">30 days of taking up employment</span></td></tr>
+        <tr><td><strong>Recusal record</strong><br><span style="font-size:11px;color:var(--muted);">Stepping back from a decision</span></td><td>Every time you recuse yourself from a decision</td><td><span class="timeline-badge">Recorded in minutes + sent to Commission within 60 days</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout teal">
+      <div class="callout-icon">📋</div>
+      <div class="callout-body">
+        <div class="callout-title">What must be registered as an interest</div>
+        <div class="callout-text">The Second Schedule lists registrable interests including: directorships in any company, shareholdings, land and property, contracts for supply of goods or services, plans for future employment, gifts and hospitality, sponsorships, overseas travel paid for by external parties, pending civil or criminal cases, and dual citizenship. If in doubt about whether something needs to be registered, contact the Legal Directorate.</div>
+      </div>
+    </div>
+
+    <div class="callout alert">
+      <div class="callout-icon">🚨</div>
+      <div class="callout-body">
+        <div class="callout-title">Post-employment restrictions — these apply after you leave KTB</div>
+        <div class="callout-text">For <strong>two years after leaving KTB</strong>, you may not: act for or against KTB in any matter you previously handled; accept appointment to a board or employment with a company that had significant official dealings with KTB in your last two years; or represent any person before KTB. Breaching these restrictions is a criminal offence under Section 27.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CONSEQUENCES & RESPONSE -->
+  <div class="slide" id="slide-5">
+    <div class="sec-head">
+      <div class="sec-num">5</div>
+      <div>
+        <div class="sec-label">Penalties &amp; Response</div>
+        <div class="sec-title">Consequences, protection, and what to do</div>
+      </div>
+    </div>
+
+    <p class="body-text">The Act carries serious penalties. Unlike the old Public Officer Ethics Act, the Conflict of Interest Act 2025 introduced substantially heavier sanctions to reflect the seriousness of the offences.</p>
+
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="callout alert" style="margin:0">
+        <div class="callout-body">
+          <div class="callout-title">Criminal penalties</div>
+          <div class="callout-text" style="font-size:13px;"><strong>Individuals:</strong> Up to KSh 4 million fine and/or up to 10 years imprisonment.<br><strong>Companies:</strong> Up to KSh 10 million fine.<br><strong>Plus:</strong> A mandatory additional fine equal to <em>twice</em> any benefit gained or loss caused.</div>
+        </div>
+      </div>
+      <div class="callout alert" style="margin:0">
+        <div class="callout-body">
+          <div class="callout-title">Additional consequences</div>
+          <div class="callout-text" style="font-size:13px;">Suspension from office during investigation (up to 90 days). Disciplinary action by KTB. Referral to the DPP for prosecution. Forfeiture of undeclared or unexplained assets. Public identification as a violator.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="body-text" style="margin-top:16px;"><strong>What to do if you find yourself in a conflict situation:</strong></p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">STOP — do not proceed with the decision or action</div><div class="step-desc">As soon as you realise you may have a private interest in a matter, stop participating immediately. Do not vote, sign, advise, or influence the outcome.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">RECUSE — formally step back</div><div class="step-desc">Inform your supervisor or the chairperson of the relevant meeting that you are recusing yourself and state the nature of your interest. This must be recorded in the minutes.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">DECLARE — notify the reporting authority in writing</div><div class="step-desc">Submit a written declaration of your private interest and the recusal to the Legal Directorate. KTB must transmit this to the Commission within 60 days.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">CONTACT LEGAL — when in doubt</div><div class="step-desc">If you are unsure whether a situation creates a conflict, contact the Legal Directorate <em>before</em> acting. The Act protects people who act in good faith — but only if they take proper steps.</div></div></div>
+    </div>
+
+    <div class="callout good">
+      <div class="callout-icon">🛡️</div>
+      <div class="callout-body">
+        <div class="callout-title">Whistleblower protection</div>
+        <div class="callout-text">If you report a suspected conflict of interest by a colleague, the Act protects you from dismissal, discrimination, demotion, or any form of reprisal under Section 47. Such protection is enforceable as a civil claim. You should report concerns to the Legal Directorate or directly to the EACC.</div>
+      </div>
+    </div>
+
+    <div class="takeaways" style="margin-top:16px;">
+      <p class="body-text" style="margin-bottom:6px;"><strong>5 things to remember:</strong></p>
+      <div class="takeaway"><div class="tk-num">1</div><div class="tk-text"><strong>It is not just about actual benefit</strong> — the appearance of conflict is enough to trigger the Act.</div></div>
+      <div class="takeaway"><div class="tk-num">2</div><div class="tk-text"><strong>Declare early and often</strong> — late or missing declarations are criminal offences, not just administrative failures.</div></div>
+      <div class="takeaway"><div class="tk-num">3</div><div class="tk-text"><strong>Gifts from KTB stakeholders are almost always prohibited</strong> — when in doubt, decline and contact Legal.</div></div>
+      <div class="takeaway"><div class="tk-num">4</div><div class="tk-text"><strong>Recuse formally</strong> — stepping back informally is not enough. It must be recorded in minutes and reported to the Commission.</div></div>
+      <div class="takeaway"><div class="tk-num">5</div><div class="tk-text"><strong>Post-employment restrictions are real</strong> — the Act follows you for two years after you leave KTB.</div></div>
+    </div>
+
+    <div class="contact-grid" style="margin-top:16px;">
+      <div class="contact-card"><div class="cc-avatar">AN</div><div><div class="cc-name">Allan Njoroge</div><div class="cc-role">Director, Legal Services &amp; Corporation Secretary</div><div class="cc-email">allan@ktb.go.ke</div></div></div>
+      <div class="contact-card"><div class="cc-avatar">DM</div><div><div class="cc-name">Doreen Mutunga</div><div class="cc-role">Deputy Director, Legal Services</div><div class="cc-email">dmutunga@ktb.go.ke</div></div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: QUIZ -->
+  <div class="slide" id="slide-6">
+    <div class="sec-head">
+      <div class="sec-num" style="background:var(--gold);color:var(--navy-d);">?</div>
+      <div><div class="sec-label">Knowledge Check</div><div class="sec-title">Quiz — 10 Questions</div></div>
+    </div>
+    <div class="callout info" style="margin-bottom:16px;">
+      <div class="callout-icon">📋</div>
+      <div class="callout-body">
+        <div class="callout-title">Instructions</div>
+        <div class="callout-text">Answer each question one at a time. Select your answer to see instant feedback, then proceed to the next question. You need <strong>7 out of 10 (70%)</strong> to pass.</div>
+      </div>
+    </div>
+    <div id="quiz-question-container"></div>
+    <div class="quiz-nav">
+      <div class="score-mini"><span id="quiz-score-text">0 / 0 correct</span><div class="score-track"><div class="score-fill" id="score-fill" style="width:0%"></div></div></div>
+      <div class="quiz-dots" id="quiz-dots"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: RESULTS -->
+  <div class="slide" id="slide-16">
+    <div class="results-card" id="results-card">
+      <div class="res-score" id="res-score">—</div>
+      <div class="res-label" id="res-label">—</div>
+      <div class="res-sub"   id="res-sub">—</div>
+      <div class="res-badge" id="res-badge">—</div><br>
+      <button class="cert-btn" onclick="window.print()">🖨️ Print completion record</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bb-section-name" id="bb-section-name">Introduction</div>
+  <div class="bb-btns">
+    <button class="btn-prev" id="btn-prev" onclick="navigate(-1)" style="display:none;">← Back</button>
+    <button class="understood-wrap" id="understood-btn" onclick="toggleUnderstood()" style="display:none;">
+      <div class="uc-box" id="uc-box">✓</div>
+      <span id="understood-label">I have read and understood this section</span>
+    </button>
+    <button class="btn-next" id="btn-next" onclick="navigate(1)">Next <span style="margin-left:4px;">→</span></button>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── QUIZ DATA ─────────────────────────────────────────
+const QUESTIONS = [
+  { q: "The Conflict of Interest Act 2025 commenced on which date?",
+    opts: ["30 July 2025","5 August 2025","19 August 2025","1 January 2026"],
+    ans: 2,
+    fb: { ok: "Correct! The Act was assented to on 30 July 2025 and commenced on 19 August 2025.", no: "Incorrect. The Act was assented to on 30 July 2025 but commenced — meaning it came into force — on 19 August 2025." }},
+  { q: "Under the Act, which of the following best describes a 'conflict of interest'?",
+    opts: ["Disagreement between two staff members over a work decision","A situation where a public officer's private interests could improperly influence their official duties","Any financial relationship a public officer has outside KTB","A dispute between KTB and a supplier"],
+    ans: 1,
+    fb: { ok: "Correct! A conflict of interest arises when a public officer's private interests could improperly influence — or appear to influence — their performance of official duties.", no: "Incorrect. The Act defines conflict of interest as a conflict between a public officer's public duty and their private interests that could improperly influence official performance." }},
+  { q: "A KTB officer sits on the tender evaluation committee. Their sibling owns one of the bidding companies. What must the officer do?",
+    opts: ["Continue but be extra objective","Recuse themselves, formally record the recusal in the meeting minutes, and declare the interest in writing","Inform a colleague verbally and let them handle that particular bid","Disqualify their sibling's company without disclosing why"],
+    ans: 1,
+    fb: { ok: "Correct! Section 10 and 30 require the officer to recuse formally, have it recorded in the minutes, and submit a written declaration to the reporting authority.", no: "Incorrect. Informal steps are not sufficient. The recusal must be formally recorded in minutes and declared in writing to the reporting authority under Sections 10 and 30." }},
+  { q: "A tourism agency that supplies event management services to KTB sends a KTB events officer a bottle of wine and a gift hamper worth KSh 5,000 as a thank-you. What should the officer do?",
+    opts: ["Accept it — it is a courtesy gesture and below any relevant threshold","Accept it and declare it within one week","Decline it — gifts from KTB suppliers are generally prohibited regardless of value","Accept it only if the CEO approves"],
+    ans: 2,
+    fb: { ok: "Correct! Section 16 prohibits accepting gifts from persons who have a contractual relationship with KTB. The officer must decline. If for any reason the gift has already been received, it must be declared within 48 hours.", no: "Incorrect. Section 16 prohibits accepting gifts from anyone with a contractual relationship with KTB, regardless of value. The officer must decline the gift." }},
+  { q: "How long does a KTB officer have to declare to the reporting authority that they have received a job offer from a company that has significant dealings with KTB?",
+    opts: ["24 hours","7 days","14 days","30 days"],
+    ans: 1,
+    fb: { ok: "Correct! Section 15 requires disclosure of any such job offer to the reporting authority within 7 days of receiving the offer.", no: "Incorrect. Section 15 requires disclosure within 7 days of receiving the offer from a company with significant official dealings with the reporting entity." }},
+  { q: "Under the Act, when must a new KTB staff member submit their initial declaration of income, assets and liabilities?",
+    opts: ["Within 7 days of appointment","Within 30 days of appointment","By 31 December of the year of appointment","At their first annual performance review"],
+    ans: 1,
+    fb: { ok: "Correct! Section 34(1) requires an initial declaration within 30 days of appointment.", no: "Incorrect. Section 34(1) requires the initial declaration within 30 days of appointment as a public officer." }},
+  { q: "A KTB officer who leaves the organisation is approached by a private hotel chain they had significant official dealings with during their last year at KTB. The hotel wants to appoint them to their board. Under the Act, the officer —",
+    opts: ["Can accept immediately since they no longer work for KTB","Must wait 6 months before accepting","Cannot accept for two years after leaving KTB without an EACC exemption","Can accept as long as they disclose it to their new employer"],
+    ans: 2,
+    fb: { ok: "Correct! Section 27(1)(d) prohibits a former public officer from accepting board appointment or employment with a private entity with which they had significant official dealings for two years after leaving office.", no: "Incorrect. Section 27 imposes a two-year post-employment restriction. The officer cannot accept without seeking an exemption from the EACC under Section 29." }},
+  { q: "Under the Act, what is the maximum prison term for an individual who violates the Conflict of Interest Act where no specific penalty is stated?",
+    opts: ["2 years","5 years","10 years","15 years"],
+    ans: 2,
+    fb: { ok: "Correct! Section 45 provides for a general penalty of up to KSh 4 million and/or up to 10 years imprisonment for natural persons.", no: "Incorrect. Section 45 provides that an individual convicted of a general offence under the Act faces up to KSh 4 million fine and/or up to 10 years imprisonment." }},
+  { q: "A colleague tells you they suspect a senior officer influenced a procurement award to benefit a company they have shares in. What should you do under the Act?",
+    opts: ["Do nothing — it is not your responsibility","Confront the senior officer directly before reporting","Report it to the Legal Directorate or directly to the EACC — you are protected from retaliation for making such a report","Wait and see if the issue becomes public before acting"],
+    ans: 2,
+    fb: { ok: "Correct! Section 47 protects anyone who makes a disclosure of conflict of interest in the public interest from dismissal, discrimination, or any form of reprisal. You should report to Legal or the EACC.", no: "Incorrect. Section 41 allows any person to lodge a complaint with the reporting authority or the EACC. Section 47 protects you from retaliation for making such a report in good faith." }},
+  { q: "Under the Act, which body is the responsible Commission for KTB staff in relation to conflict of interest declarations?",
+    opts: ["The Ethics and Anti-Corruption Commission directly","The Kenya Tourism Board management","The Public Service Commission","The National Assembly Ethics Committee"],
+    ans: 2,
+    fb: { ok: "Correct! Under Section 32(5)(d), the Public Service Commission is the responsible Commission for public officers who are employees of state corporations — which includes KTB staff.", no: "Incorrect. Section 32(5)(d) designates the Public Service Commission as the responsible Commission for public officers in state corporations, including KTB." }},
+];
+
+// ── STATE ─────────────────────────────────────────────
+const SECTIONS = [
+  { id: 'cover',       label: 'Start',              slide: 0,  requiresCheck: false },
+  { id: 'what',        label: 'What is the Act?',   slide: 1,  requiresCheck: true  },
+  { id: 'ktb',         label: 'KTB Context',        slide: 2,  requiresCheck: true  },
+  { id: 'obligations', label: 'Your Obligations',   slide: 3,  requiresCheck: true  },
+  { id: 'declarations',label: 'Declarations',       slide: 4,  requiresCheck: true  },
+  { id: 'penalties',   label: 'Penalties & Response',slide: 5, requiresCheck: true  },
+  { id: 'quiz',        label: 'Quiz',               slide: 6,  requiresCheck: false },
+  { id: 'results',     label: 'Results',            slide: 16, requiresCheck: false },
+];
+const LEARNING_SECTIONS = SECTIONS.filter(s => s.requiresCheck);
+
+let currentSlide  = 0;
+let understood    = false;
+let quizIndex     = 0;
+let quizAnswers   = new Array(QUESTIONS.length).fill(null);
+let timerSeconds  = 0;
+let timerInterval = null;
+let sectionsDone  = new Set();
+
+function init() {
+  buildPips();
+  buildTabs();
+  buildQuizDots();
+  renderQuestion(0);
+  updateUI();
+  startTimer();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const m = String(Math.floor(timerSeconds/60)).padStart(2,'0');
+    const s = String(timerSeconds%60).padStart(2,'0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function buildPips() {
+  const wrap = document.getElementById('prog-steps');
+  for (let i = 0; i < 8; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'prog-step-pip';
+    pip.id = `pip-${i}`;
+    wrap.appendChild(pip);
+  }
+}
+
+function pipIndex() {
+  if (currentSlide === 0)  return 0;
+  if (currentSlide <= 5)   return currentSlide;
+  if (currentSlide === 6)  return 6;
+  if (currentSlide === 16) return 7;
+  return 6;
+}
+
+function updatePips() {
+  const cur = pipIndex();
+  for (let i = 0; i < 8; i++) {
+    const pip = document.getElementById(`pip-${i}`);
+    pip.className = 'prog-step-pip';
+    if (i < cur)  pip.classList.add('done');
+    if (i === cur) pip.classList.add('active');
+  }
+}
+
+function buildTabs() {
+  const wrap = document.getElementById('section-tabs');
+  LEARNING_SECTIONS.forEach((sec, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'stab';
+    tab.id = `tab-${sec.id}`;
+    tab.innerHTML = `<span class="stab-num">${i+1}</span>${sec.label}`;
+    wrap.appendChild(tab);
+  });
+}
+
+function updateTabs() {
+  LEARNING_SECTIONS.forEach(sec => {
+    const tab = document.getElementById(`tab-${sec.id}`);
+    if (!tab) return;
+    tab.className = 'stab';
+    if (sectionsDone.has(sec.id)) { tab.classList.add('done'); tab.querySelector('.stab-num').textContent = '✓'; }
+    else tab.querySelector('.stab-num').textContent = LEARNING_SECTIONS.indexOf(sec)+1;
+    if (currentSlide === sec.slide) tab.classList.add('active');
+  });
+}
+
+function buildQuizDots() {
+  const wrap = document.getElementById('quiz-dots');
+  QUESTIONS.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'qdot';
+    dot.id = `qdot-${i}`;
+    wrap.appendChild(dot);
+  });
+}
+
+function renderQuestion(index) {
+  const q = QUESTIONS[index];
+  const container = document.getElementById('quiz-question-container');
+  container.innerHTML = `
+    <div class="quiz-q">
+      <div class="quiz-q-head">
+        <span class="q-badge">Q${index+1} / ${QUESTIONS.length}</span>
+        <span class="q-text">${q.q}</span>
+      </div>
+      <div class="q-opts">
+        ${q.opts.map((o, oi) => `
+          <button class="q-opt" id="qopt-${oi}" onclick="answerQuestion(${index}, ${oi})">
+            <span class="q-letter">${String.fromCharCode(65+oi)}</span>
+            <span>${o}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-fb" id="q-fb"></div>
+    </div>`;
+  updateQuizDots();
+  updateScoreBar();
+}
+
+function answerQuestion(qi, oi) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi;
+  const correct = QUESTIONS[qi].ans;
+  const isOk = oi === correct;
+  for (let i = 0; i < QUESTIONS[qi].opts.length; i++) {
+    const btn = document.getElementById(`qopt-${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === oi && isOk)  btn.classList.add('correct');
+    if (i === oi && !isOk) btn.classList.add('wrong');
+    if (i === correct && !isOk) btn.classList.add('reveal');
+  }
+  const fb = document.getElementById('q-fb');
+  fb.classList.add('show');
+  fb.classList.add(isOk ? 'ok' : 'err');
+  fb.innerHTML = isOk
+    ? `✓ &nbsp;<strong>Correct!</strong> ${QUESTIONS[qi].fb.ok}`
+    : `✗ &nbsp;<strong>Incorrect.</strong> ${QUESTIONS[qi].fb.no}`;
+  updateQuizDots();
+  updateScoreBar();
+  setTimeout(() => enableNext(), 900);
+}
+
+function updateQuizDots() {
+  QUESTIONS.forEach((q, i) => {
+    const dot = document.getElementById(`qdot-${i}`);
+    if (!dot) return;
+    dot.className = 'qdot';
+    if (quizAnswers[i] !== null) dot.classList.add('answered');
+    if (i === quizIndex) dot.classList.add('current');
+  });
+}
+
+function updateScoreBar() {
+  const answered = quizAnswers.filter(a => a !== null).length;
+  const correct  = quizAnswers.filter((a, i) => a === QUESTIONS[i].ans).length;
+  const pct = answered > 0 ? Math.round((correct/answered)*100) : 0;
+  document.getElementById('quiz-score-text').textContent = `${correct} / ${answered} correct`;
+  document.getElementById('score-fill').style.width = pct + '%';
+}
+
+function showResults() {
+  const correct = quizAnswers.filter((a, i) => a === QUESTIONS[i].ans).length;
+  const pct = Math.round((correct/QUESTIONS.length)*100);
+  const passed = pct >= 70;
+  document.getElementById('res-score').textContent = `${correct}/10`;
+  document.getElementById('res-score').className = `res-score ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('res-label').textContent = passed ? '✓ Module Passed' : '✗ Not Passed';
+  document.getElementById('res-label').className = `res-label ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('res-sub').textContent = passed
+    ? `You scored ${pct}% — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.`
+    : `You scored ${pct}% — below the 70% pass mark. Please review the module and contact the Legal Directorate.`;
+  document.getElementById('res-badge').innerHTML = passed
+    ? `🏅 Conflict of Interest Act 2025<br>Completed ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} · KTB Legal Hub`
+    : `📚 Please review the highlighted sections and retake the module.`;
+  clearInterval(timerInterval);
+}
+
+function startModule() { navigate(1); }
+
+function navigate(dir) {
+  const contentArea = document.getElementById('content-area');
+  let next = currentSlide;
+  if (dir === 1) {
+    if (currentSlide === 0) next = 1;
+    else if (currentSlide >= 1 && currentSlide <= 5) next = currentSlide + 1;
+    else if (currentSlide === 6) {
+      if (quizIndex < QUESTIONS.length - 1) {
+        quizIndex++;
+        renderQuestion(quizIndex);
+        resetUnderstood();
+        updateUI();
+        contentArea.scrollTo({top:0,behavior:'smooth'});
+        return;
+      } else {
+        next = 16;
+        showResults();
+      }
+    }
+  } else {
+    if (currentSlide === 1)  next = 0;
+    else if (currentSlide >= 2 && currentSlide <= 5) next = currentSlide - 1;
+    else if (currentSlide === 6) {
+      if (quizIndex > 0) { quizIndex--; renderQuestion(quizIndex); updateUI(); contentArea.scrollTo({top:0,behavior:'smooth'}); return; }
+      else next = 5;
+    }
+    else if (currentSlide === 16) next = 6;
+  }
+  if (next === currentSlide) return;
+  const oldSlide = document.getElementById(`slide-${currentSlide}`);
+  if (oldSlide) { oldSlide.classList.remove('active'); oldSlide.classList.remove('back'); }
+  if (dir === 1 && currentSlide >= 1 && currentSlide <= 5) {
+    const sec = SECTIONS[currentSlide];
+    if (sec) sectionsDone.add(sec.id);
+  }
+  currentSlide = next;
+  resetUnderstood();
+  const newSlide = document.getElementById(`slide-${currentSlide}`);
+  if (newSlide) {
+    newSlide.classList.remove('back');
+    if (dir === -1) newSlide.classList.add('back');
+    newSlide.classList.add('active');
+  }
+  contentArea.scrollTo({top:0,behavior:'smooth'});
+  updateUI();
+}
+
+function toggleUnderstood() {
+  understood = !understood;
+  const btn = document.getElementById('understood-btn');
+  btn.classList.toggle('checked', understood);
+  document.getElementById('understood-label').textContent = understood ? 'Understood ✓' : 'I have read and understood this section';
+  if (understood) enableNext(); else disableNext();
+}
+
+function resetUnderstood() {
+  understood = false;
+  const btn = document.getElementById('understood-btn');
+  if (btn) { btn.classList.remove('checked'); document.getElementById('understood-label').textContent = 'I have read and understood this section'; }
+}
+
+function enableNext()  { document.getElementById('btn-next').classList.add('enabled'); }
+function disableNext() { document.getElementById('btn-next').classList.remove('enabled'); }
+
+const SECTION_NAMES = { 0:'Introduction', 1:'Section 1 — What is the Act?', 2:'Section 2 — KTB Context', 3:'Section 3 — Your Obligations', 4:'Section 4 — Declarations & Timelines', 5:'Section 5 — Penalties & Response', 6:'Quiz', 16:'Results' };
+
+function updateUI() {
+  const isQuiz    = currentSlide === 6;
+  const isResults = currentSlide === 16;
+  const isCover   = currentSlide === 0;
+  const isContent = currentSlide >= 1 && currentSlide <= 5;
+  const nameMap = { ...SECTION_NAMES, 6: `Quiz — Q${quizIndex+1} of ${QUESTIONS.length}` };
+  document.getElementById('bb-section-name').textContent = nameMap[currentSlide] || '';
+  let stepNum = isCover ? '1 of 9' : isContent ? `${currentSlide+1} of 9` : isQuiz ? `${quizIndex+7} of 9` : '9 of 9';
+  document.getElementById('step-counter').textContent = `Step ${stepNum}`;
+  document.getElementById('understood-btn').style.display = isContent ? 'flex' : 'none';
+  document.getElementById('btn-prev').style.display = (isCover||isResults) ? 'none' : 'flex';
+  const nextBtn = document.getElementById('btn-next');
+  if (isResults)  { nextBtn.style.display = 'none'; }
+  else if (isCover) { nextBtn.style.display = 'none'; }
+  else if (isContent) { nextBtn.textContent = 'Next →'; nextBtn.style.display = 'flex'; if (understood) enableNext(); else disableNext(); }
+  else if (isQuiz) {
+    const answered = quizAnswers[quizIndex] !== null;
+    const isLast   = quizIndex === QUESTIONS.length - 1;
+    nextBtn.textContent = isLast ? 'See Results →' : 'Next Question →';
+    nextBtn.style.display = 'flex';
+    if (answered) enableNext(); else disableNext();
+  }
+  updatePips();
+  updateTabs();
+}
+
+function toggleScen(btn) {
+  const reveal = btn.nextElementSibling;
+  reveal.classList.toggle('open');
+  btn.textContent = reveal.classList.contains('open') ? '🔼 Hide answer' : '🔍 Reveal answer';
+}
+
+init();
+</script>
+</body>
+</html>
