@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access to Information Act — KTB Legal Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:   #1a3a5c;
+  --primary-d: #0f2237;
+  --primary-l: #2a5080;
+  --gold:      #C19A28;
+  --gold-l:    #e8c96a;
+  --gold-bg:   #fdf8ec;
+  --ink:       #1c1c1e;
+  --body:      #3a3a3c;
+  --muted:     #6e6e73;
+  --border:    #e5e1d8;
+  --cream:     #faf8f4;
+  --white:     #ffffff;
+  --green:     #1a6b47;
+  --green-bg:  #edf7f2;
+  --red:       #c0392b;
+  --red-bg:    #fdf0ee;
+  --blue:      #1a3a6b;
+  --blue-bg:   #eef3fb;
+  --amber:     #92520a;
+  --amber-bg:  #fff8ec;
+  --teal:      #0a5c5c;
+  --teal-bg:   #e6f4f4;
+  --sky-bg:    #f0f5ff;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--body); font-size: 15px; line-height: 1.7; }
+
+/* ── SHELL ── */
+.shell { display: grid; grid-template-rows: auto auto auto 1fr auto; height: 100vh; overflow: hidden; }
+
+/* ── TOP BAR ── */
+.topbar { background: var(--primary-d); border-bottom: 3px solid var(--gold); padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; }
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.tb-logo { background: var(--gold); color: var(--primary-d); font-weight: 700; font-size: 11px; padding: 3px 9px; border-radius: 2px; letter-spacing: 0.5px; flex-shrink: 0; }
+.tb-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+.tb-right { display: flex; align-items: center; gap: 16px; }
+.tb-timer { font-size: 12px; color: var(--gold-l); font-weight: 600; font-variant-numeric: tabular-nums; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 4px; }
+.tb-step { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* ── PROGRESS PIPS ── */
+.prog-bar-zone { background: var(--primary-d); padding: 0 24px 10px; flex-shrink: 0; }
+.prog-steps { display: flex; gap: 4px; }
+.prog-step-pip { flex: 1; height: 5px; background: rgba(255,255,255,0.12); border-radius: 3px; transition: background 0.3s; }
+.prog-step-pip.done   { background: var(--gold); }
+.prog-step-pip.active { background: rgba(193,154,40,0.45); }
+
+/* ── SECTION TABS ── */
+.section-tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; flex-shrink: 0; scrollbar-width: none; }
+.section-tabs::-webkit-scrollbar { display: none; }
+.stab { padding: 10px 14px; font-size: 12px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 5px; cursor: default; transition: color 0.2s, border-color 0.2s; flex-shrink: 0; }
+.stab.active { color: var(--primary); border-bottom-color: var(--gold); font-weight: 700; }
+.stab.done   { color: var(--green); }
+.stab .stab-num { width: 18px; height: 18px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+.stab.active .stab-num { background: var(--primary); color: var(--white); }
+.stab.done   .stab-num { background: var(--green); color: var(--white); }
+
+/* ── CONTENT AREA ── */
+.content-area { overflow-y: auto; padding: 28px 0 20px; }
+.content-area::-webkit-scrollbar { width: 5px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── SLIDES ── */
+.slide { display: none; max-width: 780px; margin: 0 auto; padding: 0 28px; animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+.slide.active { display: block; }
+@keyframes slideIn  { from { opacity: 0; transform: translateX(32px);  } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideBack{ from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: translateX(0); } }
+.slide.back { animation: slideBack 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── SECTION HEADER ── */
+.sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+.sec-num { width: 46px; height: 46px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 22px; flex-shrink: 0; box-shadow: 0 4px 14px rgba(26,58,92,0.3); }
+.sec-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.sec-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--primary); line-height: 1.2; }
+
+/* ── TYPOGRAPHY ── */
+.body-text { font-size: 14.5px; color: var(--body); line-height: 1.8; margin-bottom: 14px; }
+h3.sub-head { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--primary); margin: 22px 0 10px; border-left: 3px solid var(--gold); padding-left: 10px; }
+
+/* ── CALLOUT ── */
+.callout { border-radius: 8px; padding: 14px 18px; margin: 14px 0; border-left: 4px solid; display: flex; gap: 12px; align-items: flex-start; }
+.callout-icon { font-size: 20px; flex-shrink: 0; }
+.callout-title { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; }
+.callout-text  { font-size: 13.5px; line-height: 1.65; }
+.callout.info  { background: var(--blue-bg);  border-color: var(--blue);  } .callout.info  .callout-title { color: var(--blue); }
+.callout.alert { background: var(--red-bg);   border-color: var(--red);   } .callout.alert .callout-title { color: var(--red); }
+.callout.good  { background: var(--green-bg); border-color: var(--green); } .callout.good  .callout-title { color: var(--green); }
+.callout.gold  { background: var(--gold-bg);  border-color: var(--gold);  } .callout.gold  .callout-title { color: var(--amber); }
+.callout.teal  { background: var(--teal-bg);  border-color: var(--teal);  } .callout.teal  .callout-title { color: var(--teal); }
+.callout.sky   { background: var(--sky-bg);   border-color: var(--primary-l); } .callout.sky .callout-title { color: var(--primary); }
+
+/* ── TABLES ── */
+.mod-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13.5px; }
+.mod-table th { background: var(--primary); color: var(--white); padding: 9px 13px; text-align: left; font-size: 12.5px; font-weight: 600; }
+.mod-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.mod-table tr:last-child td { border-bottom: none; }
+.mod-table tr:nth-child(even) td { background: rgba(255,255,255,0.55); }
+.mod-table .warn { color: var(--red); font-weight: 700; }
+.badge-red  { display: inline-block; background: var(--red-bg); color: var(--red); border: 1px solid #f0b8b3; border-radius: 3px; font-size: 11px; font-weight: 700; padding: 2px 7px; white-space: nowrap; }
+.badge-soft { display: inline-block; background: var(--gold-bg); color: var(--amber); border: 1px solid #dfc060; border-radius: 3px; font-size: 11px; font-weight: 700; padding: 2px 7px; white-space: nowrap; }
+
+/* ── BANDS ── */
+.band { border-radius: 8px; padding: 16px; margin: 14px 0; }
+.band-sky   { background: var(--sky-bg); }
+.band-cream { background: var(--cream); border: 1px solid var(--border); }
+.band-gold  { background: var(--gold-bg); }
+.band-green { background: var(--green-bg); }
+
+/* ── OBLIGATIONS GRID ── */
+.ob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media(max-width:560px){ .ob-grid { grid-template-columns: 1fr; } }
+.ob-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 13px; border-left: 3px solid var(--primary); }
+.ob-title { font-size: 12.5px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.ob-desc  { font-size: 12.5px; color: var(--body); line-height: 1.55; }
+.ob-law   { font-size: 10.5px; color: var(--muted); margin-top: 6px; font-style: italic; background: var(--cream); display: inline-block; padding: 2px 7px; border-radius: 3px; }
+
+/* ── SCENARIO ── */
+.scenario { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 14px 0; }
+.scen-head { background: var(--gold-bg); border-bottom: 1px solid #e8d98a; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.scen-tag  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); background: rgba(193,154,40,0.15); padding: 2px 8px; border-radius: 3px; }
+.scen-title{ font-size: 13px; font-weight: 600; color: var(--body); }
+.scen-body { padding: 14px 16px; }
+.scen-q    { font-size: 13.5px; color: var(--body); line-height: 1.7; font-style: italic; margin-bottom: 10px; }
+.scen-reveal { display: none; border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 4px; }
+.scen-reveal.open { display: block; }
+.scen-ans  { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.scen-exp  { font-size: 13px; color: var(--body); line-height: 1.65; }
+.scen-btn  { display: inline-flex; align-items: center; gap: 5px; background: var(--primary); color: var(--white); border: none; border-radius: 5px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+.scen-btn:hover { background: var(--primary-l); }
+
+/* ── DO / DON'T ── */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 14px 0; }
+@media(max-width:520px){ .do-dont { grid-template-columns: 1fr; } }
+.dd-head { padding: 10px 14px; font-size: 12.5px; font-weight: 700; }
+.dd-head.do   { background: var(--green); color: var(--white); }
+.dd-head.dont { background: var(--red);   color: var(--white); }
+.dd-col { display: flex; flex-direction: column; }
+.dd-col.do-col   { background: #f5fbf8; border-right: 1px solid var(--border); }
+.dd-col.dont-col { background: #fef9f8; }
+.dd-item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 14px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.5; }
+.dd-item:last-child { border-bottom: none; }
+.dd-item .t { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.dd-item .x { color: var(--red);   font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+
+/* ── STEPS ── */
+.steps { margin: 0; }
+.step { display: flex; gap: 14px; padding: 11px 0; border-bottom: 1px dashed var(--border); align-items: flex-start; }
+.step:last-child { border-bottom: none; }
+.step-num { width: 32px; height: 32px; background: var(--primary); color: var(--white); border-radius: 50%; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-title { font-weight: 700; font-size: 13.5px; color: var(--primary); margin-bottom: 2px; }
+.step-desc  { font-size: 13.5px; color: var(--body); line-height: 1.6; }
+
+/* ── TAKEAWAYS ── */
+.takeaways { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.takeaway { display: flex; gap: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.tk-num  { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 28px; text-align: center; }
+.tk-text { font-size: 13.5px; color: var(--body); line-height: 1.6; padding-top: 2px; }
+.tk-text strong { color: var(--primary); }
+
+/* ── CONTACT GRID ── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media(max-width:520px){ .contact-grid { grid-template-columns: 1fr; } }
+.contact-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; gap: 10px; }
+.cc-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: var(--white); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cc-name  { font-weight: 700; font-size: 13.5px; color: var(--ink); }
+.cc-role  { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+.cc-email { font-size: 12px; color: var(--primary); font-weight: 500; }
+
+/* ── COVER ── */
+.cover { background: linear-gradient(135deg, var(--primary-d) 0%, var(--primary) 60%, var(--primary-l) 100%); border-radius: 12px; padding: 36px 32px; text-align: center; position: relative; overflow: hidden; margin-bottom: 20px; }
+.cover::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-5H15v-5h5v-.5z'/%3E%3C/g%3E%3C/svg%3E"); }
+.cover-eyebrow { display: inline-block; background: rgba(193,154,40,0.2); border: 1px solid var(--gold); color: var(--gold-l); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 12px; border-radius: 20px; margin-bottom: 16px; position: relative; }
+.cover h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 4vw, 34px); color: var(--white); line-height: 1.2; margin-bottom: 6px; position: relative; }
+.cover h1 span { color: var(--gold-l); font-style: italic; }
+.cover-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 24px; position: relative; }
+.cover-chips { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; position: relative; margin-bottom: 24px; }
+.cover-chip { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: rgba(255,255,255,0.85); }
+.cover-chip strong { color: var(--gold-l); }
+.cover-intro { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; text-align: left; position: relative; }
+.cover-intro p { font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.7; }
+.cover-intro p + p { margin-top: 8px; }
+.cover-start { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--primary-d); border: none; border-radius: 8px; padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; position: relative; }
+.cover-start:hover { background: var(--gold-l); transform: translateY(-1px); }
+.cover-review { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 18px; font-style: italic; position: relative; }
+
+/* ── QUIZ ── */
+.quiz-q { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.quiz-q-head { background: var(--primary-d); padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px; }
+.q-badge { background: var(--gold); color: var(--primary-d); font-weight: 700; font-size: 10.5px; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
+.q-text  { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.45; }
+.q-opts  { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; background: var(--sky-bg); }
+.q-opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13.5px; color: var(--body); background: var(--white); text-align: left; font-family: 'DM Sans', sans-serif; line-height: 1.5; width: 100%; transition: border-color 0.15s, background 0.15s; }
+.q-opt:hover:not(:disabled) { border-color: var(--primary); background: #eef3fb; }
+.q-opt.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.q-opt.wrong   { border-color: var(--red);   background: var(--red-bg);   color: var(--red); }
+.q-opt.reveal  { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.q-opt:disabled { cursor: default; }
+.q-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.q-opt.correct .q-letter { background: var(--green); color: var(--white); }
+.q-opt.wrong   .q-letter { background: var(--red);   color: var(--white); }
+.q-opt.reveal  .q-letter { background: var(--green); color: var(--white); }
+.q-fb { margin: 0 16px 14px; padding: 10px 14px; border-radius: 6px; font-size: 13px; line-height: 1.6; display: none; }
+.q-fb.show { display: block; }
+.q-fb.ok  { background: var(--green-bg); color: var(--green); border: 1px solid #a8dcc0; }
+.q-fb.err { background: var(--red-bg);   color: var(--red);   border: 1px solid #f0b8b3; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.quiz-dots { display: flex; gap: 5px; }
+.qdot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+.qdot.answered { background: rgba(26,58,92,0.35); }
+.qdot.correct  { background: var(--green); }
+.qdot.wrong    { background: var(--red); }
+.quiz-score-wrap { text-align: right; }
+.quiz-score-track { width: 120px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+.quiz-score-fill  { height: 100%; background: var(--gold); border-radius: 3px; width: 0; transition: width 0.4s; }
+.quiz-score-lbl   { font-size: 12px; color: var(--muted); }
+.quiz-header { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+.quiz-icon { width: 46px; height: 46px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 14px rgba(26,58,92,0.3); }
+
+/* ── RESULTS ── */
+.results-wrap { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 28px; }
+.results-card { background: var(--white); border: 2px solid var(--gold); border-radius: 16px; padding: 36px 32px; max-width: 460px; width: 100%; text-align: center; }
+.res-score { font-family: 'DM Serif Display', serif; font-size: 64px; line-height: 1; margin-bottom: 4px; }
+.res-label { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.res-sub   { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.res-cert  { border: 1.5px solid var(--gold); border-radius: 10px; padding: 18px; margin-bottom: 20px; background: var(--gold-bg); }
+.res-cert-icon  { font-size: 30px; margin-bottom: 6px; }
+.res-cert-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
+.res-cert-sub   { font-size: 12px; color: var(--muted); }
+.cert-btn { background: none; border: none; font-size: 13px; color: var(--primary); text-decoration: underline; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.retry-msg { font-size: 13px; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar { background: var(--white); border-top: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; }
+.bb-section-name { font-size: 12px; color: var(--muted); }
+.bb-btns { display: flex; gap: 10px; align-items: center; }
+.btn-prev { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+.btn-prev:hover { border-color: var(--primary); color: var(--primary); }
+.understood-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 7px 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--body); background: var(--white); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.understood-wrap:hover { border-color: var(--gold); background: var(--gold-bg); }
+.understood-wrap.checked { border-color: var(--green); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.uc-box { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; flex-shrink: 0; }
+.understood-wrap.checked .uc-box { background: var(--green); border-color: var(--green); color: var(--white); }
+.btn-next { background: var(--primary); color: var(--white); border: none; border-radius: 6px; padding: 9px 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; display: flex; align-items: center; opacity: 0.35; pointer-events: none; }
+.btn-next.enabled { opacity: 1; pointer-events: all; }
+.btn-next.enabled:hover { background: var(--primary-l); }
+
+@media print {
+  .topbar, .prog-bar-zone, .section-tabs, .bottom-bar { display: none !important; }
+  .shell { display: block; height: auto; }
+  .content-area { overflow: visible; padding: 0; }
+  .slide { display: none !important; animation: none !important; }
+  #slide-16 { display: flex !important; }
+  .results-wrap { padding: 20px; }
+}
+@media(max-width:520px){
+  .slide { padding: 0 16px; }
+  .bottom-bar { padding: 10px 16px; }
+  .bb-section-name { display: none; }
+  .ob-grid { grid-template-columns: 1fr; }
+  .do-dont { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="tb-logo">KTB</div>
+    <div class="tb-title">Access to Information Act (Cap. 7M) — Staff Training</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-timer" id="timer">00:00</div>
+    <div class="tb-step" id="step-counter">Step 1 of 8</div>
+  </div>
+</div>
+
+<!-- PROGRESS PIPS -->
+<div class="prog-bar-zone">
+  <div class="prog-steps" id="prog-steps"></div>
+</div>
+
+<!-- SECTION TABS -->
+<div class="section-tabs" id="section-tabs"></div>
+
+<!-- CONTENT -->
+<div class="content-area" id="content-area">
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 0: COVER
+════════════════════════════════════════════════ -->
+<div class="slide active" id="slide-0">
+  <div class="cover">
+    <div class="cover-eyebrow">Directorate of Legal Services · KTB</div>
+    <h1>Access to <span>Information</span> Act</h1>
+    <div class="cover-sub">Cap. 7M · Commenced 21 September 2016</div>
+    <div class="cover-chips">
+      <div class="cover-chip">⏱ <strong>~25 min</strong></div>
+      <div class="cover-chip">❓ <strong>10</strong> questions</div>
+      <div class="cover-chip">🎯 Pass mark: <strong>70%</strong></div>
+      <div class="cover-chip">📅 <strong>21 Sep 2016</strong></div>
+      <div class="cover-chip">👥 All KTB Staff</div>
+    </div>
+    <div class="cover-intro">
+      <p>This module has been developed by the Directorate of Legal Services to help all KTB staff understand their obligations under the Access to Information Act (Cap. 7M, 2016). It covers the right of access to information, KTB's disclosure obligations, processing timelines, exemptions, and the penalties for non-compliance.</p>
+      <p>It includes five sections and a ten-question quiz. You must score at least 70% to pass.</p>
+    </div>
+    <button class="cover-start" onclick="navigate(1)">Begin Training →</button>
+    <div class="cover-review">Reviewed and approved by Allan Njoroge, Director of Legal Services &amp; Corporation Secretary, Kenya Tourism Board.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 1: FOUNDATION
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-1">
+  <div class="sec-head">
+    <div class="sec-num">1</div>
+    <div>
+      <div class="sec-label">Foundation</div>
+      <div class="sec-title">What is the Access to Information Act?</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-icon">🧑‍⚖️</div>
+    <div>
+      <div class="callout-title">Why this law matters to YOU personally</div>
+      <div class="callout-text">The Access to Information Act creates direct personal obligations on every KTB staff member — not just management. If you deliberately destroy a record to prevent its disclosure, you face criminal prosecution personally. If you are an information access officer and you refuse or delay a valid request, you are individually liable. This module explains exactly what you must and must not do.</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">What the Act is About</h3>
+  <p class="body-text">The Act gives effect to <strong>Article 35 of the Constitution</strong>, which guarantees every citizen the right to access information held by the State, or by another person where that information is needed to exercise or protect any right or fundamental freedom. It establishes the framework for how requests are made, processed and reviewed, and what information may lawfully be withheld.</p>
+  <p class="body-text">The Act commenced on <strong>21 September 2016</strong> and applies to all public entities (including KTB) and to private bodies that receive public resources, perform public functions, or hold information of significant public interest.</p>
+
+  <div class="callout gold">
+    <div class="callout-icon">⚖️</div>
+    <div>
+      <div class="callout-title">The Constitutional Principle: Duty to Disclose</div>
+      <div class="callout-text">Section 4(4) states the Act must be interpreted on the basis of a <strong>duty to disclose</strong>. Non-disclosure is only permitted in the specific circumstances exempted under section 6. KTB's default position must always be to disclose — not to withhold.</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">The Regulator</h3>
+  <p class="body-text">The <strong>Commission on Administrative Justice (CAJ)</strong> — also known as the Office of the Ombudsman — is the oversight and enforcement body. It designates one Commissioner as the "Access to Information Commissioner." CAJ decisions are binding on both national and county governments.</p>
+
+  <h3 class="sub-head">Key Defined Terms</h3>
+  <div class="band band-sky">
+    <table class="mod-table">
+      <thead><tr><th>Term</th><th>Plain English Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Information</strong></td><td>All records held by KTB regardless of format, source or date — emails, contracts, databases, photos, electronic files (s.2)</td></tr>
+        <tr><td><strong>Public entity</strong></td><td>Any public office or body performing a constitutional function — KTB qualifies as a public entity (s.2)</td></tr>
+        <tr><td><strong>Information access officer</strong></td><td>The person designated to receive and process requests; the CEO is the default officer and may delegate (ss.2, 7)</td></tr>
+        <tr><td><strong>Exempt information</strong></td><td>Information that may lawfully be withheld under the categories listed in section 6</td></tr>
+        <tr><td><strong>Citizen</strong></td><td>Any individual with Kenyan citizenship, or any private entity controlled by Kenyan citizens (s.2)</td></tr>
+        <tr><td><strong>Personal information</strong></td><td>Information about an identifiable individual — health, finances, employment history, contact details, opinions (s.2)</td></tr>
+        <tr><td><strong>Edited copy</strong></td><td>A copy of a document from which exempt information has been redacted before release (s.2)</td></tr>
+        <tr><td><strong>Electronic record</strong></td><td>Any digitally generated record — emails, spreadsheets, databases, scanned documents (s.2)</td></tr>
+        <tr><td><strong>Commission</strong></td><td>The Commission on Administrative Justice (CAJ) — the oversight and enforcement body (ss.2, 20)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 2: KTB CONTEXT
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-2">
+  <div class="sec-head">
+    <div class="sec-num">2</div>
+    <div>
+      <div class="sec-label">KTB Context</div>
+      <div class="sec-title">How Does This Law Apply to Us?</div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <div class="callout-icon">🏛️</div>
+    <div>
+      <div class="callout-title">KTB is a public entity — the Act applies in full</div>
+      <div class="callout-text">KTB is a state corporation established under the Tourism Act Cap. 383. Any citizen can request any record KTB holds. Every staff member must know when to assist, when to refer, and — critically — what they must never do when a request arrives.</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Where the Act Touches KTB's Work</h3>
+  <div class="ob-grid">
+    <div class="ob-card">
+      <div class="ob-title">🏗️ Contracts &amp; Procurement</div>
+      <div class="ob-desc">Upon signing any contract, KTB must publish the scope of work, contract sum, supplier name and completion timeline on its website. Citizens may also request contract copies directly.</div>
+      <div class="ob-law">s.5(1)(e)</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">📊 Organisational Information</div>
+      <div class="ob-desc">KTB must proactively publish its organisational structure, officer functions, salary grades, decision-making procedures and guidelines — and update them annually.</div>
+      <div class="ob-law">ss.5(1)(a), 5(1)(b)</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">📂 HR Records &amp; Staff Files</div>
+      <div class="ob-desc">Performance records, disciplinary files, payroll data and contracts are all "information" under the Act. A staff member may request their own personal information held by KTB.</div>
+      <div class="ob-law">ss.4, 13</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">📸 Events &amp; Marketing Materials</div>
+      <div class="ob-desc">Photographs, event attendee lists, marketing reports and campaign data created or commissioned by KTB are records that may be the subject of an access request.</div>
+      <div class="ob-law">ss.2, 4</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">💰 Budget &amp; Expenditure</div>
+      <div class="ob-desc">KTB's budget, expenditure reports, audit findings and financial statements are public records. Citizens may request these, and KTB should proactively publish key financial information.</div>
+      <div class="ob-law">ss.4, 5</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">📋 Board Decisions &amp; Minutes</div>
+      <div class="ob-desc">Board minutes and decisions may be requested. Some deliberations may qualify as exempt, but this must be assessed case by case under s.6 — it cannot simply be assumed.</div>
+      <div class="ob-law">ss.4, 6</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">📧 Official Correspondence</div>
+      <div class="ob-desc">Official emails and reports created in the course of KTB's business are public records. A requester may ask for emails relating to a specific decision or contract.</div>
+      <div class="ob-law">ss.2, 17</div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-title">🗄️ Records Management</div>
+      <div class="ob-desc">Every unit must maintain accurate, authentic and organised records to facilitate access requests. KTB must also computerise its records management systems within 3 years of the Act applying to it.</div>
+      <div class="ob-law">s.17</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Scenario — Marketing Department</h3>
+  <div class="scenario">
+    <div class="scen-head">
+      <div class="scen-tag">Scenario</div>
+      <div class="scen-title">Journalist requests agency payment data</div>
+    </div>
+    <div class="scen-body">
+      <div class="scen-q">A journalist formally writes to KTB requesting a breakdown of all marketing agency payments in the last financial year — agency names, amounts paid, and campaigns supported. The Head of Marketing is uncomfortable releasing this, fearing it will generate a negative story. Can KTB refuse?</div>
+      <button class="scen-btn" onclick="toggleReveal(this)">▶ Reveal Answer</button>
+      <div class="scen-reveal">
+        <div class="scen-ans">No — KTB cannot refuse on these grounds.</div>
+        <div class="scen-exp">Under section 4(2), a citizen's right of access is not affected by the reason they give for requesting information, or KTB's belief about why they want it. The journalist's motive — even if critical — is legally irrelevant. KTB must assess the content against the specific s.6 exemptions only. Refusing because the information might be used negatively is not a lawful basis for withholding.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Scenario — HR Department</h3>
+  <div class="scenario">
+    <div class="scen-head">
+      <div class="scen-tag">Scenario</div>
+      <div class="scen-title">Staff member requests their own performance appraisal</div>
+    </div>
+    <div class="scen-body">
+      <div class="scen-q">A KTB staff member formally applies to HR requesting a copy of their performance appraisal for the previous year, which they believe contains inaccurate assessments. HR is unsure whether they must provide it. What does the law require?</div>
+      <button class="scen-btn" onclick="toggleReveal(this)">▶ Reveal Answer</button>
+      <div class="scen-reveal">
+        <div class="scen-ans">KTB must provide the information AND correct any inaccuracies.</div>
+        <div class="scen-exp">Under section 4(1), every citizen has the right of access to information held by the State. The staff member's own performance record is personal information they are entitled to access. KTB must process the request within 21 days (s.9(1)). Under section 13, if the staff member demonstrates the record is inaccurate, KTB must correct, update or annotate it at its own expense within a reasonable time.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 3: OBLIGATIONS
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-3">
+  <div class="sec-head">
+    <div class="sec-num">3</div>
+    <div>
+      <div class="sec-label">Core Obligations</div>
+      <div class="sec-title">What You Must and Must Not Do</div>
+    </div>
+  </div>
+
+  <div class="callout alert">
+    <div class="callout-icon">⚠️</div>
+    <div>
+      <div class="callout-title">Criminal liability applies personally to you — not just to KTB</div>
+      <div class="callout-text">Certain breaches carry personal criminal liability. The most serious is deliberately destroying or hiding records to prevent disclosure (section 18). Study the table below carefully — these are your individual obligations.</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Your Personal Obligations at a Glance</h3>
+  <div class="do-dont">
+    <div class="dd-col do-col">
+      <div class="dd-head do">✓ DO</div>
+      <div class="dd-item"><span class="t">✓</span><span>Refer any information request you receive to the designated Information Access Officer immediately</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Maintain accurate, organised and retrievable records of all your official activities and decisions</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Co-operate fully when the IAO requests records from your unit to respond to a request</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Support proactive disclosure — publish KTB's organisational and contractual information on the website as required</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Assess whether any information falls under a s.6 exemption before withholding, and document your reasons</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Provide written reasons to any applicant whose request is refused and inform them of their right to appeal to the CAJ (s.9(4))</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Transfer a misrouted application within 5 days and notify the applicant within 7 days (s.10)</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Disclose information in good faith when lawfully directed — you are protected from criminal liability (s.28(9))</span></div>
+      <div class="dd-item"><span class="t">✓</span><span>Report concerns about record tampering or improper withholding to your supervisor or the Legal Directorate</span></div>
+    </div>
+    <div class="dd-col dont-col">
+      <div class="dd-head dont">✗ DON'T</div>
+      <div class="dd-item"><span class="x">✗</span><span>Handle an information request yourself without involving the Information Access Officer</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Store official records in personal devices, personal email accounts or non-KTB systems</span></div>
+      <div class="dd-item"><span class="x">✗</span><span><strong>Alter, deface, block, erase, destroy or conceal any record once you know an information request has been made — this is a criminal offence (s.18)</strong></span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Refuse to help a requester who cannot write due to illiteracy or disability — the IAO must help them reduce their request to writing (s.8(2))</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Withhold information because you are uncomfortable with how it might be used or reported (s.4(2))</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Charge any fee for submitting the application — only fees for reproduction/copying are permitted after approval (s.12(1))</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Ignore a request or allow it to lapse — silence is a deemed refusal (s.9(6)) and the applicant can appeal immediately</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Knowingly disclose exempt information — this carries up to Ksh 1,000,000 fine or 3 years' imprisonment (s.28(1))</span></div>
+      <div class="dd-item"><span class="x">✗</span><span>Penalise or retaliate against a colleague who makes a good-faith public interest disclosure (s.16)</span></div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Scenario — Finance Department</h3>
+  <div class="scenario">
+    <div class="scen-head">
+      <div class="scen-tag">Scenario</div>
+      <div class="scen-title">Finance officer deletes records after a request is received</div>
+    </div>
+    <div class="scen-body">
+      <div class="scen-q">KTB receives a formal information request from an NGO for all invoices and payment records for a specific event management contract. Two days later, a Finance Officer — concerned the records show procurement irregularities — permanently deletes the relevant files from the finance system. What is the legal position?</div>
+      <button class="scen-btn" onclick="toggleReveal(this)">▶ Reveal Answer</button>
+      <div class="scen-reveal">
+        <div class="scen-ans">The Finance Officer has committed a criminal offence under section 18.</div>
+        <div class="scen-exp">Section 18(1) makes it an offence for any officer of a public entity to alter, erase, destroy or conceal any record with the intention of preventing its disclosure after a request has been made. The officer is personally liable and faces up to Ksh 500,000 fine or 2 years' imprisonment (s.28(5)). The fact that the records may show irregularities does not justify deletion. The correct course is to raise concerns through proper whistleblower channels under section 16.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <div class="callout-icon">🛡️</div>
+    <div>
+      <div class="callout-title">Whistleblower protection (s.16)</div>
+      <div class="callout-text">Section 16 protects any KTB staff member who discloses information of public interest — including violations of law, mismanagement of funds, conflict of interest, corruption or dangers to public health — from dismissal, demotion or any form of penalisation. A disclosure to a law enforcement agency is deemed to be in the public interest. Any retaliation against you is actionable as a tort.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 4: COMPLIANCE
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-4">
+  <div class="sec-head">
+    <div class="sec-num">4</div>
+    <div>
+      <div class="sec-label">Compliance Requirements</div>
+      <div class="sec-title">Timelines, Fees &amp; Reporting</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Key Deadlines at a Glance</h3>
+  <div class="band band-sky">
+    <table class="mod-table">
+      <thead><tr><th>Obligation</th><th>Trigger</th><th>Deadline</th><th>Consequence of Breach</th></tr></thead>
+      <tbody>
+        <tr><td>Decision on information request</td><td>Receipt of written application</td><td><span class="badge-red">21 days</span></td><td>Deemed refusal; applicant may appeal to CAJ (ss.9(1), 9(6))</td></tr>
+        <tr><td>Response — life or liberty at stake</td><td>Receipt of such a request</td><td><span class="badge-red">48 hours</span></td><td>Criminal liability; applicant may appeal (s.9(2))</td></tr>
+        <tr><td>Extension of response period</td><td>Large volume of records or consultations required</td><td><span class="badge-soft">+14 days max (once)</span></td><td>Extension beyond 14 days not permitted; deemed refusal (s.9(3))</td></tr>
+        <tr><td>Transfer of misrouted application</td><td>Receipt of application belonging to another entity</td><td><span class="badge-red">5 days</span></td><td>Procedural breach (s.10(1))</td></tr>
+        <tr><td>Notify applicant of transfer</td><td>Transfer of application to another entity</td><td><span class="badge-red">7 days</span></td><td>Applicant left uninformed; potential complaint (s.10(2))</td></tr>
+        <tr><td>Provide information after fee payment</td><td>Receipt of fee from applicant</td><td><span class="badge-red">2 working days</span></td><td>Criminal offence for failure (ss.11(2), 28(4))</td></tr>
+        <tr><td>Correct inaccurate personal information</td><td>Applicant's written correction request</td><td><span class="badge-soft">Reasonable time</span></td><td>Criminal offence; fine up to Ksh 100,000 (ss.13, 28(4))</td></tr>
+        <tr><td>KTB annual report to CAJ</td><td>End of each calendar year</td><td><span class="badge-red">30 June each year</span></td><td>Regulatory non-compliance; CAJ enforcement action (s.27)</td></tr>
+        <tr><td>Computerise KTB records management systems</td><td>Act applying to KTB</td><td><span class="badge-soft">Within 3 years</span></td><td>Non-compliance subject to CAJ inquiry (s.17(3)(c))</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-head">Fees — What Is Permitted</h3>
+  <div class="callout teal">
+    <div class="callout-icon">💳</div>
+    <div>
+      <div class="callout-title">Fee rules under section 12</div>
+      <div class="callout-text">KTB <strong>cannot charge any fee</strong> for receiving or submitting an information request (s.12(1)). Fees may only be charged to cover the <em>actual cost</em> of reproducing and supplying the information — for example, printing costs. Overcharging is a criminal offence under s.28(4)(a).</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Annual Reporting Obligation (Section 27)</h3>
+  <p class="body-text">By <strong>30 June</strong> of each year, KTB must submit a report to the CAJ covering the preceding year. The report must include:</p>
+  <div class="band band-cream">
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Requests received and processed</div><div class="step-desc">The number of information requests KTB received and the number actually processed during the year.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Refusals and grounds</div><div class="step-desc">The number of determinations not to comply with requests and the main grounds for each refusal.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Processing times</div><div class="step-desc">The average number of days taken to process different types of requests.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">Fees collected</div><div class="step-desc">The total amount of fees collected while processing requests during the year.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div><div class="step-title">Staff and costs</div><div class="step-desc">Number of full-time staff devoted to processing requests and total expenditure incurred.</div></div></div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Proactive Disclosure — Ongoing Obligation</h3>
+  <div class="callout sky">
+    <div class="callout-icon">📢</div>
+    <div>
+      <div class="callout-title">KTB must publish proactively — citizens do not need to ask</div>
+      <div class="callout-text">KTB must keep updated on its website: its organisational structure and functions, officer duties and salary grades, decision-making procedures, guidelines, and a guide to the categories of information it holds. Upon signing <em>any</em> contract, KTB must also publish the scope of work, contract sum, supplier name and completion timeline (s.5(1)(e)).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 5: CONSEQUENCES
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-5">
+  <div class="sec-head">
+    <div class="sec-num">5</div>
+    <div>
+      <div class="sec-label">Consequences &amp; Response</div>
+      <div class="sec-title">Penalties, Steps to Follow &amp; Key Contacts</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">Penalty Provisions — Plain Language</h3>
+  <div class="band band-sky">
+    <table class="mod-table">
+      <thead><tr><th>Offence</th><th>Section</th><th>Maximum Penalty</th></tr></thead>
+      <tbody>
+        <tr><td>Knowingly disclosing exempt information</td><td>s.28(1)</td><td class="warn">Ksh 1,000,000 fine or 3 years' imprisonment, or both</td></tr>
+        <tr><td>Altering, destroying or concealing records after a request has been made</td><td>ss.18(3), 28(5)</td><td class="warn">Ksh 500,000 fine or 2 years' imprisonment, or both</td></tr>
+        <tr><td>Providing false information with intent to injure</td><td>s.16(4)</td><td class="warn">Ksh 500,000 fine or 3 years' imprisonment, or both</td></tr>
+        <tr><td>Failure to publish IAO name and contact details (private body)</td><td>s.28(6)</td><td class="warn">Ksh 500,000 fine</td></tr>
+        <tr><td>False statement to CAJ; failing to attend CAJ summons; obstructing CAJ proceedings</td><td>s.28(8)</td><td>Ksh 300,000 fine or 6 months' imprisonment, or both</td></tr>
+        <tr><td>Altering or misrepresenting information received under the Act with intent to deceive</td><td>s.28(10)</td><td>Ksh 200,000 fine or 1 year's imprisonment, or both</td></tr>
+        <tr><td>IAO refusing to accept/assist with a request, or failing to respond in time</td><td>s.28(3)</td><td>Ksh 50,000 fine or 3 months' imprisonment, or both</td></tr>
+        <tr><td>Overcharging for information; failing to respond to or act on a correction request</td><td>s.28(4)</td><td>Ksh 100,000 fine or 6 months' imprisonment, or both</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout good">
+    <div class="callout-icon">🛡️</div>
+    <div>
+      <div class="callout-title">Good faith protection (s.28(9))</div>
+      <div class="callout-text">You are <strong>not</strong> criminally liable for disclosing or authorising a disclosure made in good faith in reliance on this Act. Follow KTB's proper procedures, consult Legal where in doubt, and act honestly — the law protects you.</div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">What to Do When You Receive an Information Request</h3>
+  <div class="band band-cream">
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Do not handle it yourself</div><div class="step-desc">Pass the request immediately — in whatever form received — to the Information Access Officer or the Legal Directorate.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Log the date of receipt</div><div class="step-desc">The 21-day clock starts from the date KTB receives the request. Record the date accurately.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Preserve all relevant records</div><div class="step-desc">Do not delete, move, alter or destroy any potentially relevant record. Section 18 makes tampering a criminal offence.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">Provide records when asked</div><div class="step-desc">If the IAO asks your unit to locate and provide records, co-operate promptly. Delays can cause KTB to breach the response deadline.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div><div class="step-title">Do not contact the applicant directly</div><div class="step-desc">Do not communicate with the applicant unless specifically instructed to do so by the IAO.</div></div></div>
+      <div class="step"><div class="step-num">6</div><div><div class="step-title">If withholding, give reasons in writing</div><div class="step-desc">If a decision is made to withhold, the applicant must be informed in writing of the reasons and their right to appeal to the CAJ (s.9(4)).</div></div></div>
+      <div class="step"><div class="step-num">7</div><div><div class="step-title">If in doubt, consult Legal</div><div class="step-desc">If you are unsure whether information is exempt, consult the Legal Directorate before withholding anything.</div></div></div>
+    </div>
+  </div>
+
+  <h3 class="sub-head">5 Key Takeaways</h3>
+  <div class="takeaways">
+    <div class="takeaway"><div class="tk-num">1</div><div class="tk-text"><strong>The default is to disclose.</strong> KTB must withhold only where a specific s.6 exemption applies — discomfort is not a legal basis for withholding.</div></div>
+    <div class="takeaway"><div class="tk-num">2</div><div class="tk-text"><strong>The 21-day deadline is strict.</strong> A missed deadline is automatically a deemed refusal — the applicant can go straight to the CAJ without any further notice.</div></div>
+    <div class="takeaway"><div class="tk-num">3</div><div class="tk-text"><strong>Destroying a record after a request is a criminal offence</strong> carrying up to Ksh 500,000 fine or 2 years' imprisonment — even if you think the content is embarrassing.</div></div>
+    <div class="takeaway"><div class="tk-num">4</div><div class="tk-text"><strong>The applicant's motive is irrelevant.</strong> You cannot refuse information because you dislike the reason for the request or think it will be used negatively.</div></div>
+    <div class="takeaway"><div class="tk-num">5</div><div class="tk-text"><strong>Whistleblowing is legally protected.</strong> If you report corruption, mismanagement or rights violations in good faith, you cannot be lawfully dismissed or penalised for doing so.</div></div>
+  </div>
+
+  <h3 class="sub-head">Key Contacts — KTB Legal Directorate</h3>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="cc-avatar">AN</div>
+      <div>
+        <div class="cc-name">Allan Njoroge</div>
+        <div class="cc-role">Director of Legal Services &amp; Corporation Secretary</div>
+        <div class="cc-email">allan@ktb.go.ke</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="cc-avatar">DM</div>
+      <div>
+        <div class="cc-name">Doreen Mutunga</div>
+        <div class="cc-role">Legal Officer</div>
+        <div class="cc-email">dmutunga@ktb.go.ke</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 6: QUIZ
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-6">
+  <div class="quiz-header">
+    <div class="quiz-icon">✍️</div>
+    <div>
+      <div class="sec-label">Knowledge Check</div>
+      <div class="sec-title">Access to Information Act — 10 Questions</div>
+    </div>
+  </div>
+  <div id="quiz-container"></div>
+  <div class="quiz-nav" id="quiz-nav">
+    <div class="quiz-dots" id="quiz-dots"></div>
+    <div class="quiz-score-wrap">
+      <div class="quiz-score-track"><div class="quiz-score-fill" id="score-fill"></div></div>
+      <span class="quiz-score-lbl" id="score-lbl">0 / 10</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 16: RESULTS
+════════════════════════════════════════════════ -->
+<div class="slide" id="slide-16">
+  <div class="results-wrap">
+    <div class="results-card">
+      <div class="res-score" id="res-score">—</div>
+      <div class="res-label" id="res-label">—</div>
+      <div class="res-sub"   id="res-sub">—</div>
+      <div class="res-cert"  id="res-cert"></div>
+      <button class="cert-btn" onclick="window.print()">🖨️ Print completion record</button>
+      <div class="retry-msg" id="retry-msg"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content-area -->
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bb-section-name" id="bb-section-name"></div>
+  <div class="bb-btns">
+    <button class="btn-prev" id="btn-prev" onclick="navigate(-1)" style="display:none;">← Back</button>
+    <button class="understood-wrap" id="understood-btn" onclick="toggleUnderstood()" style="display:none;">
+      <div class="uc-box" id="uc-box"></div>
+      <span>I have read and understood this section</span>
+    </button>
+    <button class="btn-next" id="btn-next" onclick="navigate(1)">Next <span style="margin-left:4px;">→</span></button>
+  </div>
+</div>
+
+</div><!-- /shell -->
+
+<script>
+// ── QUIZ DATA ──────────────────────────────────────────────────────────
+const QUESTIONS = [
+  { q: "Under the Access to Information Act, what is KTB's default position when it holds information that a citizen requests?",
+    opts: ["KTB has discretion to decide whether to disclose based on management's judgment","KTB must disclose unless it can identify a specific exemption under section 6","KTB should first determine the applicant's reason for wanting the information","KTB should disclose only if the information is already publicly available"],
+    ans: 1,
+    fb: { ok: "Correct! Section 4(4) establishes a duty to disclose. Non-disclosure is only permitted in circumstances exempted under section 6.", no: "Incorrect. Section 4(4) states the Act must be interpreted on a duty to disclose. KTB cannot rely on management judgment or the applicant's reason — it must identify a specific s.6 exemption." }},
+  { q: "A citizen submits a written request for information to KTB on 1 March. By what date must KTB make a decision under the standard rule in section 9(1)?",
+    opts: ["By 15 March (14 days)","By 22 March (21 days)","By 8 March (7 days)","By 1 April (30 days)"],
+    ans: 1,
+    fb: { ok: "Correct. Section 9(1) requires a decision within 21 days of receipt. From 1 March, the deadline falls on 22 March.", no: "Incorrect. Section 9(1) requires a decision within 21 days of receipt — from 1 March, that is 22 March." }},
+  { q: "KTB receives a request for information urgently needed to protect a person's life. What is the maximum response time under section 9(2)?",
+    opts: ["21 days as for any other request","7 days","48 hours","5 working days"],
+    ans: 2,
+    fb: { ok: "Correct. Section 9(2) provides that where information concerns the life or liberty of a person, the officer must provide it within 48 hours.", no: "Incorrect. Section 9(2) sets a special 48-hour deadline specifically where life or liberty is at stake." }},
+  { q: "A KTB Finance Officer deletes procurement records three days after learning a formal information request for those records has been received. Which offence has the officer committed?",
+    opts: ["No offence — the records were legitimately managed by the Finance Officer","An offence under section 18 of destroying records to prevent disclosure","An offence only if the requester ultimately does not receive the information","A civil wrong but not a criminal offence"],
+    ans: 1,
+    fb: { ok: "Correct. Section 18(1) makes it a criminal offence for any officer to destroy records with the intention of preventing disclosure after a request has been made. The officer personally faces up to Ksh 500,000 fine or 2 years' imprisonment under s.28(5).", no: "Incorrect. Section 18(1) is unambiguous: deleting records to prevent disclosure after a request is made is a personal criminal offence, regardless of the outcome for the requester." }},
+  { q: "May KTB charge a fee at the point of application for access to information?",
+    opts: ["Yes — KTB may charge a reasonable administrative fee","Yes — but only if the request is for a large volume of records","No — no fee may be levied for submitting an application","No — unless the applicant is not a Kenyan citizen"],
+    ans: 2,
+    fb: { ok: "Correct. Section 12(1) is explicit: no fee may be levied in relation to the submission of an application. Fees may only be charged after the decision to disclose, to cover actual reproduction costs.", no: "Incorrect. Section 12(1) prohibits any fee at the application stage. Fees are only permitted to cover the actual cost of copying and supplying information after disclosure is approved." }},
+  { q: "The Head of Marketing wants to withhold a payments report because she believes the requesting journalist will write a negative story. Is this a lawful basis for withholding?",
+    opts: ["Yes — protecting KTB's reputation is a legitimate interest","Yes — if senior management agrees it is not in KTB's interest to disclose","No — a citizen's right of access is not affected by their reason for requesting information","No — but KTB can delay the response while assessing reputational risk"],
+    ans: 2,
+    fb: { ok: "Correct. Section 4(2) states that a citizen's right of access is not affected by any reason they give for seeking access. KTB's only lawful basis for withholding is a specific s.6 exemption.", no: "Incorrect. Section 4(2) explicitly removes 'reason for request' as a basis for withholding. KTB must assess only whether a specific s.6 exemption applies." }},
+  { q: "Which body has oversight and enforcement powers under the Access to Information Act?",
+    opts: ["The Ethics and Anti-Corruption Commission (EACC)","The Kenya National Human Rights Commission","The Commission on Administrative Justice (CAJ)","The Public Service Commission (PSC)"],
+    ans: 2,
+    fb: { ok: "Correct. Section 20 confers oversight and enforcement powers on the Commission on Administrative Justice (CAJ), which designates one Commissioner as the Access to Information Commissioner.", no: "Incorrect. The Commission on Administrative Justice (CAJ) is the enforcement body under sections 20–24 of the Act." }},
+  { q: "By what date must KTB submit its annual report on information requests to the Commission on Administrative Justice?",
+    opts: ["31 December each year","30 June each year","31 March each year","30 September each year"],
+    ans: 1,
+    fb: { ok: "Correct. Section 27 requires every public entity to submit its annual report to the CAJ on or before 30 June each year, covering the preceding calendar year.", no: "Incorrect. Section 27 sets the deadline as 30 June each year, covering information requests received and processed in the preceding year." }},
+  { q: "A KTB staff member discloses information about financial mismanagement at KTB to a law enforcement agency and is subsequently demoted by management. What is their protection under the Act?",
+    opts: ["No protection unless they obtained written permission before disclosing","They may apply to the CAJ for compensation but cannot challenge the demotion","They are protected under section 16 — the demotion is unlawful and actionable as a tort","They are only protected if they disclosed to the media, not law enforcement"],
+    ans: 2,
+    fb: { ok: "Correct. Section 16 protects persons who disclose information of public interest from all forms of penalisation, including demotion. Section 16(2) deems a disclosure to law enforcement to be in the public interest. Section 16(6) makes any such penalty actionable as a tort.", no: "Incorrect. Section 16 explicitly protects whistleblowers from demotion and other forms of penalty. Disclosure to law enforcement is specifically protected under s.16(2), and any retaliation is actionable as a tort under s.16(6)." }},
+  { q: "What is the maximum fine a KTB officer personally faces for knowingly disclosing exempt information in breach of the Act?",
+    opts: ["Ksh 50,000","Ksh 500,000","Ksh 1,000,000","Ksh 300,000"],
+    ans: 2,
+    fb: { ok: "Correct. Section 28(1) provides that any person who knowingly discloses exempt information is liable to a fine not exceeding Ksh 1,000,000 or imprisonment for up to 3 years, or both.", no: "Incorrect. Section 28(1) sets the maximum fine at Ksh 1,000,000, plus possible imprisonment for up to 3 years, for knowingly disclosing exempt information." }},
+];
+
+// ── SECTIONS CONFIG ────────────────────────────────────────────────────
+const SECTIONS = [
+  { label: 'Start',           slide: 0,  requiresCheck: false },
+  { label: '1. Foundation',   slide: 1,  requiresCheck: true  },
+  { label: '2. KTB Context',  slide: 2,  requiresCheck: true  },
+  { label: '3. Obligations',  slide: 3,  requiresCheck: true  },
+  { label: '4. Compliance',   slide: 4,  requiresCheck: true  },
+  { label: '5. Consequences', slide: 5,  requiresCheck: true  },
+  { label: 'Quiz',            slide: 6,  requiresCheck: false },
+  { label: 'Results',         slide: 16, requiresCheck: false },
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────
+let sIdx = 0;
+let understood = false;
+let doneSections = new Set();
+let timerSec = 0, timerInt = null;
+let currentQ = 0, score = 0;
+let answered = new Array(10).fill(null);
+
+// ── TIMER ──────────────────────────────────────────────────────────────
+function startTimer() {
+  if (timerInt) return;
+  timerInt = setInterval(() => {
+    timerSec++;
+    const m = String(Math.floor(timerSec / 60)).padStart(2, '0');
+    const s = String(timerSec % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = m + ':' + s;
+  }, 1000);
+}
+
+// ── NAVIGATE ───────────────────────────────────────────────────────────
+function navigate(dir) {
+  const curr = SECTIONS[sIdx];
+  if (dir === 1 && curr.requiresCheck && !understood) return;
+  if (dir === 1 && curr.slide === 6) { advanceQuiz(); return; }
+  const newIdx = sIdx + dir;
+  if (newIdx < 0 || newIdx >= SECTIONS.length) return;
+  if (dir === 1) doneSections.add(curr.slide);
+  showSection(newIdx, dir > 0 ? 'fwd' : 'back');
+}
+
+function showSection(idx, dir) {
+  sIdx = idx;
+  const curr = SECTIONS[idx];
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active', 'back'));
+  const el = document.getElementById('slide-' + curr.slide);
+  el.classList.add('active');
+  if (dir === 'back') el.classList.add('back');
+  document.getElementById('content-area').scrollTop = 0;
+  understood = false;
+  updateUI();
+  if (curr.slide === 6) renderQuizQ();
+  if (curr.slide === 16) renderResults();
+  if (sIdx === 1) startTimer();
+}
+
+// ── UPDATE UI ──────────────────────────────────────────────────────────
+function updateUI() {
+  const curr = SECTIONS[sIdx];
+  document.getElementById('step-counter').textContent = 'Step ' + (sIdx + 1) + ' of ' + SECTIONS.length;
+  document.getElementById('bb-section-name').textContent = curr.slide === 0 ? '' : curr.label;
+
+  // pips
+  const pzone = document.getElementById('prog-steps');
+  pzone.innerHTML = '';
+  SECTIONS.forEach((s, i) => {
+    const p = document.createElement('div');
+    p.className = 'prog-step-pip' + (doneSections.has(s.slide) ? ' done' : i === sIdx ? ' active' : '');
+    pzone.appendChild(p);
+  });
+
+  // tabs
+  const tabs = document.getElementById('section-tabs');
+  tabs.innerHTML = '';
+  SECTIONS.forEach((s, i) => {
+    if (s.slide === 16) return;
+    const t = document.createElement('div');
+    t.className = 'stab' + (i === sIdx ? ' active' : '') + (doneSections.has(s.slide) ? ' done' : '');
+    const num = document.createElement('div');
+    num.className = 'stab-num';
+    num.textContent = doneSections.has(s.slide) ? '✓' : (s.slide === 0 ? '★' : s.slide === 6 ? '?' : s.slide);
+    t.appendChild(num);
+    t.appendChild(document.createTextNode(' ' + s.label));
+    tabs.appendChild(t);
+  });
+
+  // back
+  document.getElementById('btn-prev').style.display = sIdx === 0 ? 'none' : 'flex';
+
+  // understood
+  const undBtn = document.getElementById('understood-btn');
+  undBtn.style.display = curr.requiresCheck ? 'flex' : 'none';
+  undBtn.classList.remove('checked');
+  document.getElementById('uc-box').textContent = '';
+
+  // next
+  const btnNext = document.getElementById('btn-next');
+  if (curr.slide === 16) {
+    btnNext.style.display = 'none';
+  } else {
+    btnNext.style.display = 'flex';
+    const ready = (!curr.requiresCheck || understood) && !(curr.slide === 6 && answered[currentQ] === null);
+    btnNext.className = 'btn-next' + (ready ? ' enabled' : '');
+    btnNext.textContent = (curr.slide === 6 && currentQ >= 9) ? 'See Results →' : 'Next →';
+  }
+}
+
+function toggleUnderstood() {
+  if (!SECTIONS[sIdx].requiresCheck) return;
+  understood = !understood;
+  const btn = document.getElementById('understood-btn');
+  const box = document.getElementById('uc-box');
+  btn.classList.toggle('checked', understood);
+  box.textContent = understood ? '✓' : '';
+  const btnNext = document.getElementById('btn-next');
+  btnNext.className = 'btn-next' + (understood ? ' enabled' : '');
+}
+
+// ── QUIZ ───────────────────────────────────────────────────────────────
+function renderQuizQ() {
+  updateQuizDots();
+  const q = QUESTIONS[currentQ];
+  document.getElementById('quiz-container').innerHTML =
+    '<div class="quiz-q">' +
+      '<div class="quiz-q-head">' +
+        '<div class="q-badge">Q' + (currentQ + 1) + ' / 10</div>' +
+        '<div class="q-text">' + q.q + '</div>' +
+      '</div>' +
+      '<div class="q-opts">' +
+        q.opts.map((o, i) =>
+          '<button class="q-opt" id="qo-' + i + '" onclick="answerQ(' + i + ')">' +
+            '<div class="q-letter">' + ['A','B','C','D'][i] + '</div>' +
+            '<span>' + o + '</span>' +
+          '</button>'
+        ).join('') +
+      '</div>' +
+      '<div class="q-fb" id="q-fb"></div>' +
+    '</div>';
+  if (answered[currentQ] !== null) restoreQ();
+  updateUI();
+}
+
+function answerQ(oi) {
+  if (answered[currentQ] !== null) return;
+  const q = QUESTIONS[currentQ];
+  const isOk = oi === q.ans;
+  if (isOk) score++;
+  answered[currentQ] = isOk;
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('qo-' + i);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === oi && !isOk) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('q-fb');
+  fb.className = 'q-fb show ' + (isOk ? 'ok' : 'err');
+  fb.innerHTML = '<strong>' + (isOk ? '✓ Correct!' : '✗ Incorrect.') + '</strong> ' + (isOk ? q.fb.ok : q.fb.no);
+  updateQuizDots();
+  updateScoreBar();
+  setTimeout(() => {
+    const btn = document.getElementById('btn-next');
+    btn.className = 'btn-next enabled';
+    btn.textContent = currentQ >= 9 ? 'See Results →' : 'Next →';
+  }, 900);
+}
+
+function restoreQ() {
+  const q = QUESTIONS[currentQ];
+  const isOk = answered[currentQ];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('qo-' + i);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+  }
+  const fb = document.getElementById('q-fb');
+  if (fb) {
+    fb.className = 'q-fb show ' + (isOk ? 'ok' : 'err');
+    fb.innerHTML = '<strong>' + (isOk ? '✓ Correct!' : '✗ Incorrect.') + '</strong> ' + (isOk ? q.fb.ok : q.fb.no);
+  }
+}
+
+function advanceQuiz() {
+  if (answered[currentQ] === null) return;
+  if (currentQ < 9) {
+    currentQ++;
+    renderQuizQ();
+    document.getElementById('content-area').scrollTop = 0;
+  } else {
+    doneSections.add(6);
+    showSection(SECTIONS.findIndex(s => s.slide === 16), 'fwd');
+  }
+}
+
+function updateQuizDots() {
+  const d = document.getElementById('quiz-dots');
+  if (!d) return;
+  d.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'qdot' + (answered[i] !== null ? (answered[i] ? ' correct' : ' wrong') : i === currentQ ? ' answered' : '');
+    d.appendChild(dot);
+  }
+}
+
+function updateScoreBar() {
+  const done = answered.filter(a => a !== null).length;
+  const fill = document.getElementById('score-fill');
+  const lbl  = document.getElementById('score-lbl');
+  if (fill) fill.style.width = (done / 10 * 100) + '%';
+  if (lbl)  lbl.textContent = done + ' / 10';
+}
+
+// ── RESULTS ────────────────────────────────────────────────────────────
+function renderResults() {
+  const pct    = Math.round(score / 10 * 100);
+  const passed = score >= 7;
+  const today  = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  document.getElementById('res-score').textContent = score + '/10';
+  document.getElementById('res-score').style.color = passed ? 'var(--primary)' : 'var(--red)';
+  document.getElementById('res-label').textContent  = passed ? '✓ Module Passed' : '✗ Not Passed';
+  document.getElementById('res-label').style.color  = passed ? 'var(--green)' : 'var(--red)';
+  document.getElementById('res-sub').textContent    = passed
+    ? 'You scored ' + pct + '% — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.'
+    : 'You scored ' + pct + '% — below the 70% pass mark. Please review the module and try again.';
+  const cert = document.getElementById('res-cert');
+  if (passed) {
+    cert.style.display = 'block';
+    cert.innerHTML = '<div class="res-cert-icon">📄</div><div class="res-cert-title">Access to Information Act (Cap. 7M)</div><div class="res-cert-sub">Completed: ' + today + '</div><div class="res-cert-sub">KTB Legal Hub</div>';
+  } else {
+    cert.style.display = 'none';
+  }
+  document.getElementById('retry-msg').innerHTML = passed ? '' :
+    'Please revisit the sections you found difficult and retake the quiz. Contact the Legal Directorate at <strong>allan@ktb.go.ke</strong> or <strong>dmutunga@ktb.go.ke</strong>.';
+}
+
+// ── SCENARIO REVEAL ────────────────────────────────────────────────────
+function toggleReveal(btn) {
+  const r = btn.nextElementSibling;
+  r.classList.toggle('open');
+  btn.textContent = r.classList.contains('open') ? '▼ Hide Answer' : '▶ Reveal Answer';
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────
+updateUI();
+</script>
+</body>
+</html>
