@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KTB Advanced Training · Public Procurement Practitioners Module</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1a4a2a;
+  --primary-dark:#0f2e19;
+  --primary-light:#2a6b3e;
+  --gold:#C19A28;
+  --gold-light:#d4b44a;
+  --bg:#f5f3ef;
+  --card:#fff;
+  --text:#23272f;
+  --text-light:#555e6a;
+  --red:#b53030;
+  --red-bg:#fdf0f0;
+  --green:#1a7a3a;
+  --green-bg:#eef8f0;
+  --border:#ddd5ca;
+  --radius:10px;
+}
+html,body{overflow:hidden;height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+.shell{display:grid;grid-template-rows:auto auto auto 1fr auto;height:100vh;overflow:hidden}
+.topbar{background:var(--primary);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.topbar .logo{font-weight:700;letter-spacing:.5px}
+.topbar .module-label{opacity:.85;font-size:13px}
+.adv-badge{background:var(--gold);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:.5px;margin-left:8px}
+.progress-bar{background:var(--primary-dark);padding:8px 24px;display:flex;gap:4px;align-items:center}
+.pip{width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,.18);transition:background .3s}
+.pip.filled{background:var(--gold)}
+.section-tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 12px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:10px 12px;font-size:12px;font-weight:600;color:var(--text-light);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:all .2s}
+.tab.active{color:var(--primary);border-bottom-color:var(--gold)}
+.tab .tick{display:none;color:var(--green);font-weight:700}
+.tab.done .tick{display:inline}
+.content-area{overflow-y:auto;padding:0;scroll-behavior:smooth}
+.slide{display:none;padding:32px 24px 100px;max-width:900px;margin:0 auto;width:100%;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM BAR */
+.bottombar{background:#fff;border-top:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.section-indicator{font-size:13px;color:var(--text-light);font-weight:500;white-space:nowrap}
+.nav-controls{display:flex;align-items:center;gap:12px}
+.understood-wrap{display:flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:#faf8f4;user-select:none}
+#understood-btn{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .2s;font-size:12px;color:transparent;flex-shrink:0}
+#understood-btn.checked{background:var(--gold);border-color:var(--gold);color:#fff}
+.understood-label{font-size:13px;color:var(--text-light);white-space:nowrap}
+.nav-btn{padding:10px 28px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+#btn-prev{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+#btn-prev:hover{background:#e8e4dd}
+#btn-next{background:var(--gold);color:#fff}
+#btn-next:hover{background:var(--gold-light)}
+#btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+/* COVER */
+.cover{text-align:center;padding-top:50px}
+.cover .eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:12px}
+.cover h1{font-size:28px;color:var(--primary);line-height:1.25;margin-bottom:4px}
+.cover .subtitle{font-size:15px;color:var(--text-light);margin-bottom:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px}
+.chip{background:var(--primary);color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600}
+.chip.gold{background:var(--gold)}
+.chip.red{background:var(--red)}
+.begin-btn{display:inline-block;padding:16px 48px;background:var(--gold);color:#fff;font-size:16px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:all .25s;text-transform:uppercase;letter-spacing:1px}
+.begin-btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 4px 16px rgba(193,154,40,.3)}
+.cover-info{background:var(--green-bg);border:1px solid #b8dfc0;border-radius:var(--radius);padding:20px;margin-top:24px;text-align:left;font-size:14px;line-height:1.65;max-width:680px;margin-left:auto;margin-right:auto}
+.cover-info strong{color:var(--primary)}
+.byline{margin-top:16px;font-size:12px;color:var(--text-light);font-style:italic}
+
+/* CONTENT */
+.section-title{font-size:22px;color:var(--primary);margin-bottom:6px;font-weight:700}
+.section-num{font-size:13px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.callout{border-left:4px solid var(--gold);background:#faf6eb;padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin:18px 0;font-size:14px;line-height:1.7}
+.callout.red{border-left-color:var(--red);background:var(--red-bg)}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout strong{color:var(--primary)}
+p{font-size:14.5px;line-height:1.75;margin-bottom:12px;color:var(--text)}
+h3{font-size:17px;color:var(--primary-dark);margin:22px 0 8px}
+.ref-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.ref-table th{background:var(--primary);color:#fff;padding:8px 12px;text-align:left;font-weight:600;font-size:12px}
+.ref-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.ref-table tr:nth-child(even) td{background:#faf8f4}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.do-col,.dont-col{border-radius:var(--radius);padding:16px;font-size:13px;line-height:1.7}
+.do-col{background:var(--green-bg);border:1px solid #b8dfc0}
+.dont-col{background:var(--red-bg);border:1px solid #e6b8b8}
+.do-col h4{color:var(--green);margin-bottom:8px;font-size:14px}
+.dont-col h4{color:var(--red);margin-bottom:8px;font-size:14px}
+.do-col li,.dont-col li{margin-bottom:5px;padding-left:4px}
+.do-col ul,.dont-col ul{padding-left:16px}
+.scenario{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0}
+.scenario .label{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gold);letter-spacing:1px;margin-bottom:6px}
+.scenario .prompt{font-size:14px;line-height:1.7;margin-bottom:12px}
+.reveal-btn{background:var(--primary);color:#fff;padding:7px 18px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer}
+.reveal-btn:hover{background:var(--primary-light)}
+.reveal-text{display:none;margin-top:12px;padding:12px;background:#f0faf3;border-radius:8px;font-size:13px;line-height:1.7;border:1px solid #c5e3cc}
+.badge-red{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.takeaway{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+.takeaway-num{background:var(--gold);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.takeaway-text{font-size:13px;line-height:1.65;padding-top:4px}
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.contact-card .name{font-weight:700;color:var(--primary);font-size:14px}
+.contact-card .role{font-size:11px;color:var(--text-light);margin:4px 0 6px}
+.contact-card .email{font-size:12px;color:var(--gold);font-weight:600}
+
+/* QUIZ */
+.quiz-header{text-align:center;margin-bottom:16px}
+.quiz-dots{display:flex;gap:4px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.qdot{width:20px;height:20px;border-radius:50%;background:var(--border);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#888;transition:all .3s}
+.qdot.current{border:2px solid var(--gold);color:var(--gold)}
+.qdot.correct{background:var(--green);color:#fff}
+.qdot.wrong{background:var(--red);color:#fff}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;max-width:720px;margin:0 auto}
+.q-card .q-num{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.q-card .q-text{font-size:15px;line-height:1.6;margin-bottom:18px;font-weight:600}
+.q-options{display:grid;gap:8px}
+.q-opt{padding:12px 16px;border:2px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;background:#fff;text-align:left;font-family:inherit;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.q-opt:hover{border-color:var(--gold);background:#faf6eb}
+.q-opt .letter{font-weight:700;color:var(--primary);flex-shrink:0}
+.q-opt.correct-answer{border-color:var(--green);background:var(--green-bg)}
+.q-opt.wrong-answer{border-color:var(--red);background:var(--red-bg)}
+.q-opt.reveal-correct{border-color:var(--green);background:var(--green-bg)}
+.q-opt.disabled{pointer-events:none;opacity:.85}
+.q-feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none}
+.q-feedback.show{display:block}
+.q-feedback.correct{background:var(--green-bg);border:1px solid #b8dfc0;color:var(--green)}
+.q-feedback.wrong{background:var(--red-bg);border:1px solid #e6b8b8;color:var(--red)}
+.score-bar-wrap{max-width:400px;margin:0 auto 16px;text-align:center}
+.score-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:4px}
+.score-fill{height:100%;background:var(--gold);transition:width .4s;width:0}
+.score-label{font-size:13px;color:var(--text-light)}
+
+/* RESULTS */
+.results-card{text-align:center;max-width:560px;margin:40px auto;background:var(--card);border-radius:16px;padding:48px 40px;border:2px solid var(--gold)}
+.results-card .big-score{font-size:64px;font-weight:800;line-height:1}
+.results-card .big-score.pass{color:var(--primary)}
+.results-card .big-score.fail{color:var(--red)}
+.results-card .result-label{font-size:20px;font-weight:700;margin:8px 0 14px}
+.results-card .result-label.pass{color:var(--primary)}
+.results-card .result-label.fail{color:var(--red)}
+.results-card .result-msg{font-size:14px;line-height:1.7;color:var(--text-light);margin-bottom:20px}
+.cert-badge{display:inline-block;border:1.5px solid var(--gold);border-radius:10px;padding:12px 28px;margin:18px auto;text-align:center}
+.cert-badge .cert-icon{font-size:18px;margin-bottom:2px}
+.cert-badge .cert-title{font-size:13px;font-weight:700;color:var(--primary)}
+.cert-badge .cert-date{font-size:12px;color:var(--text-light);margin-top:2px}
+.print-btn{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:12px 32px;background:transparent;color:var(--text-light);border:none;font-size:14px;font-weight:500;cursor:pointer}
+.print-btn:hover{color:var(--primary)}
+
+@media(max-width:700px){
+  .do-dont,.contacts{grid-template-columns:1fr}
+  .cover h1{font-size:22px}
+  .slide{padding:20px 16px 80px}
+  .nav-controls{gap:6px}
+  .understood-wrap{padding:6px 8px}
+  .nav-btn{padding:10px 16px;font-size:13px}
+}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .shell{display:block!important;height:auto!important;overflow:visible!important}
+  .bottombar,.topbar,.progress-bar,.section-tabs{display:none!important}
+  .content-area{overflow:visible!important;height:auto!important}
+  .slide{display:none!important;padding:0!important}
+  #slide-16{display:block!important;padding:40px 24px!important}
+  .results-card{border:2px solid var(--gold);box-shadow:none;margin:60px auto;page-break-inside:avoid}
+  .print-btn{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="logo">KTB LEGAL HUB <span class="adv-badge">ADVANCED</span></div>
+    <div class="module-label">Practitioners Module · Procurement Law</div>
+  </div>
+
+  <div class="progress-bar" id="progress-bar">
+    <div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div>
+    <div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div>
+  </div>
+
+  <div class="section-tabs" id="section-tabs">
+    <div class="tab" data-tab="0" onclick="goToSlide(0)">Cover</div>
+    <div class="tab" data-tab="1" onclick="goToSlide(1)">1 · Roles <span class="tick">✓</span></div>
+    <div class="tab" data-tab="2" onclick="goToSlide(2)">2 · Methods <span class="tick">✓</span></div>
+    <div class="tab" data-tab="3" onclick="goToSlide(3)">3 · Process <span class="tick">✓</span></div>
+    <div class="tab" data-tab="4" onclick="goToSlide(4)">4 · Contracts <span class="tick">✓</span></div>
+    <div class="tab" data-tab="5" onclick="goToSlide(5)">5 · AGPO <span class="tick">✓</span></div>
+    <div class="tab" data-tab="6" onclick="goToSlide(6)">6 · Disposal <span class="tick">✓</span></div>
+    <div class="tab" data-tab="7" onclick="goToSlide(7)">7 · Offences <span class="tick">✓</span></div>
+    <div class="tab" data-tab="8" onclick="goToSlide(8)">8 · Review <span class="tick">✓</span></div>
+    <div class="tab" data-tab="9" onclick="goToSlide(9)">Quiz <span class="tick">✓</span></div>
+  </div>
+
+  <div class="content-area" id="content-area">
+
+    <!-- SLIDE 0: COVER -->
+    <div class="slide active" id="slide-0">
+      <div class="cover">
+        <div class="eyebrow">Directorate of Legal Services · KTB</div>
+        <h1>Public Procurement &amp; Asset Disposal Act, 2015</h1>
+        <p class="subtitle">Advanced Practitioners Module — For Procurement, Legal, Audit &amp; Finance Staff</p>
+        <div class="chips">
+          <span class="chip red">ADVANCED</span>
+          <span class="chip">⏱ 60 min read</span>
+          <span class="chip">📝 30 quiz questions</span>
+          <span class="chip gold">Pass mark: 70%</span>
+          <span class="chip">📅 Act commenced 7 Jan 2016</span>
+          <span class="chip">👥 Procurement · Legal · Audit · Finance</span>
+        </div>
+        <button class="begin-btn" onclick="navigate(1)">Begin Training →</button>
+        <div class="cover-info">
+          <strong>This module has been developed by the Directorate of Legal Services</strong> for KTB staff in procurement, legal, audit, and finance who interact with procurement law daily and require in-depth procedural knowledge. The module covers committee roles and segregation of duties, procurement methods and thresholds, the end-to-end tender process, contract management and variations, AGPO reservations, asset disposal, criminal offences, and the administrative review process.
+          <br><br>It includes <strong>eight sections and a thirty-question quiz</strong>. You must score at least 70% (21/30) to pass. This module assumes you have completed the introductory procurement module.
+        </div>
+        <div class="byline">Reviewed and approved by Allan Njoroge, Director of Legal Services &amp; Corporation Secretary, Kenya Tourism Board.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 1: ROLES & SEGREGATION -->
+    <div class="slide" id="slide-1">
+      <div class="section-num">Section 1 of 8</div>
+      <div class="section-title">Roles, Committees &amp; Segregation of Duties</div>
+
+      <div class="callout">The Act requires strict segregation between those who initiate procurement, those who evaluate, those who award, and those who receive goods. No single person should control the entire chain. This protects KTB from fraud and protects <strong>you</strong> from personal liability.</div>
+
+      <h3>Accounting Officer (Section 44)</h3>
+      <p>The Accounting Officer (KTB's CEO) bears primary responsibility for KTB's compliance. Key duties include: ensuring procurement is within approved budget (s.44(2)(a)), constituting all procurement committees (s.44(2)(b)), ensuring procurement plans are prepared and submitted (s.44(2)(c)), approving and signing all contracts (s.44(2)(f)), and submitting the AGPO portion of the procurement plan to PPRA within 60 days of the financial year (s.44(2)(i)).</p>
+
+      <h3>Evaluation Committee (Section 46, Regulations 28–32)</h3>
+      <table class="ref-table">
+        <tr><th>Requirement</th><th>Detail</th></tr>
+        <tr><td>Composition</td><td>At least 3 members, appointed ad hoc on rotational basis — heads of user department + 2 other departments or their representatives (s.46(4)(b)). External consultants may be added where technical expertise is needed (s.46(3)).</td></tr>
+        <tr><td>Secretary</td><td>Head of procurement function or an officer from procurement designated in writing (s.46(4)(c), Reg.29(4))</td></tr>
+        <tr><td>Quorum</td><td>At least 3 persons including the chairperson (Reg.29(3))</td></tr>
+        <tr><td>Independence</td><td>Each member must evaluate independently before sharing ratings with others (Reg.31(1)). Individual score sheets must be kept as records (Reg.31(2)).</td></tr>
+        <tr><td>Continuity</td><td>Must complete the procurement for which appointed — no new committee on the same issue unless the existing one is procedurally disbanded (s.46(4)(d))</td></tr>
+        <tr><td>Evaluation time</td><td>Maximum 30 days for tenders (s.80(6)); 21 days for consultancy proposals (s.126(3))</td></tr>
+        <tr><td>Low-value</td><td>Not required for low-value procurements per the threshold matrix (Reg.27)</td></tr>
+      </table>
+
+      <h3>Procurement Function (Section 47, Regulation 33)</h3>
+      <p>Must be staffed by procurement professionals with recognised qualifications. The head of procurement provides professional opinion to the accounting officer (s.47(2), s.84) and acts as secretary to evaluation, inspection, and disposal committees (Reg.33(3)(r)). The professional opinion must accompany every evaluation report submitted to the accounting officer (s.84(1)).</p>
+
+      <h3>Inspection &amp; Acceptance Committee (Section 48, Regulation 35)</h3>
+      <p>Ad hoc committee appointed by the accounting officer on recommendation of the head of procurement. Must include the user department, technical department, and head of procurement (Reg.35(2)). Inspects goods/works/services immediately after delivery to confirm compliance with contract specifications, issues interim or completion certificates (s.48(4)).</p>
+
+      <h3>Tender Opening Committee (Section 78, Regulation 25)</h3>
+      <p>At least 3 members; at least one must not be directly involved in processing or evaluation (s.78(1)(b)). Opens all tenders immediately after the deadline. Each member must sign each tender on determined pages and initial against quoted prices (s.78(9)).</p>
+
+      <div class="scenario">
+        <div class="label">🔍 Practitioner Scenario</div>
+        <div class="prompt">The head of procurement at KTB is appointed as secretary to the evaluation committee for a KES 20 million media buying tender. During evaluation, a committee member starts discussing their individual scores before completing their own independent assessment. The head of procurement says nothing. What are the issues?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text"><strong>Two issues:</strong> (1) Regulation 31(1) requires each member to evaluate <strong>independently</strong> before sharing analysis, questions, evaluation, or ratings. Sharing scores prematurely breaches this regulation and could invalidate the evaluation. (2) The head of procurement, as secretary, has a duty to ensure compliance (Reg.33(3)(a)) and should have intervened to stop the premature discussion and recorded the deviation. Failure to intervene may constitute a personal accountability issue under Section 45(5).</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: METHODS & THRESHOLDS -->
+    <div class="slide" id="slide-2">
+      <div class="section-num">Section 2 of 8</div>
+      <div class="section-title">Procurement Methods &amp; Thresholds</div>
+
+      <div class="callout red"><strong>Default rule:</strong> Open tendering is the preferred method (s.91(1)). Every alternative method requires specific justification under the Act. Document why you are not using open tender.</div>
+
+      <table class="ref-table">
+        <tr><th>Method</th><th>Goods</th><th>Works</th><th>Services</th><th>Conditions</th></tr>
+        <tr><td><strong>Open Tender</strong> (s.96)</td><td colspan="3">No min/max — determined by budget</td><td>Default method; must advertise in Government tenders portal + 2 national newspapers or 2 TV/radio stations (s.96(2))</td></tr>
+        <tr><td><strong>Restricted Tender 102(1)(b)</strong></td><td>Max KES 30M</td><td>Max KES 30M</td><td>Max KES 20M</td><td>Time/cost of evaluating large number of tenders disproportionate to value (s.102(1)(b))</td></tr>
+        <tr><td><strong>Restricted Tender 102(1)(c)</strong></td><td colspan="3">No min/max — budget determines</td><td>Only a few known suppliers in the whole market (s.102(1)(c))</td></tr>
+        <tr><td><strong>Direct Procurement</strong> (s.103)</td><td colspan="3">No financial threshold</td><td>5 conditions only: sole source (a), war/disaster/urgency not caused by delay (b), catastrophe (c), standardisation/compatibility (d), acquiring from another public entity (e)</td></tr>
+        <tr><td><strong>RFQ</strong> (s.105)</td><td>Max KES 3M</td><td>Max KES 5M</td><td>Max KES 3M</td><td>Goods/works/services readily available with established market; min 3 quotations before evaluation (s.106(2)(d))</td></tr>
+        <tr><td><strong>Low Value</strong> (s.107)</td><td>Max KES 50K/item/yr</td><td>Max KES 100K/item/yr</td><td>Max KES 50K/item/yr</td><td>Not regular/frequent; not covered by framework; no evaluation committee required (Reg.27)</td></tr>
+        <tr><td><strong>Framework Agreement</strong> (s.114)</td><td colspan="3">As prescribed; max 3 years</td><td>Min 7 vendors per category; annual VFM assessment for agreements &gt;1 year; quarterly reports to AO + internal auditor (s.114(6))</td></tr>
+        <tr><td><strong>Two-Stage Tender</strong> (s.99)</td><td colspan="3">No min/max</td><td>Complex/specialised; Stage 1 = proposals without price; Stage 2 = final tenders with price. Min 7 days prep at each stage (Reg.87)</td></tr>
+        <tr><td><strong>Force Account</strong> (s.109)</td><td colspan="3">Per Second Schedule</td><td>Small/scattered/remote works; unforeseen urgent work; completing work delayed by contractor after written warnings</td></tr>
+        <tr><td><strong>Competitive Negotiations</strong> (s.131)</td><td colspan="3">No min/max</td><td>Tie in lowest price; tie in highest score; lowest price exceeds budget (max 25% above); urgent need with several known suppliers</td></tr>
+      </table>
+
+      <h3>Consultancy Services (Part X — Sections 115–133)</h3>
+      <p>Consultancy services (predominantly intellectual/advisory) follow a separate track. Key points for practitioners:</p>
+      <table class="ref-table">
+        <tr><th>Selection Method</th><th>When to Use</th></tr>
+        <tr><td><strong>QCBS</strong> (s.124(1)) — Quality &amp; Cost Based</td><td><strong>Preferred default</strong> — competitive process considering both quality and cost</td></tr>
+        <tr><td><strong>QBS</strong> (s.124(6)(a)) — Quality Based</td><td>Complex/highly specialised; high downstream impact; can be carried out in substantially different ways; professional fees regulated by statute</td></tr>
+        <tr><td><strong>LCS</strong> (s.124(6)(b)) — Least Cost</td><td>Standard/routine assignments with well-established practices</td></tr>
+        <tr><td><strong>FBS</strong> (s.124(6)(e)) — Fixed Budget</td><td>Simple, precisely defined assignments where budget is fixed</td></tr>
+        <tr><td><strong>ICS</strong> (s.124(6)(d)) — Individual Consultant</td><td>No team needed; no outside support; experience/qualifications paramount (Reg.127)</td></tr>
+        <tr><td><strong>SSS</strong> (s.124(12)) — Single Source</td><td>Sole source; natural continuation; emergency — must show clear advantage over competition; requires Authority approval (Reg.129(2))</td></tr>
+      </table>
+
+      <div class="callout">Where alternative selection methods are used, a report must be submitted to PPRA within 14 days (s.124(15)). The Authority issues written guidelines on reporting requirements (s.124(16)).</div>
+
+      <div class="scenario">
+        <div class="label">🔍 Practitioner Scenario</div>
+        <div class="prompt">KTB needs to procure branded promotional merchandise (bags, caps, lanyards) for a tourism expo. The total budget is KES 4.2 million. The procurement officer proposes using RFQ. Is this correct?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text"><strong>No.</strong> RFQ for goods is capped at KES 3 million per the Second Schedule. At KES 4.2 million, this procurement must use <strong>open tender</strong> (the default method) or restricted tender under s.102(1)(b) if the conditions are met (max KES 30M for goods). Splitting this into two RFQs of KES 2.1 million each would be contract splitting under s.54(1) — a criminal offence.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: END-TO-END PROCESS -->
+    <div class="slide" id="slide-3">
+      <div class="section-num">Section 3 of 8</div>
+      <div class="section-title">The End-to-End Tender Process</div>
+
+      <table class="ref-table">
+        <tr><th>Step</th><th>Who</th><th>Key Rules</th></tr>
+        <tr><td><strong>1. Planning</strong></td><td>User dept → Procurement → AO</td><td>Annual procurement plan, realistic, within approved budget (s.53(2)). Must confirm budget before starting (s.53(8)–(9)). Multi-year plans for projects beyond 1 year (s.53(7)).</td></tr>
+        <tr><td><strong>2. Initiation</strong></td><td>User dept</td><td>Requisition with technical specifications forwarded to procurement (Reg.34(a),(h)). Specs must be non-proprietary unless no other way to describe + equivalents allowed (s.60(4)).</td></tr>
+        <tr><td><strong>3. Tender documents</strong></td><td>Procurement + User</td><td>Use PPRA standard documents (s.58(1)). Must contain: specs, conditions, tender number, instructions, evaluation criteria, statement AO may terminate, sub-contractor details (s.70(6)).</td></tr>
+        <tr><td><strong>4. Advertisement</strong></td><td>Procurement</td><td>Government portal + 2 national newspapers or 2 TV + 2 radio stations (s.96(2)). County-specific: portal + 1 county newspaper or 2 TV + 2 radio (s.96(4)). Below national threshold: portal + notice board (s.96(5)).</td></tr>
+        <tr><td><strong>5. Preparation time</strong></td><td>Bidders</td><td>Min <span class="badge-red">7 days</span> for national/county tenders (Reg.86). If documents amended with &lt;⅓ of time remaining, extend deadline (s.75(5)).</td></tr>
+        <tr><td><strong>6. Opening</strong></td><td>Opening committee</td><td>Immediately after deadline (s.78(3)). Read aloud: name, price, tender security (s.78(6)). No bidder disqualified at opening (s.78(7)). Members sign each tender (s.78(9)). Prepare opening minutes (s.78(10)).</td></tr>
+        <tr><td><strong>7. Evaluation</strong></td><td>Evaluation committee</td><td>Independent evaluation first (Reg.31(1)). Then moderate to average rating (Reg.31(3)). Max <span class="badge-red">30 days</span> (s.80(6)). Each member signs report (s.80(7)). Professional opinion from head of procurement accompanies report (s.84).</td></tr>
+        <tr><td><strong>8. Post-qualification</strong></td><td>Evaluation committee</td><td>Due diligence on lowest evaluated responsive tenderer before award (s.83). May include confidential references (s.83(2)). Each member initials and signs report (s.83(3)).</td></tr>
+        <tr><td><strong>9. Award recommendation</strong></td><td>Procurement → AO</td><td>Successful tender = lowest evaluated price, or highest score (QCBS), or lowest total cost of ownership, or highest technical score (regulated professions) (s.86(1)). Citizen contractors get 20% score advantage if minimum technical score met (s.86(2)).</td></tr>
+        <tr><td><strong>10. Notification</strong></td><td>AO</td><td>Notify successful bidder in writing (s.87(1)). Also notify all unsuccessful bidders with reasons (s.87(3)). <span class="badge-red">14-day standstill</span> before signing contract (s.135(3)).</td></tr>
+        <tr><td><strong>11. Contract signing</strong></td><td>AO + Winning bidder</td><td>Written contract incorporating all agreements (s.135(1)). Contracts &gt;KES 5 billion cleared by AG first (s.134(2)). Tender sum as read at opening is final — no corrections (s.82(1)).</td></tr>
+        <tr><td><strong>12. Publication</strong></td><td>Procurement</td><td>Publish on notice board + website within <span class="badge-red">14 days</span> of signing (s.138(1), Reg.131). Report to PPRA within 14 days of month-end (Reg.131(1)(b)).</td></tr>
+      </table>
+
+      <h3>Tender Security (Section 61)</h3>
+      <p>Max 2% of tender value (s.61(2)(c)). Stated as absolute value. Forfeited if bidder withdraws after deadline or refuses to sign contract (s.61(3)). <strong>Not required for AGPO categories</strong> — they use a Tender Securing Declaration Form instead (s.61(5), Reg.155).</p>
+
+      <h3>Tender Validity Extension (Section 88)</h3>
+      <p>Maximum <strong>30 days, once only</strong> (s.88(3)). Notice in writing to each bidder (s.88(2)). Security forfeited if bidder withdraws after accepting extension (s.88(4)).</p>
+    </div>
+
+    <!-- SLIDE 4: CONTRACTS & VARIATIONS -->
+    <div class="slide" id="slide-4">
+      <div class="section-num">Section 4 of 8</div>
+      <div class="section-title">Contracts, Variations &amp; Performance Security</div>
+
+      <h3>Contract Formation (Section 135)</h3>
+      <p>No contract exists until the written contract is signed by both parties (s.135(4)). The 14-day standstill period must elapse after notification before signing (s.135(3)). The tender documents form the basis of all contracts and must include at minimum: Contract Agreement Form, Tender Form, price schedule/BOQ, Schedule of Requirements, Technical Specs, General Conditions, Special Conditions, Notification of Award (s.135(6)).</p>
+
+      <h3>Contract Variation Hard Limits (Section 139)</h3>
+      <table class="ref-table">
+        <tr><th>Rule</th><th>Detail</th><th>Consequence</th></tr>
+        <tr><td>No price increase within 12 months</td><td>s.139(3) — absolute prohibition on upward price variation in first year</td><td>Any variation in breach is voidable</td></tr>
+        <tr><td>Price variation basis</td><td>Must be based on prevailing CPI from KNBS (s.139(4)(a))</td><td>Variations not linked to CPI are unlawful</td></tr>
+        <tr><td>Quantity variation for goods</td><td>Max 15% of original contract quantity (s.139(4)(b))</td><td>Beyond 15% requires fresh tender</td></tr>
+        <tr><td>Cumulative price for goods</td><td>Max 25% of original contract price (s.139(4)(d))</td><td>Beyond 25% must be tendered separately (s.139(6))</td></tr>
+        <tr><td>Cumulative price for professional services</td><td>Max 25% of original contract price (s.139(4)(e))</td><td>Same — separate tender required</td></tr>
+        <tr><td>Variation must be within contract period</td><td>s.139(4)(c)</td><td>Post-contract variations are unlawful</td></tr>
+        <tr><td>Extension of contract period</td><td>s.139(2A) — requires written justification from tenderer</td><td>AO approves on evaluation committee recommendation</td></tr>
+        <tr><td>Quarterly reporting</td><td>All varied/amended contracts reported to PPRA quarterly (s.139(5))</td><td>Non-compliance reportable</td></tr>
+      </table>
+
+      <h3>Performance Security (Section 142, Regulation 135)</h3>
+      <table class="ref-table">
+        <tr><th>Rule</th><th>Detail</th></tr>
+        <tr><td>Amount</td><td>Up to 10% of contract value (s.142(1))</td></tr>
+        <tr><td>Threshold</td><td>Required for contracts above <strong>KES 5 million</strong> for goods, works, non-consultancy services (Reg.135(1))</td></tr>
+        <tr><td>AGPO categories</td><td>Capped at 1% of contract sum (s.142(3))</td></tr>
+        <tr><td>Form</td><td>Bank guarantee, irrevocable letter of credit (s.143). Foreign contractors: issued by local bank recognised by CBK (s.144(4)).</td></tr>
+        <tr><td>Return</td><td>Within 30 days of final acceptance by AO (s.145(1)). For works: 30 days from practical completion/handover (s.145(2)).</td></tr>
+        <tr><td>Seizure</td><td>Unconditionally seized if contract not fully/well executed (s.142(2)). Bank must pay within 10 working days of claim or face 1%/day penalty interest (s.144(3)).</td></tr>
+      </table>
+
+      <h3>Advance Payment (Sections 146–148)</h3>
+      <p>No payment before delivery/acceptance except where specified in tender documents and contract (s.146). Maximum <strong>20% of tender price</strong> (s.147(1)). Requires advance payment security equivalent to the advance itself. Must be used only for the contract — misuse makes the advance an immediately recoverable debt (s.148).</p>
+
+      <h3>Sub-contracting (Section 149)</h3>
+      <p>Permitted unless tender documents prohibit it. Sub-contractor must not be debarred and must not have participated in the related procurement. The main contractor remains responsible for the sub-contractor's obligations (s.149(2)).</p>
+
+      <div class="scenario">
+        <div class="label">🔍 Practitioner Scenario</div>
+        <div class="prompt">A contractor awarded a KES 12 million goods supply contract signed 8 months ago requests a 20% price increase due to currency fluctuations. The user department supports the request. Can the head of procurement approve this?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Analysis</button>
+        <div class="reveal-text"><strong>No — on multiple grounds.</strong> (1) Section 139(3) prohibits any upward price variation within the first 12 months. The contract is only 8 months old. (2) Even after 12 months, any price variation must be based on the prevailing CPI from KNBS (s.139(4)(a)), not currency fluctuations. (3) The head of procurement does not approve variations — variations require approval by the accounting officer on the recommendation of an evaluation committee (s.139(1)(a), s.139(2)). The contractor must wait until after 12 months and demonstrate CPI-linked justification.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: AGPO -->
+    <div class="slide" id="slide-5">
+      <div class="section-num">Section 5 of 8</div>
+      <div class="section-title">AGPO — Preferences &amp; Reservations</div>
+
+      <h3>The 30% Mandate (Sections 53(6), 157(5), 157(10))</h3>
+      <p>Every procuring entity must allocate <strong>at least 30%</strong> of its annual procurement budget to youth, women, and persons with disability. This is not discretionary — it is a constitutional obligation under Articles 55, 56, and 227(2).</p>
+
+      <table class="ref-table">
+        <tr><th>Requirement</th><th>Detail</th><th>Reference</th></tr>
+        <tr><td>Budget allocation</td><td>Min 30% of procurement budget for AGPO groups</td><td>s.53(6), s.157(10)</td></tr>
+        <tr><td>Procurement plan</td><td>Must demonstrate AGPO allocation; submit to PPRA within 60 days of FY start</td><td>s.44(2)(i), s.158(2)</td></tr>
+        <tr><td>Tender security</td><td><strong>Not required</strong> — use Tender Securing Declaration Form instead</td><td>s.61(5), Reg.155</td></tr>
+        <tr><td>Performance security</td><td>Max 1% (not 10%) of contract sum</td><td>s.142(3)</td></tr>
+        <tr><td>Review Board filing fees</td><td>May be waived for AGPO groups</td><td>s.169(2)</td></tr>
+        <tr><td>Payment into correct account</td><td>Money paid to AGPO enterprises must go to an account where the mandatory signatory is a youth, woman, or person with disability</td><td>s.157(11)</td></tr>
+        <tr><td>Six-monthly reports to PPRA</td><td>Certify compliance; disaggregated data on beneficiaries</td><td>s.157(12)–(13)</td></tr>
+        <tr><td>Registration</td><td>Must be registered with National Treasury; registration valid 2 years, renewable up to max 10 years</td><td>Reg.146, Reg.156</td></tr>
+        <tr><td>Unbundling</td><td>Procuring entities may unbundle/lot procurements into smaller quantities affordable for AGPO groups</td><td>Reg.154</td></tr>
+        <tr><td>Prompt payment</td><td>Payment within 60 days of invoice receipt</td><td>Reg.150(1)</td></tr>
+      </table>
+
+      <h3>Exclusive Preference Thresholds (Regulation 163)</h3>
+      <p>Exclusive preference for citizen contractors: up to <strong>KES 1 billion</strong> for works/construction materials; up to <strong>KES 500 million</strong> for goods and services. Above these thresholds, international competition is permitted but with margins of preference (Reg.164).</p>
+
+      <h3>Margins of Preference for International Tenders (Regulation 164)</h3>
+      <table class="ref-table">
+        <tr><th>Category</th><th>Margin</th></tr>
+        <tr><td>Goods manufactured/mined/assembled in Kenya; Kenyan shareholding &gt;50%</td><td>20% preference on evaluated price</td></tr>
+        <tr><td>Foreign contractor in JV with Kenyan firm (Kenyan majority shares)</td><td>10% preference on evaluated price</td></tr>
+      </table>
+
+      <div class="callout">Citizen contractors who meet the minimum technical score are entitled to <strong>20% of their total evaluation score</strong> as a preference (s.86(2)). This is in addition to the price preference margins above.</div>
+    </div>
+
+    <!-- SLIDE 6: DISPOSAL -->
+    <div class="slide" id="slide-6">
+      <div class="section-num">Section 6 of 8</div>
+      <div class="section-title">Asset Disposal &amp; Inventory Management</div>
+
+      <h3>Disposal Committee (Section 163)</h3>
+      <p>Established by the accounting officer as and when needed. Responsible for verification and processing of all disposal recommendations in liaison with the head of procurement (s.163(2)).</p>
+
+      <h3>Disposal Process (Section 164)</h3>
+      <table class="ref-table">
+        <tr><th>Step</th><th>Who</th><th>What</th></tr>
+        <tr><td>1</td><td>Employee in charge</td><td>Brings unserviceable/obsolete/surplus assets to disposal committee's attention through the head of procurement, within a reasonable time (s.164(1)–(2))</td></tr>
+        <tr><td>2</td><td>Technical expert</td><td>Prepares technical report, sets reserve price (minimum acceptable price below real market value) (s.164(3))</td></tr>
+        <tr><td>3</td><td>Disposal committee</td><td>Meets within prescribed period, conducts survey, reviews items and technical report, recommends best disposal method to AO (s.164(4))</td></tr>
+        <tr><td>4</td><td>AO</td><td>Discloses reserve price to prospective buyers (s.164(5)). May approve or reject committee recommendation (s.164(7)). If rejected, gives further direction (s.164(9)).</td></tr>
+        <tr><td>5</td><td>AO</td><td>If no responsive bidder at reserve price, AO may revise the reserve price on disposal committee recommendation (s.164(6))</td></tr>
+      </table>
+
+      <h3>Methods of Disposal (Section 165)</h3>
+      <p>Transfer to another public entity (with or without financial adjustment), sale by public tender, sale by public auction, trade-in, waste disposal management, or as prescribed. Radioactive/electronic waste must be disposed only to persons licensed under EMCA 1999 (s.165(2)).</p>
+
+      <div class="callout red"><strong>Section 166 — Restriction on disposal to employees:</strong> KTB <strong>cannot</strong> dispose of assets to its own employees or board/committee members except as expressly allowed under the Act and regulations. An AO who disposes assets to employees through artificial valuation commits an offence (s.166(2)).</div>
+
+      <h3>Inventory &amp; Stores Management (Sections 159–162)</h3>
+      <p>Head of procurement must arrange quarterly inspection visits and conduct quarterly and annual inventory and stock-taking (s.162(2)). All procured items must be taken on charge before use (s.162(1)). Overstocking must be avoided (s.162(3)). The Authority issues manuals and guidelines on inventory management (s.162(6)).</p>
+    </div>
+
+    <!-- SLIDE 7: OFFENCES -->
+    <div class="slide" id="slide-7">
+      <div class="section-num">Section 7 of 8</div>
+      <div class="section-title">Offences, Penalties &amp; Personal Liability</div>
+
+      <h3>Specific Prohibitions Under Section 176(1)</h3>
+      <table class="ref-table">
+        <tr><th>Offence</th><th>Description</th><th>Ref</th></tr>
+        <tr><td>Obstruction</td><td>Obstructing or hindering anyone carrying out duties under the Act</td><td>s.176(1)(a)</td></tr>
+        <tr><td>Misleading</td><td>Knowingly lying to or misleading anyone exercising powers under the Act</td><td>s.176(1)(b)</td></tr>
+        <tr><td>Delay</td><td>Unjustified delay in opening/evaluation, awarding beyond prescribed period, or payment beyond contractual obligations</td><td>s.176(1)(c)</td></tr>
+        <tr><td>Undue influence</td><td>Unduly influencing or pressuring members of opening/evaluation/disposal committees or any employee to favour a particular tenderer</td><td>s.176(1)(d)</td></tr>
+        <tr><td>Opening sealed tenders early</td><td>Opening any sealed tender (physical or electronic) before the appointed time</td><td>s.176(1)(e)</td></tr>
+        <tr><td>Divulging confidential info</td><td>Disclosing confidential procurement information under s.67</td><td>s.176(1)(f)</td></tr>
+        <tr><td>Influencing evaluations</td><td>Inappropriately influencing tender evaluations</td><td>s.176(1)(g)</td></tr>
+        <tr><td>Splitting contracts</td><td>Structuring procurement to avoid thresholds contrary to s.54</td><td>s.176(1)(h)</td></tr>
+        <tr><td>Fraud</td><td>Committing a fraudulent act in procurement</td><td>s.176(1)(i)</td></tr>
+        <tr><td>Withholding award notification</td><td>Knowingly withholding notification of award to successful or unsuccessful tenderers</td><td>s.176(1)(j)–(k)</td></tr>
+        <tr><td>Signing unlawful contract</td><td>Signing a contract contrary to the Act or Regulations</td><td>s.176(1)(l)</td></tr>
+        <tr><td>Disobeying PPRA/Review Board</td><td>Contravening a lawful order of the Authority or Review Board</td><td>s.176(1)(m)</td></tr>
+      </table>
+
+      <h3>Penalties (Sections 176(2)–(3), 177)</h3>
+      <div class="do-dont">
+        <div class="dont-col">
+          <h4>Individuals</h4>
+          <ul>
+            <li>Fine up to <strong>KES 4 million</strong></li>
+            <li>Imprisonment up to <strong>10 years</strong></li>
+            <li>Or <strong>both</strong></li>
+            <li>Plus internal disciplinary action</li>
+            <li>Plus personal reimbursement for losses caused (s.54(4), s.66(7))</li>
+          </ul>
+        </div>
+        <div class="do-col" style="background:var(--red-bg);border-color:#e6b8b8">
+          <h4 style="color:var(--red)">Body Corporate</h4>
+          <ul>
+            <li>Fine up to <strong>KES 10 million</strong></li>
+            <li>Plus debarment of non-public officers</li>
+            <li>Contract voidable at procuring entity's option (s.176(4)(b))</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Debarment (Section 41)</h3>
+      <p>Minimum <strong>3 years</strong>. Grounds include: offence under the Act, breach of contract including poor performance, false information, refusal to enter contract, breach of code of ethics, tax default, corrupt/fraudulent practices, violation of employment laws, filing frivolous review requests. Spouse, child, or sub-contractor's involvement can trigger debarment of the principal (s.55(2)).</p>
+
+      <h3>Confidentiality Breach (Section 67(5))</h3>
+      <div class="callout red"><strong>Debarred + prohibited from government work for 10 years.</strong> Any person who discloses evaluation information, bid contents, or confidential procurement data faces debarment and a 10-year prohibition from working for any government entity or entity where government holds shares.</div>
+
+      <h3>Good Faith Protection (Section 178)</h3>
+      <p>You are protected from personal liability for acts done in good faith in performance of duties. KTB will indemnify you if you are sued for official actions — provided you were not guilty of gross negligence, misconduct, or grave abuse of office, and you engaged external counsel.</p>
+    </div>
+
+    <!-- SLIDE 8: ADMINISTRATIVE REVIEW -->
+    <div class="slide" id="slide-8">
+      <div class="section-num">Section 8 of 8</div>
+      <div class="section-title">Administrative Review &amp; Judicial Review</div>
+
+      <h3>Request for Review (Section 167)</h3>
+      <table class="ref-table">
+        <tr><th>Element</th><th>Detail</th></tr>
+        <tr><td>Who can apply</td><td>Any candidate or tenderer who claims to have suffered or risks suffering loss or damage due to breach of the Act (s.167(1))</td></tr>
+        <tr><td>Time limit</td><td><span class="badge-red">14 days</span> from notification of award or date of alleged breach (s.167(1))</td></tr>
+        <tr><td>Deposit</td><td>Refundable deposit of not less than 10% of contract cost. Waived for AGPO groups (s.167(2))</td></tr>
+        <tr><td>Forum</td><td>Open forum unless matter would compromise national security (s.167(3))</td></tr>
+        <tr><td>Non-reviewable</td><td>Choice of procurement method (s.167(4)(a)); termination under s.63 (s.167(4)(b)); signed contract under s.135 (s.167(4)(c))</td></tr>
+      </table>
+
+      <h3>Review Board Process</h3>
+      <table class="ref-table">
+        <tr><th>Step</th><th>Deadline</th><th>Reference</th></tr>
+        <tr><td>Secretary notifies AO and suspends proceedings</td><td>Immediately upon receipt</td><td>s.168</td></tr>
+        <tr><td>Rejection if no appeal fees paid</td><td>Within prescribed time</td><td>s.169(1)</td></tr>
+        <tr><td>Review Board completes review</td><td><span class="badge-red">21 days</span></td><td>s.171(1)</td></tr>
+        <tr><td>Frivolous appeals</td><td>Dismissed with costs; deposit forfeited; applicant debarred</td><td>s.172</td></tr>
+      </table>
+
+      <h3>Review Board Powers (Section 173)</h3>
+      <p>The Review Board can: annul any part or all of the procurement proceedings (a); give directions to the AO (b); substitute its own decision for the AO's (c); order costs between parties (d); order termination and fresh procurement (e).</p>
+
+      <h3>Judicial Review (Section 175)</h3>
+      <table class="ref-table">
+        <tr><th>Stage</th><th>Deadline</th><th>Effect</th></tr>
+        <tr><td>Appeal to High Court</td><td><span class="badge-red">14 days</span> from Review Board decision</td><td>If not appealed, Review Board decision is final and binding</td></tr>
+        <tr><td>High Court determination</td><td><span class="badge-red">45 days</span></td><td>If not determined in time, Review Board decision is final</td></tr>
+        <tr><td>Appeal to Court of Appeal</td><td><span class="badge-red">7 days</span> from High Court decision</td><td>Court of Appeal decision is final</td></tr>
+        <tr><td>Court of Appeal determination</td><td><span class="badge-red">45 days</span></td><td>If not determined in time, Review Board decision is final</td></tr>
+        <tr><td>Security fee</td><td>Percentage of contract value (prescribed)</td><td>Must be paid before application accepted (s.175(2))</td></tr>
+      </table>
+
+      <div class="callout red"><strong>Section 175(6):</strong> Any party that disobeys a decision of the Review Board, High Court, or Court of Appeal is in breach of the Act. Any action taken contrary to such a decision is <strong>null and void</strong>.</div>
+
+      <h3>Key Contacts</h3>
+      <div class="contacts">
+        <div class="contact-card">
+          <div class="name">Allan Njoroge</div>
+          <div class="role">Director of Legal Services &amp; Corporation Secretary</div>
+          <div class="email">allan@ktb.go.ke</div>
+        </div>
+        <div class="contact-card">
+          <div class="name">Doreen Mutunga</div>
+          <div class="role">Legal Officer</div>
+          <div class="email">dmutunga@ktb.go.ke</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: QUIZ (30 questions) -->
+    <div class="slide" id="slide-9">
+      <div class="quiz-header">
+        <div class="section-num">Assessment</div>
+        <div class="section-title" style="margin-bottom:10px">Advanced Knowledge Check — 30 Questions</div>
+        <div class="score-bar-wrap">
+          <div class="score-label">Score: <span id="score-display">0</span>/30 (need 21 to pass)</div>
+          <div class="score-bar"><div class="score-fill" id="score-fill"></div></div>
+        </div>
+        <div class="quiz-dots" id="quiz-dots"></div>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+
+    <!-- SLIDE 16: RESULTS -->
+    <div class="slide" id="slide-16">
+      <div class="results-card" id="results-card">
+        <div class="big-score" id="final-score"></div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-msg" id="result-msg"></div>
+        <div class="cert-badge" id="cert-badge">
+          <div class="cert-icon">🏛</div>
+          <div class="cert-title">Public Procurement Act — Advanced Practitioners</div>
+          <div class="cert-date" id="cert-date"></div>
+        </div>
+        <div><button class="print-btn" onclick="window.print()">🖨 Print completion record</button></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar" id="bottombar">
+    <div class="section-indicator" id="section-indicator"></div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Back</button>
+      <div class="understood-wrap" id="understood-wrap" onclick="toggleUnderstood()">
+        <div id="understood-btn">✓</div>
+        <span class="understood-label">I have read and understood this section</span>
+      </div>
+      <button class="nav-btn" id="btn-next" onclick="navigate(1)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL_Q = 30;
+const PASS_MARK = 21;
+const TOTAL_SLIDES = 8; // content slides 1-8, quiz=9, results=16
+
+const quizData = [
+  // --- SECTION 1: Roles & Segregation ---
+  {q:"What is the minimum number of members required for an evaluation committee?",opts:["2","3","5","7"],correct:1,
+  correctFeedback:"Correct! Section 46(4)(b) and Regulation 29(1) require at least 3 members.",
+  wrongFeedback:"Incorrect. Section 46(4)(b) requires at least 3 members on a rotational basis — heads of user department plus 2 other departments or their representatives."},
+
+  {q:"Under Regulation 31(1), each evaluation committee member must:",opts:["Evaluate jointly as a group from the start","Evaluate independently before sharing ratings with others","Submit their scores directly to the accounting officer","Defer to the chairperson's assessment"],correct:1,
+  correctFeedback:"Correct! Regulation 31(1) requires independent evaluation before sharing analysis, questions, evaluation or ratings.",
+  wrongFeedback:"Incorrect. Regulation 31(1) mandates that each member evaluates independently first. Only after individual assessment do they share and moderate to arrive at an average rating (Reg.31(3))."},
+
+  {q:"Who serves as secretary to the evaluation committee?",opts:["The accounting officer","The chairperson of the committee","The head of procurement function or a designated procurement officer","A member of the user department"],correct:2,
+  correctFeedback:"Correct! Section 46(4)(c) and Regulation 29(4) — the person in charge of the procurement function or an officer from procurement designated in writing.",
+  wrongFeedback:"Incorrect. Section 46(4)(c) specifies the head of procurement function or an officer from procurement appointed in writing by the head of procurement function."},
+
+  {q:"Low-value procurements under the threshold matrix:",opts:["Require a full evaluation committee","Require at least a 2-person committee","Do not require an evaluation committee","Must be approved by the Review Board"],correct:2,
+  correctFeedback:"Correct! Regulation 27 states that low-value procurements per the threshold matrix do not require an evaluation committee.",
+  wrongFeedback:"Incorrect. Regulation 27 explicitly exempts low-value procurements from the evaluation committee requirement."},
+
+  {q:"The professional opinion required under Section 84 must be provided by:",opts:["The chairperson of the evaluation committee","The accounting officer","The head of the procurement function","The Director-General of PPRA"],correct:2,
+  correctFeedback:"Correct! Section 84(1) requires the head of the procurement function to review the evaluation report and provide a signed professional opinion.",
+  wrongFeedback:"Incorrect. Section 84(1) places this duty on the head of the procurement function, who must provide the professional opinion alongside the evaluation committee's report."},
+
+  // --- SECTION 2: Methods & Thresholds ---
+  {q:"The maximum value for a Request for Quotations for WORKS is:",opts:["KES 3 million","KES 5 million","KES 10 million","KES 30 million"],correct:1,
+  correctFeedback:"Correct! The Second Schedule of the 2020 Regulations sets the RFQ threshold for works at KES 5 million per request.",
+  wrongFeedback:"Incorrect. RFQ thresholds: Goods = KES 3M, Works = KES 5M, Services = KES 3M."},
+
+  {q:"Under Section 103(2)(b), direct procurement for urgency is NOT justified when:",opts:["There is a natural disaster","War or invasion has occurred","The urgency was foreseeable or caused by the procuring entity's own delay","Engaging in tendering would be impractical"],correct:2,
+  correctFeedback:"Correct! Section 103(2)(b) explicitly excludes urgency that was foreseeable or resulted from dilatory conduct by the procuring entity.",
+  wrongFeedback:"Incorrect. Section 103(2)(b) allows direct procurement for urgency — but specifically provides that circumstances giving rise to urgency must not be foreseeable or the result of the procuring entity's own delay."},
+
+  {q:"A framework agreement must include a minimum of how many alternative vendors per category?",opts:["3","5","7","10"],correct:2,
+  correctFeedback:"Correct! Section 114(1)(c) requires a minimum of 7 alternative vendors per category.",
+  wrongFeedback:"Incorrect. Section 114(1)(c) requires at least 7 vendors. The framework maximum term is 3 years (s.114(2))."},
+
+  {q:"QCBS is the preferred selection method for consultancy services. What does it stand for?",opts:["Quality Control and Budget Selection","Quality and Cost Based Selection","Qualification and Competence Based Scoring","Quantitative Cost-Benefit Selection"],correct:1,
+  correctFeedback:"Correct! Section 124(2) defines QCBS as Quality and Cost Based Selection — a competitive process considering both quality and cost.",
+  wrongFeedback:"Incorrect. QCBS = Quality and Cost Based Selection (Section 124(1)–(2)). It is the preferred default method for consultancy procurement."},
+
+  {q:"When using an alternative consultancy selection method (not QCBS), a report must be submitted to PPRA within:",opts:["7 days","14 days","21 days","30 days"],correct:1,
+  correctFeedback:"Correct! Section 124(15) requires the report to be submitted within 14 days.",
+  wrongFeedback:"Incorrect. Section 124(15) sets the deadline at 14 days."},
+
+  // --- SECTION 3: End-to-End Process ---
+  {q:"The minimum tender preparation time for national tenders under Regulation 86 is:",opts:["3 days","7 days","14 days","21 days"],correct:1,
+  correctFeedback:"Correct! Regulation 86 sets the minimum at 7 days for national and county-specific tenders.",
+  wrongFeedback:"Incorrect. Regulation 86 prescribes 7 days minimum. Two-stage tendering also requires 7 days minimum at each stage (Reg.87)."},
+
+  {q:"At tender opening, which of the following is TRUE?",opts:["The opening committee may disqualify non-responsive tenders","No tenderer shall be disqualified during opening","Only the procurement function may attend","Price information is not read aloud"],correct:1,
+  correctFeedback:"Correct! Section 78(7) — no tenderer shall be disqualified by the procuring entity during opening of tenders.",
+  wrongFeedback:"Incorrect. Section 78(7) prohibits disqualification at opening. Section 78(6) requires price to be read aloud. Section 78(4) allows bidders/representatives to attend."},
+
+  {q:"The maximum period for evaluation of tenders under Section 80(6) is:",opts:["14 days","21 days","30 days","45 days"],correct:2,
+  correctFeedback:"Correct! Section 80(6) sets a maximum of 30 days for tender evaluation.",
+  wrongFeedback:"Incorrect. Section 80(6) = 30 days for tender evaluation. Section 126(3) = 21 days for consultancy proposals."},
+
+  {q:"After notification of intention to award, the standstill period before signing the contract is:",opts:["7 days","14 days","21 days","30 days"],correct:1,
+  correctFeedback:"Correct! Section 135(3) — the contract shall not be signed before 14 days have elapsed following notification.",
+  wrongFeedback:"Incorrect. Section 135(3) prescribes a 14-day standstill period. This does not apply to direct procurement (Reg.90(7))."},
+
+  {q:"Section 82(1) provides that the tender sum as read at opening:",opts:["May be corrected for arithmetical errors","Is absolute and final and cannot be corrected, revised, adjusted or amended","Can be revised downward by mutual agreement","Can be amended by the evaluation committee"],correct:1,
+  correctFeedback:"Correct! Section 82(1) — the tender sum is absolute and final. Exceptions: direct procurement (s.103), competitive negotiations (s.131), framework/multiple awards (s.141).",
+  wrongFeedback:"Incorrect. Section 82(1) makes the tender sum final with only three narrow exceptions under s.82(2): sections 103, 131, and 141."},
+
+  {q:"Tender security is capped at what percentage of the tender value?",opts:["1%","2%","5%","10%"],correct:1,
+  correctFeedback:"Correct! Section 61(2)(c) — not more than 2% of the tender as valued by the procuring entity.",
+  wrongFeedback:"Incorrect. Section 61(2)(c) caps tender security at 2%. Performance security is the one capped at 10% (s.142(1))."},
+
+  // --- SECTION 4: Contracts & Variations ---
+  {q:"Within the first 12 months of a contract, upward price variations are:",opts:["Permitted with CPI justification","Permitted up to 15%","Absolutely prohibited","Permitted with AO approval"],correct:2,
+  correctFeedback:"Correct! Section 139(3) — no contract price shall be varied upwards within 12 months from signing. This is an absolute prohibition.",
+  wrongFeedback:"Incorrect. Section 139(3) is an absolute prohibition — no upward price variation in the first 12 months, regardless of justification."},
+
+  {q:"The maximum quantity variation for goods under a contract is:",opts:["10% of original quantity","15% of original quantity","20% of original quantity","25% of original quantity"],correct:1,
+  correctFeedback:"Correct! Section 139(4)(b) — the quantity variation for goods does not exceed 15% of the original contract quantity.",
+  wrongFeedback:"Incorrect. Section 139(4)(b) sets the limit at 15% for quantity of goods. The cumulative price limit is 25% (s.139(4)(d))."},
+
+  {q:"If cumulative contract variations exceed 25% of the original price, the procuring entity must:",opts:["Seek PPRA approval to continue","Terminate the contract immediately","Tender for the additional work separately","Request Cabinet Secretary approval"],correct:2,
+  correctFeedback:"Correct! Section 139(6) — where variations result in an increment of more than 25%, such variations shall be tendered for separately.",
+  wrongFeedback:"Incorrect. Section 139(6) requires a fresh tender for any variation amount exceeding 25% of the original contract price."},
+
+  {q:"Performance security is required for contracts above:",opts:["KES 1 million","KES 3 million","KES 5 million","KES 10 million"],correct:2,
+  correctFeedback:"Correct! Regulation 135(1) — the threshold for performance security is contracts above KES 5 million for goods, works, and non-consultancy services.",
+  wrongFeedback:"Incorrect. Regulation 135(1) sets the threshold at KES 5 million. For AGPO groups, performance security is capped at 1% (s.142(3))."},
+
+  {q:"The maximum advance payment permitted is:",opts:["10% of tender price","15% of tender price","20% of tender price","25% of tender price"],correct:2,
+  correctFeedback:"Correct! Section 147(1) — advance payment shall not exceed 20% of the tender price.",
+  wrongFeedback:"Incorrect. Section 147(1) caps advance payment at 20%. It requires equivalent advance payment security and cannot be paid before contract signing (s.146)."},
+
+  // --- SECTION 5: AGPO ---
+  {q:"Tender security for procurements reserved for AGPO groups is:",opts:["Reduced to 1%","Waived entirely — a Tender Securing Declaration is used instead","The same as other procurements (2%)","Set by the Review Board"],correct:1,
+  correctFeedback:"Correct! Section 61(5) and Regulation 155 — tender security is not required for AGPO groups; they use a Tender Securing Declaration Form instead.",
+  wrongFeedback:"Incorrect. Section 61(5) waives tender security for AGPO groups. They instead sign a Tender Securing Declaration Form (Reg.155(2)). Breaching this declaration can lead to debarment (Reg.155(3))."},
+
+  {q:"The exclusive preference threshold for citizen contractors for goods and services is:",opts:["KES 100 million","KES 500 million","KES 1 billion","KES 5 billion"],correct:1,
+  correctFeedback:"Correct! Regulation 163(b) — KES 500 million for goods and services. KES 1 billion is for works and construction materials (Reg.163(a)).",
+  wrongFeedback:"Incorrect. Reg.163(b) = KES 500 million for goods/services. Reg.163(a) = KES 1 billion for works/construction."},
+
+  {q:"Payment to AGPO enterprises must be made within:",opts:["30 days of invoice","45 days of invoice","60 days of invoice","90 days of invoice"],correct:2,
+  correctFeedback:"Correct! Regulation 150(1) — payment within 60 days from the date of receipt of the invoice.",
+  wrongFeedback:"Incorrect. Regulation 150(1) requires prompt payment within 60 days of invoice receipt for all performed contracts including AGPO enterprises."},
+
+  // --- SECTION 6: Disposal ---
+  {q:"An accounting officer who disposes of assets to employees through artificial valuation commits:",opts:["A procedural breach only","A disciplinary offence only","A criminal offence under the Act","No offence if the Board approves"],correct:2,
+  correctFeedback:"Correct! Section 166(2) — an accounting officer who, pursuant to artificial valuation, disposes off assets to employees commits an offence.",
+  wrongFeedback:"Incorrect. Section 166(2) makes this a criminal offence. Section 166(1) prohibits disposal to employees or board/committee members except as expressly allowed."},
+
+  {q:"Who sets the reserve price for asset disposal?",opts:["The accounting officer","The disposal committee","A relevant technical expert","The head of procurement"],correct:2,
+  correctFeedback:"Correct! Section 164(3) — a relevant expert prepares a technical report considering the real market price and sets the reserve price.",
+  wrongFeedback:"Incorrect. Section 164(3) requires a relevant technical expert to prepare the report and set the reserve price (minimum acceptable price below real market value)."},
+
+  // --- SECTION 7: Offences ---
+  {q:"A person who divulges confidential procurement information under Section 67 faces debarment and prohibition from government work for:",opts:["3 years","5 years","7 years","10 years"],correct:3,
+  correctFeedback:"Correct! Section 67(5) — debarred and prohibited from working for any government entity or entity where government holds shares for 10 years.",
+  wrongFeedback:"Incorrect. Section 67(5) imposes a 10-year prohibition. This is in addition to the criminal penalty of up to KES 4 million fine and/or 10 years imprisonment."},
+
+  {q:"The minimum debarment period under Section 41(4) is:",opts:["1 year","2 years","3 years","5 years"],correct:2,
+  correctFeedback:"Correct! Section 41(4) — debarment shall be for a specified period of not less than 3 years.",
+  wrongFeedback:"Incorrect. Section 41(4) sets the minimum at 3 years."},
+
+  // --- SECTION 8: Review ---
+  {q:"A request for administrative review must be filed within how many days of notification of award?",opts:["7 days","14 days","21 days","30 days"],correct:1,
+  correctFeedback:"Correct! Section 167(1) — within 14 days of notification of award or date of occurrence of the alleged breach.",
+  wrongFeedback:"Incorrect. Section 167(1) = 14 days. The Review Board then has 21 days to complete its review (s.171(1))."},
+
+  {q:"Which of the following is NOT subject to review by the Review Board?",opts:["Evaluation methodology used","The choice of procurement method","Notification of award","Rejection of a bid for non-responsiveness"],correct:1,
+  correctFeedback:"Correct! Section 167(4)(a) — the choice of procurement method is not reviewable. Also non-reviewable: termination under s.63 and signed contracts under s.135.",
+  wrongFeedback:"Incorrect. Section 167(4)(a) explicitly excludes the choice of procurement method from review. The other listed items can be reviewed."},
+
+  {q:"An appeal from the Review Board to the High Court must be filed within:",opts:["7 days","14 days","21 days","30 days"],correct:1,
+  correctFeedback:"Correct! Section 175(1) — within 14 days from the date of the Review Board's decision. If not appealed, the decision is final and binding.",
+  wrongFeedback:"Incorrect. Section 175(1) = 14 days. The High Court must then determine within 45 days (s.175(3)). Further appeal to Court of Appeal within 7 days (s.175(4))."}
+];
+
+// ========== STATE ==========
+let currentSlide = 0;
+let understood = false;
+let sectionsDone = new Array(TOTAL_SLIDES + 1).fill(false);
+let quizQuestion = 0;
+let quizAnswers = new Array(TOTAL_Q).fill(null);
+let score = 0;
+
+function init() { buildQuizDots(); buildQuizQuestion(0); updateUI(); }
+
+function navigate(dir) {
+  if (currentSlide === 0 && dir === 1) { goToSlide(1); return; }
+  if (currentSlide >= 1 && currentSlide <= TOTAL_SLIDES) {
+    if (dir === 1) { markSectionDone(currentSlide); goToSlide(currentSlide + 1); }
+    else if (dir === -1) { goToSlide(currentSlide - 1); }
+  } else if (currentSlide === TOTAL_SLIDES + 1) { // quiz slide
+    if (dir === 1) {
+      if (quizQuestion < TOTAL_Q - 1) { quizQuestion++; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(16); showResults(); }
+    } else if (dir === -1) {
+      if (quizQuestion > 0) { quizQuestion--; buildQuizQuestion(quizQuestion); updateUI(); }
+      else { goToSlide(TOTAL_SLIDES); }
+    }
+  } else if (currentSlide === 16 && dir === -1) { goToSlide(TOTAL_SLIDES + 1); }
+}
+
+function goToSlide(n) {
+  if (n >= 1 && n <= TOTAL_SLIDES && n > 1) {
+    for (let i = 1; i < n; i++) { if (!sectionsDone[i]) return; }
+  }
+  if (n === TOTAL_SLIDES + 1) {
+    for (let i = 1; i <= TOTAL_SLIDES; i++) { if (!sectionsDone[i]) return; }
+  }
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  let slideEl = document.getElementById('slide-' + n);
+  if (slideEl) slideEl.classList.add('active');
+  currentSlide = n;
+  understood = false;
+  document.getElementById('content-area').scrollTop = 0;
+  updateUI();
+}
+
+function markSectionDone(n) { if (n >= 1 && n <= TOTAL_SLIDES) sectionsDone[n] = true; updateTabs(); }
+
+function updateUI() {
+  let pips = document.querySelectorAll('.pip');
+  let fillCount = currentSlide === 16 ? pips.length : Math.min(currentSlide, pips.length);
+  pips.forEach((p, i) => p.classList.toggle('filled', i < fillCount));
+
+  updateTabs();
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  let tabIdx = currentSlide === 16 ? TOTAL_SLIDES + 1 : currentSlide;
+  let activeTab = document.querySelector('.tab[data-tab="' + tabIdx + '"]');
+  if (activeTab) activeTab.classList.add('active');
+
+  let uWrap = document.getElementById('understood-wrap');
+  let btnNext = document.getElementById('btn-next');
+  let btnPrev = document.getElementById('btn-prev');
+  let uBtn = document.getElementById('understood-btn');
+  let secInd = document.getElementById('section-indicator');
+
+  uBtn.classList.remove('checked');
+  btnPrev.style.display = currentSlide === 0 ? 'none' : '';
+
+  const sNames = {0:'',1:'Section 1 — Roles & Segregation',2:'Section 2 — Methods & Thresholds',3:'Section 3 — End-to-End Process',4:'Section 4 — Contracts & Variations',5:'Section 5 — AGPO Reservations',6:'Section 6 — Asset Disposal',7:'Section 7 — Offences & Penalties',8:'Section 8 — Administrative Review',9:'Quiz',16:'Results'};
+  secInd.textContent = sNames[currentSlide] || '';
+
+  if (currentSlide === 0) {
+    uWrap.style.display = 'none'; btnNext.style.display = 'none';
+    document.getElementById('bottombar').style.display = 'none';
+  } else { document.getElementById('bottombar').style.display = 'flex'; }
+
+  if (currentSlide >= 1 && currentSlide <= TOTAL_SLIDES) {
+    uWrap.style.display = 'flex'; btnNext.style.display = ''; btnNext.disabled = !understood; btnNext.textContent = 'Next →';
+  } else if (currentSlide === TOTAL_SLIDES + 1) {
+    uWrap.style.display = 'none'; btnNext.style.display = '';
+    btnNext.disabled = (quizAnswers[quizQuestion] === null);
+    btnNext.textContent = quizQuestion < TOTAL_Q - 1 ? 'Next Question →' : 'See Results →';
+  } else if (currentSlide === 16) {
+    uWrap.style.display = 'none'; btnNext.style.display = 'none';
+  }
+}
+
+function updateTabs() {
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    let tab = document.querySelector('.tab[data-tab="' + i + '"]');
+    if (tab) tab.classList.toggle('done', sectionsDone[i]);
+  }
+}
+
+function toggleUnderstood() {
+  understood = !understood;
+  document.getElementById('understood-btn').classList.toggle('checked', understood);
+  document.getElementById('btn-next').disabled = !understood;
+}
+
+function buildQuizDots() {
+  let dots = document.getElementById('quiz-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < TOTAL_Q; i++) {
+    let d = document.createElement('div'); d.className = 'qdot'; d.textContent = (i + 1); dots.appendChild(d);
+  }
+}
+
+function updateQuizDots() {
+  document.querySelectorAll('.qdot').forEach((d, i) => {
+    d.classList.remove('current', 'correct', 'wrong');
+    if (i === quizQuestion) d.classList.add('current');
+    if (quizAnswers[i] !== null) d.classList.add(quizAnswers[i] === quizData[i].correct ? 'correct' : 'wrong');
+  });
+}
+
+function updateScoreBar() {
+  score = quizAnswers.filter((a, i) => a !== null && a === quizData[i].correct).length;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('score-fill').style.width = ((score / TOTAL_Q) * 100) + '%';
+}
+
+function buildQuizQuestion(qi) {
+  let qd = quizData[qi], container = document.getElementById('quiz-container'), answered = quizAnswers[qi] !== null;
+  let html = '<div class="q-card"><div class="q-num">Question ' + (qi+1) + ' of ' + TOTAL_Q + '</div>';
+  html += '<div class="q-text">' + qd.q + '</div><div class="q-options">';
+  ['A','B','C','D'].forEach((l,i) => {
+    let cls = 'q-opt';
+    if (answered) { cls += ' disabled'; if (i === quizAnswers[qi] && i !== qd.correct) cls += ' wrong-answer'; if (i === qd.correct) cls += ' reveal-correct correct-answer'; }
+    html += '<button class="' + cls + '" onclick="answerQuestion(' + qi + ',' + i + ')"><span class="letter">' + l + '.</span> ' + qd.opts[i] + '</button>';
+  });
+  html += '</div>';
+  if (answered) {
+    let ok = quizAnswers[qi] === qd.correct;
+    html += '<div class="q-feedback show ' + (ok?'correct':'wrong') + '">' + (ok?'✅ '+qd.correctFeedback:'❌ '+qd.wrongFeedback) + '</div>';
+  }
+  html += '</div>'; container.innerHTML = html; updateQuizDots();
+}
+
+function answerQuestion(qi, oi) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi; updateScoreBar(); buildQuizQuestion(qi);
+  setTimeout(() => { document.getElementById('btn-next').disabled = false; }, 900);
+}
+
+function showResults() {
+  score = quizAnswers.filter((a, i) => a !== null && a === quizData[i].correct).length;
+  let pass = score >= PASS_MARK, pct = Math.round((score / TOTAL_Q) * 100);
+  document.getElementById('final-score').textContent = score + '/' + TOTAL_Q;
+  document.getElementById('final-score').className = 'big-score ' + (pass ? 'pass' : 'fail');
+  let label = document.getElementById('result-label');
+  label.textContent = pass ? '✓ Module Passed' : '✗ Not Passed';
+  label.className = 'result-label ' + (pass ? 'pass' : 'fail');
+  document.getElementById('result-msg').textContent = pass
+    ? 'You scored ' + pct + '% (' + score + '/' + TOTAL_Q + ') — above the 70% pass mark. Your completion has been recorded. Please print this page as your record.'
+    : 'You scored ' + pct + '% (' + score + '/' + TOTAL_Q + ') — below the 70% pass mark. Please review the module and retake the quiz. Contact the Legal Directorate (allan@ktb.go.ke) if you need assistance.';
+  let d = new Date();
+  document.getElementById('cert-date').textContent = 'Completed ' + d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) + ' · KTB Legal Hub';
+  document.getElementById('cert-badge').style.display = pass ? 'inline-block' : 'none';
+}
+
+init();
+</script>
+</body>
+</html>
